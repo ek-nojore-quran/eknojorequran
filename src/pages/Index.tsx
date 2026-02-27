@@ -69,11 +69,7 @@ const Index = () => {
         {/* Hero Banner */}
         <div className="relative z-10 container mx-auto px-4 pt-8 pb-4">
           <div className="rounded-2xl overflow-hidden shadow-xl">
-            
-
-
-
-
+            <img src={heroBanner} alt="এক নজরে কুরআন হিরো ব্যানার" className="w-full h-auto object-cover" />
           </div>
         </div>
 
