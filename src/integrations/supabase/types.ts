@@ -90,22 +90,31 @@ export type Database = {
       }
       questions: {
         Row: {
+          correct_answer: number | null
           created_at: string
           id: string
+          options: Json | null
+          points: number | null
           question_order: number
           question_text: string
           surah_id: string
         }
         Insert: {
+          correct_answer?: number | null
           created_at?: string
           id?: string
+          options?: Json | null
+          points?: number | null
           question_order?: number
           question_text: string
           surah_id: string
         }
         Update: {
+          correct_answer?: number | null
           created_at?: string
           id?: string
+          options?: Json | null
+          points?: number | null
           question_order?: number
           question_text?: string
           surah_id?: string
