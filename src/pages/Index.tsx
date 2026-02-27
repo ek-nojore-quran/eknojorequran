@@ -142,6 +142,24 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Hadiya Section */}
+      <section className="container mx-auto px-4 py-16 text-center">
+        <div className="max-w-lg mx-auto">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 text-primary mb-4">
+            <Award className="h-7 w-7" />
+          </div>
+          <h2 className="text-3xl font-bold mb-3">হাদিয়া দিন</h2>
+          <p className="text-muted-foreground mb-6">
+            কুরআন শিক্ষার এই প্রকল্পে আপনার হাদিয়া আমাদের জন্য অত্যন্ত মূল্যবান।
+          </p>
+          <Button size="lg" variant="outline" className="text-lg px-8 py-6" asChild>
+            <Link to="/hadiya">
+              হাদিয়া দিন <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </Button>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="container mx-auto px-4 py-20 text-center">
         <h2 className="text-3xl font-bold mb-4">আজই শুরু করুন</h2>
