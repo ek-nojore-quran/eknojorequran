@@ -1,31 +1,42 @@
 
 
-## হাদিয়া + অটো রেজিস্ট্রেশন ফিচার
+## সূরা ভিত্তিক PDF আপলোড ও দেখার ফিচার
 
-হাদিয়া ফর্মে ইমেইল ও পাসওয়ার্ড ফিল্ড যোগ করা হবে। সাবমিট করলে একই সাথে ডোনেশন রেকর্ড সেভ হবে এবং অটোমেটিক অ্যাকাউন্ট তৈরি হবে (QUR-XXXX আইডি সহ)।
+প্রতিটি সূরার জন্য একটি PDF আপলোড করা যাবে (অ্যাডমিন প্যানেল থেকে)। ইউজাররা MCQ দেওয়ার আগে সেই PDF দেখতে পারবে।
 
 ---
 
-### ধাপ ১: `Hadiya.tsx` ফর্ম আপডেট
-- ফর্মে নতুন ফিল্ড যোগ:
-  - **ইমেইল** (required)
-  - **পাসওয়ার্ড** (required, কমপক্ষে ৬ অক্ষর)
-- zod স্কিমা আপডেট করে ইমেইল ও পাসওয়ার্ড ভ্যালিডেশন যোগ
-- সাবমিট হ্যান্ডলারে:
-  1. প্রথমে `supabase.auth.signUp()` কল করে অ্যাকাউন্ট তৈরি (নাম ও ফোন মেটাডেটায়)
-  2. সাইনআপ সফল হলে donations টেবিলে ইনসার্ট
-  3. সফল হলে সাকসেস মেসেজে দেখাবে: "আপনার অ্যাকাউন্ট তৈরি হয়েছে এবং আপনার আইডি হলো QUR-XXXX। ইমেইল যাচাই করে লগইন করুন।"
-- যদি ইমেইলে ইতোমধ্যে অ্যাকাউন্ট থাকে, এরর মেসেজ দেখাবে
+### ধাপ ১: Storage Bucket তৈরি (মাইগ্রেশন)
+```sql
+INSERT INTO storage.buckets (id, name, public) VALUES ('surah-pdfs', 'surah-pdfs', true);
 
-### ধাপ ২: সাকসেস স্টেটে প্রোফাইল তথ্য দেখানো
-- সাবমিটের পর প্রোফাইল থেকে user_id (QUR-XXXX) ফেচ করে দেখানো
-- ড্যাশবোর্ডে যাওয়ার লিংক ও লগইন লিংক দেওয়া
+-- যেকেউ পড়তে পারবে
+CREATE POLICY "Public read surah pdfs" ON storage.objects FOR SELECT USING (bucket_id = 'surah-pdfs');
+-- অ্যাডমিন আপলোড/ডিলিট করতে পারবে
+CREATE POLICY "Admin insert surah pdfs" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'surah-pdfs' AND has_role(auth.uid(), 'admin'));
+CREATE POLICY "Admin update surah pdfs" ON storage.objects FOR UPDATE USING (bucket_id = 'surah-pdfs' AND has_role(auth.uid(), 'admin'));
+CREATE POLICY "Admin delete surah pdfs" ON storage.objects FOR DELETE USING (bucket_id = 'surah-pdfs' AND has_role(auth.uid(), 'admin'));
+```
+
+### ধাপ ২: `surahs` টেবিলে `pdf_url` কলাম যোগ
+```sql
+ALTER TABLE public.surahs ADD COLUMN pdf_url TEXT;
+```
+
+### ধাপ ৩: MCQ ম্যানেজমেন্ট পেজ আপডেট (`MCQManagement.tsx`)
+- প্রতিটি সূরার পাশে "PDF আপলোড" বাটন যোগ
+- ফাইল ইনপুট দিয়ে PDF সিলেক্ট করে `surah-pdfs` বাকেটে আপলোড
+- আপলোড হলে `surahs.pdf_url` আপডেট হবে
+- ইতোমধ্যে PDF থাকলে "PDF দেখুন" ও "PDF মুছুন" অপশন দেখাবে
+
+### ধাপ ৪: ইউজার সাইডে PDF দেখার সুবিধা (Dashboard / সূরা পেজ)
+- সূরা সিলেক্ট করলে MCQ-এর আগে "PDF দেখুন" বাটন দেখাবে
+- ক্লিক করলে নতুন ট্যাবে বা Dialog-এ পুরো PDF দেখা যাবে (iframe embed)
 
 ---
 
 ### টেকনিক্যাল নোট
-- `handle_new_user` ট্রিগার ইতোমধ্যে আছে — সাইনআপে অটোমেটিক প্রোফাইল ও QUR-XXXX আইডি তৈরি হবে
-- ডোনেশন ইনসার্ট anon policy দিয়ে হবে (পাবলিক insert), তাই সাইনআপের পর সেশন ছাড়াও কাজ করবে
-- ইমেইল ভেরিফিকেশন এনাবল থাকবে (auto-confirm বন্ধ)
-- কোনো ডেটাবেস পরিবর্তন লাগবে না — শুধু ফ্রন্টেন্ড কোড পরিবর্তন
+- PDF পাবলিক বাকেটে রাখা হবে যাতে যেকেউ দেখতে পারে
+- ফাইল নাম: `{surah_id}.pdf` ফরম্যাটে রাখা হবে (ডুপ্লিকেট এড়াতে)
+- শুধু অ্যাডমিনরা আপলোড/ডিলিট করতে পারবে (RLS policy)
 
