@@ -1,42 +1,62 @@
 
 
-## হাদিয়া (ডোনেশন) ফিচার পরিকল্পনা
+## হাদিয়া ট্রানজেকশন কনফার্মেশন ফিচার
 
-এই প্ল্যানে হোমপেজে একটি হাদিয়া সেকশন এবং একটি আলাদা `/hadiya` পেজ তৈরি করা হবে, যেখানে বিকাশ/নগদ নম্বর ও QR কোড দেখানো হবে। অ্যাডমিন প্যানেল থেকে নম্বর ও QR কোড পরিবর্তন করা যাবে।
+পেমেন্ট করার পর ব্যবহারকারী ট্রানজেকশন আইডি দিয়ে কনফার্ম করতে পারবে এবং অ্যাডমিন সেটি দেখতে ও ভেরিফাই করতে পারবে।
 
 ---
 
-### ধাপ ১: ডাটাবেস আপডেট
-- `settings` টেবিলে হাদিয়া সংক্রান্ত ডিফল্ট ভ্যালু ইনসার্ট:
-  - `bkash_number` → বিকাশ নম্বর
-  - `nagad_number` → নগদ নম্বর
-  - `hadiya_description` → হাদিয়ার বিবরণ টেক্সট
-- লোগো বাকেটে QR কোড ইমেজ আপলোড সাপোর্ট ইতোমধ্যে আছে (logos bucket)
+### ধাপ ১: নতুন `donations` টেবিল তৈরি (মাইগ্রেশন)
+```sql
+CREATE TABLE public.donations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  donor_name TEXT NOT NULL,
+  donor_phone TEXT,
+  payment_method TEXT NOT NULL, -- 'bkash' বা 'nagad'
+  transaction_id TEXT NOT NULL,
+  amount NUMERIC,
+  status TEXT NOT NULL DEFAULT 'pending', -- pending / verified / rejected
+  created_at TIMESTAMPTZ DEFAULT now(),
+  verified_at TIMESTAMPTZ,
+  admin_note TEXT
+);
 
-### ধাপ ২: অ্যাডমিন সেটিংস আপডেট (`AdminSettings.tsx`)
-- হাদিয়া সেকশন যোগ:
-  - বিকাশ নম্বর ইনপুট
-  - নগদ নম্বর ইনপুট
-  - হাদিয়ার বিবরণ টেক্সটেরিয়া
-  - বিকাশ/নগদ QR কোড ইমেজ আপলোড
+ALTER TABLE public.donations ENABLE ROW LEVEL SECURITY;
 
-### ধাপ ৩: হাদিয়া পেজ তৈরি (`/hadiya`)
-- `src/pages/Hadiya.tsx` তৈরি
-- সেটিংস থেকে বিকাশ/নগদ নম্বর ও QR কোড দেখাবে
-- সুন্দর কার্ড লেআউটে বিকাশ ও নগদ আলাদাভাবে প্রদর্শিত হবে
-- কপি বাটন দিয়ে নম্বর কপি করার সুবিধা
+-- যেকেউ ডোনেশন সাবমিট করতে পারবে (লগইন ছাড়াও)
+CREATE POLICY "Anyone can insert donations" ON public.donations FOR INSERT WITH CHECK (true);
+-- অ্যাডমিন সব দেখতে ও আপডেট করতে পারবে
+CREATE POLICY "Admins can view all donations" ON public.donations FOR SELECT USING (has_role(auth.uid(), 'admin'));
+CREATE POLICY "Admins can update donations" ON public.donations FOR UPDATE USING (has_role(auth.uid(), 'admin'));
+CREATE POLICY "Admins can delete donations" ON public.donations FOR DELETE USING (has_role(auth.uid(), 'admin'));
+```
 
-### ধাপ ৪: হোমপেজে হাদিয়া সেকশন (`Index.tsx`)
-- CTA সেকশনের আগে একটি হাদিয়া ব্যানার/কার্ড যোগ
-- "হাদিয়া দিন" বাটন → `/hadiya` পেজে নিয়ে যাবে
+### ধাপ ২: হাদিয়া পেজে (`Hadiya.tsx`) ট্রানজেকশন ফর্ম যোগ
+- বিকাশ/নগদ কার্ডের নিচে একটি "পেমেন্ট কনফার্ম করুন" সেকশন:
+  - নাম (required)
+  - ফোন নম্বর (optional)
+  - পেমেন্ট মেথড সিলেক্ট (বিকাশ/নগদ)
+  - ট্রানজেকশন আইডি (required)
+  - পরিমাণ (optional)
+  - সাবমিট বাটন
+- সাবমিটে `donations` টেবিলে ইনসার্ট হবে
+- সফল হলে সাকসেস মেসেজ দেখাবে
 
-### ধাপ ৫: রাউটিং (`App.tsx`)
-- `/hadiya` রাউট যোগ
+### ধাপ ৩: অ্যাডমিন প্যানেলে ডোনেশন ম্যানেজমেন্ট পেজ
+- নতুন `src/pages/admin/DonationManagement.tsx` তৈরি
+- টেবিল ভিউ: নাম, ফোন, মেথড, ট্রানজেকশন আইডি, পরিমাণ, স্ট্যাটাস, তারিখ
+- ভেরিফাই/রিজেক্ট বাটন
+- অ্যাডমিন নোট যোগ করার সুবিধা
+- AdminSidebar-এ নতুন মেনু আইটেম যোগ
+
+### ধাপ ৪: রাউটিং আপডেট
+- `App.tsx`-এ `/admin/donations` রাউট যোগ
+- `AdminSidebar.tsx`-এ "ডোনেশন" মেনু লিংক যোগ
 
 ---
 
 ### টেকনিক্যাল নোট
-- নতুন টেবিল লাগবে না — বিদ্যমান `settings` টেবিল ব্যবহার হবে
-- QR কোড ইমেজ বিদ্যমান `logos` স্টোরেজ বাকেটে সংরক্ষণ হবে
-- কোনো পেমেন্ট গেটওয়ে ইন্টিগ্রেশন নেই — শুধু ম্যানুয়াল ট্রান্সফারের তথ্য দেখাবে
+- লগইন ছাড়াই ট্রানজেকশন আইডি সাবমিট করা যাবে (anon insert policy)
+- অ্যাডমিনরা ভেরিফাই/রিজেক্ট করতে পারবে
+- zod দিয়ে ফর্ম ভ্যালিডেশন করা হবে
 
