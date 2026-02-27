@@ -1,62 +1,31 @@
 
 
-## হাদিয়া ট্রানজেকশন কনফার্মেশন ফিচার
+## হাদিয়া + অটো রেজিস্ট্রেশন ফিচার
 
-পেমেন্ট করার পর ব্যবহারকারী ট্রানজেকশন আইডি দিয়ে কনফার্ম করতে পারবে এবং অ্যাডমিন সেটি দেখতে ও ভেরিফাই করতে পারবে।
+হাদিয়া ফর্মে ইমেইল ও পাসওয়ার্ড ফিল্ড যোগ করা হবে। সাবমিট করলে একই সাথে ডোনেশন রেকর্ড সেভ হবে এবং অটোমেটিক অ্যাকাউন্ট তৈরি হবে (QUR-XXXX আইডি সহ)।
 
 ---
 
-### ধাপ ১: নতুন `donations` টেবিল তৈরি (মাইগ্রেশন)
-```sql
-CREATE TABLE public.donations (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  donor_name TEXT NOT NULL,
-  donor_phone TEXT,
-  payment_method TEXT NOT NULL, -- 'bkash' বা 'nagad'
-  transaction_id TEXT NOT NULL,
-  amount NUMERIC,
-  status TEXT NOT NULL DEFAULT 'pending', -- pending / verified / rejected
-  created_at TIMESTAMPTZ DEFAULT now(),
-  verified_at TIMESTAMPTZ,
-  admin_note TEXT
-);
+### ধাপ ১: `Hadiya.tsx` ফর্ম আপডেট
+- ফর্মে নতুন ফিল্ড যোগ:
+  - **ইমেইল** (required)
+  - **পাসওয়ার্ড** (required, কমপক্ষে ৬ অক্ষর)
+- zod স্কিমা আপডেট করে ইমেইল ও পাসওয়ার্ড ভ্যালিডেশন যোগ
+- সাবমিট হ্যান্ডলারে:
+  1. প্রথমে `supabase.auth.signUp()` কল করে অ্যাকাউন্ট তৈরি (নাম ও ফোন মেটাডেটায়)
+  2. সাইনআপ সফল হলে donations টেবিলে ইনসার্ট
+  3. সফল হলে সাকসেস মেসেজে দেখাবে: "আপনার অ্যাকাউন্ট তৈরি হয়েছে এবং আপনার আইডি হলো QUR-XXXX। ইমেইল যাচাই করে লগইন করুন।"
+- যদি ইমেইলে ইতোমধ্যে অ্যাকাউন্ট থাকে, এরর মেসেজ দেখাবে
 
-ALTER TABLE public.donations ENABLE ROW LEVEL SECURITY;
-
--- যেকেউ ডোনেশন সাবমিট করতে পারবে (লগইন ছাড়াও)
-CREATE POLICY "Anyone can insert donations" ON public.donations FOR INSERT WITH CHECK (true);
--- অ্যাডমিন সব দেখতে ও আপডেট করতে পারবে
-CREATE POLICY "Admins can view all donations" ON public.donations FOR SELECT USING (has_role(auth.uid(), 'admin'));
-CREATE POLICY "Admins can update donations" ON public.donations FOR UPDATE USING (has_role(auth.uid(), 'admin'));
-CREATE POLICY "Admins can delete donations" ON public.donations FOR DELETE USING (has_role(auth.uid(), 'admin'));
-```
-
-### ধাপ ২: হাদিয়া পেজে (`Hadiya.tsx`) ট্রানজেকশন ফর্ম যোগ
-- বিকাশ/নগদ কার্ডের নিচে একটি "পেমেন্ট কনফার্ম করুন" সেকশন:
-  - নাম (required)
-  - ফোন নম্বর (optional)
-  - পেমেন্ট মেথড সিলেক্ট (বিকাশ/নগদ)
-  - ট্রানজেকশন আইডি (required)
-  - পরিমাণ (optional)
-  - সাবমিট বাটন
-- সাবমিটে `donations` টেবিলে ইনসার্ট হবে
-- সফল হলে সাকসেস মেসেজ দেখাবে
-
-### ধাপ ৩: অ্যাডমিন প্যানেলে ডোনেশন ম্যানেজমেন্ট পেজ
-- নতুন `src/pages/admin/DonationManagement.tsx` তৈরি
-- টেবিল ভিউ: নাম, ফোন, মেথড, ট্রানজেকশন আইডি, পরিমাণ, স্ট্যাটাস, তারিখ
-- ভেরিফাই/রিজেক্ট বাটন
-- অ্যাডমিন নোট যোগ করার সুবিধা
-- AdminSidebar-এ নতুন মেনু আইটেম যোগ
-
-### ধাপ ৪: রাউটিং আপডেট
-- `App.tsx`-এ `/admin/donations` রাউট যোগ
-- `AdminSidebar.tsx`-এ "ডোনেশন" মেনু লিংক যোগ
+### ধাপ ২: সাকসেস স্টেটে প্রোফাইল তথ্য দেখানো
+- সাবমিটের পর প্রোফাইল থেকে user_id (QUR-XXXX) ফেচ করে দেখানো
+- ড্যাশবোর্ডে যাওয়ার লিংক ও লগইন লিংক দেওয়া
 
 ---
 
 ### টেকনিক্যাল নোট
-- লগইন ছাড়াই ট্রানজেকশন আইডি সাবমিট করা যাবে (anon insert policy)
-- অ্যাডমিনরা ভেরিফাই/রিজেক্ট করতে পারবে
-- zod দিয়ে ফর্ম ভ্যালিডেশন করা হবে
+- `handle_new_user` ট্রিগার ইতোমধ্যে আছে — সাইনআপে অটোমেটিক প্রোফাইল ও QUR-XXXX আইডি তৈরি হবে
+- ডোনেশন ইনসার্ট anon policy দিয়ে হবে (পাবলিক insert), তাই সাইনআপের পর সেশন ছাড়াও কাজ করবে
+- ইমেইল ভেরিফিকেশন এনাবল থাকবে (auto-confirm বন্ধ)
+- কোনো ডেটাবেস পরিবর্তন লাগবে না — শুধু ফ্রন্টেন্ড কোড পরিবর্তন
 
