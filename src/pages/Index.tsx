@@ -7,44 +7,44 @@ import heroBanner from "@/assets/hero-banner.png";
 import SurahDialog from "@/components/SurahDialog";
 
 const surahs = [
-  { number: 96, name: "আলাক্ব" },
-  { number: 97, name: "ক্বদর" },
-  { number: 98, name: "বাইয়্যিনাহ" },
-  { number: 99, name: "যিলযাল" },
-  { number: 100, name: "আদিয়াত" },
-  { number: 101, name: "ক্বারিআহ" },
-  { number: 102, name: "তাকাসুর" },
-  { number: 103, name: "আসর" },
-  { number: 104, name: "হুমাযাহ" },
-  { number: 105, name: "ফীল" },
-  { number: 106, name: "কুরাইশ" },
-  { number: 107, name: "মাঊন" },
-  { number: 108, name: "কাউসার" },
-  { number: 109, name: "কাফিরূন" },
-  { number: 110, name: "নাসর" },
-  { number: 111, name: "লাহাব" },
-  { number: 112, name: "ইখলাস" },
-  { number: 113, name: "ফালাক্ব" },
-  { number: 114, name: "নাস" },
-];
+{ number: 96, name: "আলাক্ব" },
+{ number: 97, name: "ক্বদর" },
+{ number: 98, name: "বাইয়্যিনাহ" },
+{ number: 99, name: "যিলযাল" },
+{ number: 100, name: "আদিয়াত" },
+{ number: 101, name: "ক্বারিআহ" },
+{ number: 102, name: "তাকাসুর" },
+{ number: 103, name: "আসর" },
+{ number: 104, name: "হুমাযাহ" },
+{ number: 105, name: "ফীল" },
+{ number: 106, name: "কুরাইশ" },
+{ number: 107, name: "মাঊন" },
+{ number: 108, name: "কাউসার" },
+{ number: 109, name: "কাফিরূন" },
+{ number: 110, name: "নাসর" },
+{ number: 111, name: "লাহাব" },
+{ number: 112, name: "ইখলাস" },
+{ number: 113, name: "ফালাক্ব" },
+{ number: 114, name: "নাস" }];
+
 
 const features = [
-  {
-    icon: BookOpen,
-    title: "সূরা ভিত্তিক পাঠ",
-    description: "সূরা আলাক্ব থেকে সূরা নাস পর্যন্ত প্রতিটি সূরার ব্যাখ্যা, মূল শিক্ষা এবং গুরুত্বপূর্ণ আয়াত",
-  },
-  {
-    icon: Users,
-    title: "প্রশ্নোত্তর পদ্ধতি",
-    description: "প্রতিটি সূরার শেষে প্রশ্নের উত্তর দিন এবং আপনার বোঝাপড়া যাচাই করুন",
-  },
-  {
-    icon: Award,
-    title: "অগ্রগতি ট্র্যাকিং",
-    description: "আপনার শেখার অগ্রগতি দেখুন এবং শিক্ষকের ফিডব্যাক পান",
-  },
-];
+{
+  icon: BookOpen,
+  title: "সূরা ভিত্তিক পাঠ",
+  description: "সূরা আলাক্ব থেকে সূরা নাস পর্যন্ত প্রতিটি সূরার ব্যাখ্যা, মূল শিক্ষা এবং গুরুত্বপূর্ণ আয়াত"
+},
+{
+  icon: Users,
+  title: "প্রশ্নোত্তর পদ্ধতি",
+  description: "প্রতিটি সূরার শেষে প্রশ্নের উত্তর দিন এবং আপনার বোঝাপড়া যাচাই করুন"
+},
+{
+  icon: Award,
+  title: "অগ্রগতি ট্র্যাকিং",
+  description: "আপনার শেখার অগ্রগতি দেখুন এবং শিক্ষকের ফিডব্যাক পান"
+}];
+
 
 const Index = () => {
   const [selectedSurah, setSelectedSurah] = useState<number | null>(null);
@@ -69,11 +69,11 @@ const Index = () => {
         {/* Hero Banner */}
         <div className="relative z-10 container mx-auto px-4 pt-8 pb-4">
           <div className="rounded-2xl overflow-hidden shadow-xl">
-            <img
-              src={heroBanner}
-              alt="এক নজরে কুরআন - ড. মিজানুর রহমান আজহারী"
-              className="w-full h-auto object-cover"
-            />
+            
+
+
+
+
           </div>
         </div>
 
@@ -102,8 +102,8 @@ const Index = () => {
       <section className="container mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold text-center mb-12">কেন এই কোর্স?</h2>
         <div className="grid md:grid-cols-3 gap-8">
-          {features.map((feature, i) => (
-            <Card key={i} className="border-none shadow-md hover:shadow-lg transition-shadow">
+          {features.map((feature, i) =>
+          <Card key={i} className="border-none shadow-md hover:shadow-lg transition-shadow">
               <CardContent className="pt-8 text-center">
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 text-primary mb-5">
                   <feature.icon className="h-7 w-7" />
@@ -112,7 +112,7 @@ const Index = () => {
                 <p className="text-muted-foreground">{feature.description}</p>
               </CardContent>
             </Card>
-          ))}
+          )}
         </div>
       </section>
 
@@ -122,23 +122,23 @@ const Index = () => {
           <h2 className="text-3xl font-bold text-center mb-4">কোর্সের বিষয়বস্তু</h2>
           <p className="text-center text-muted-foreground mb-10">সূরা আলাক্ব (৯৬) থেকে সূরা নাস (১১৪)</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-            {surahs.map((surah) => (
-              <div
-                key={surah.number}
-                onClick={() => setSelectedSurah(surah.number)}
-                className="bg-card rounded-lg p-4 text-center shadow-sm hover:shadow-lg hover:border-primary/50 transition-all border cursor-pointer"
-              >
+            {surahs.map((surah) =>
+            <div
+              key={surah.number}
+              onClick={() => setSelectedSurah(surah.number)}
+              className="bg-card rounded-lg p-4 text-center shadow-sm hover:shadow-lg hover:border-primary/50 transition-all border cursor-pointer">
+
                 <span className="text-sm text-muted-foreground">সূরা নং {surah.number}</span>
                 <p className="font-semibold mt-1">{surah.name}</p>
               </div>
-            ))}
+            )}
           </div>
 
           <SurahDialog
             surahNumber={selectedSurah}
             open={!!selectedSurah}
-            onOpenChange={(open) => !open && setSelectedSurah(null)}
-          />
+            onOpenChange={(open) => !open && setSelectedSurah(null)} />
+
         </div>
       </section>
 
@@ -179,8 +179,8 @@ const Index = () => {
           <p>© {new Date().getFullYear()} এক নজরে কুরআন। সকল অধিকার সংরক্ষিত।</p>
         </div>
       </footer>
-    </div>
-  );
+    </div>);
+
 };
 
 export default Index;
