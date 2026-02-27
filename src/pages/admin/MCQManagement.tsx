@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import SurahPdfUpload from "@/components/admin/SurahPdfUpload";
 
 type Question = {
   id: string;
@@ -42,7 +43,7 @@ const MCQManagement = () => {
   const { data: surahs = [] } = useQuery({
     queryKey: ["admin-surahs-list"],
     queryFn: async () => {
-      const { data } = await supabase.from("surahs").select("id, surah_name_bengali, surah_number").order("surah_number");
+      const { data } = await supabase.from("surahs").select("id, surah_name_bengali, surah_number, pdf_url").order("surah_number");
       return data || [];
     },
   });
@@ -125,6 +126,8 @@ const MCQManagement = () => {
         <h2 className="text-2xl font-bold">MCQ ব্যবস্থাপনা</h2>
         <Button onClick={openAdd}><Plus className="mr-2 h-4 w-4" /> নতুন প্রশ্ন</Button>
       </div>
+
+      <SurahPdfUpload surahs={surahs as any} />
 
       <div className="flex gap-4 mb-4">
         <Select value={filterSurah} onValueChange={setFilterSurah}>

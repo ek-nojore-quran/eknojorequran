@@ -4,6 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { FileText } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
@@ -127,6 +128,16 @@ const SurahDialog = ({ surahNumber, open, onOpenChange }: SurahDialogProps) => {
               </div>
             ) : (
               <div className="space-y-6">
+                {(surah as any)?.pdf_url && (
+                  <div className="p-4 rounded-lg border bg-muted/30 flex items-center justify-between">
+                    <span className="text-sm font-medium">📄 এই সূরার PDF নোট দেখুন</span>
+                    <Button variant="outline" size="sm" asChild>
+                      <a href={(surah as any).pdf_url} target="_blank" rel="noopener noreferrer">
+                        <FileText className="h-4 w-4 mr-1" /> PDF দেখুন
+                      </a>
+                    </Button>
+                  </div>
+                )}
                 {questions?.map((q, idx) => {
                   const opts: string[] = Array.isArray((q as any).options) ? (q as any).options : JSON.parse((q as any).options || "[]");
                   return (
