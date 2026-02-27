@@ -1,36 +1,41 @@
 
 
-# এক নজরে কুরআন - Implementation Plan
+# Plan: Surah Card Click → Dialog with MCQ Questions
 
-## Phase 1: Foundation & Authentication
-- Set up Supabase Cloud for backend (database, auth, storage)
-- Create landing page with project title, introduction, course overview, and CTA buttons ("Join the Journey", Login)
-- Build registration page with fields: Full Name, Email, Phone, Password, Confirm Password
-- Build login page with email/password authentication
-- Auto-generate unique User ID (QUR-0001 format) on registration
-- Create user profiles table with auto-creation trigger
+## What will happen
+When a user clicks on any surah card in the "কোর্সের বিষয়বস্তু" section, a dialog/modal will open showing:
+- Surah name and number as title
+- MCQ-style questions with radio button options (like the reference image)
+- Points display per question
+- Submit button
 
-## Phase 2: Database & Course Content
-- Create database tables: profiles, surahs (96–114), questions, answers, user_roles
-- Set up RLS policies for secure data access
-- Seed Surah 96–114 content (name, explanation, key teachings, important ayat)
-- Seed 3–5 questions per surah
+## Implementation Steps
 
-## Phase 3: User Dashboard & Course Pages
-- Build user profile page showing: Name, Email, User ID, Join Date, Completed Surah Count, Progress Bar, Submitted Answers
-- Build course listing page showing all surahs (96–114) with progress indicators
-- Build individual surah page with content display and "Answer the Questions" form at the bottom
-- Implement answer submission storing user_id, question_id, answer_text, and timestamp
+### 1. Database: Add MCQ options to questions table
+- Add `options` column (JSONB array) to `questions` table for storing MCQ choices
+- Add `correct_answer` column (integer) for the correct option index
+- Add `points` column (integer, default 2)
 
-## Phase 4: Admin Panel
-- Create admin role system with secure role-based access
-- Build admin dashboard with: Total Users count, Total Submissions count
-- Build user-wise answer view with mark/feedback functionality
-- Add CSV export for answer data
+### 2. Seed Surah & Question Data
+- Insert all 19 surahs (96-114) with names (Bengali, Arabic, English), total ayat, explanation, key teachings
+- Insert 3-5 MCQ questions per surah with options (like the reference image style)
 
-## Phase 5: Navigation & Polish
-- Responsive layout with sidebar/navbar navigation
-- Bengali language UI throughout
-- Protected routes (auth-required for courses, admin-only for admin panel)
-- Toast notifications for submissions and feedback
+### 3. Create SurahDialog Component
+- New component `src/components/SurahDialog.tsx`
+- Uses Radix Dialog with ScrollArea
+- Shows surah title, then lists MCQ questions
+- Each question has: question number, text, points badge, 4 radio button options
+- Submit button at the bottom
+- For unauthenticated users: show questions but prompt login on submit
+- For authenticated users: save answers to database
+
+### 4. Update Index.tsx
+- Make surah cards clickable (cursor-pointer)
+- On click, fetch surah data + questions from database
+- Open SurahDialog with the fetched data
+
+### Technical Details
+- Use `@tanstack/react-query` for data fetching from surahs/questions tables
+- Use RadioGroup component for MCQ options
+- Dialog will be responsive with ScrollArea for long content
 
