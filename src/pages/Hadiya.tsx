@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Copy, ArrowLeft, Heart, Loader2, CheckCircle2, Send } from "lucide-react";
+import { Copy, ArrowLeft, Heart, Loader2, CheckCircle2, Send, Mail, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -17,6 +17,8 @@ const donationSchema = z.object({
   payment_method: z.enum(["bkash", "nagad"], { required_error: "পেমেন্ট মেথড সিলেক্ট করুন" }),
   transaction_id: z.string().trim().min(1, "ট্রানজেকশন আইডি দিন").max(50),
   amount: z.string().optional().or(z.literal("")),
+  email: z.string().trim().email("সঠিক ইমেইল দিন"),
+  password: z.string().min(6, "পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে"),
 });
 
 const Hadiya = () => {
@@ -26,10 +28,13 @@ const Hadiya = () => {
     payment_method: "",
     transaction_id: "",
     amount: "",
+    email: "",
+    password: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [generatedUserId, setGeneratedUserId] = useState("");
 
   const { data: settings, isLoading } = useQuery({
     queryKey: ["hadiya-settings"],
@@ -60,21 +65,60 @@ const Hadiya = () => {
     }
 
     setSubmitting(true);
-    const { error } = await supabase.from("donations" as any).insert({
+
+    // Step 1: Sign up the user
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      email: result.data.email,
+      password: result.data.password,
+      options: {
+        data: {
+          name: result.data.donor_name,
+          phone: result.data.donor_phone || null,
+        },
+      },
+    });
+
+    if (signUpError) {
+      setSubmitting(false);
+      if (signUpError.message.includes("already registered")) {
+        setErrors({ email: "এই ইমেইলে ইতোমধ্যে অ্যাকাউন্ট আছে। লগইন করুন।" });
+      } else {
+        toast.error("অ্যাকাউন্ট তৈরি করতে সমস্যা হয়েছে: " + signUpError.message);
+      }
+      return;
+    }
+
+    // Step 2: Insert donation record
+    const { error: donationError } = await supabase.from("donations").insert({
       donor_name: result.data.donor_name,
       donor_phone: result.data.donor_phone || null,
       payment_method: result.data.payment_method,
       transaction_id: result.data.transaction_id,
       amount: result.data.amount ? parseFloat(result.data.amount) : null,
-    } as any);
+    });
+
+    if (donationError) {
+      console.error("Donation insert error:", donationError);
+    }
+
+    // Step 3: Fetch user_id (QUR-XXXX) from profiles
+    if (signUpData.user) {
+      // Small delay to allow trigger to create profile
+      await new Promise((r) => setTimeout(r, 1500));
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("user_id")
+        .eq("auth_user_id", signUpData.user.id)
+        .maybeSingle();
+
+      if (profile?.user_id) {
+        setGeneratedUserId(profile.user_id);
+      }
+    }
 
     setSubmitting(false);
-    if (error) {
-      toast.error("সাবমিট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
-    } else {
-      setSubmitted(true);
-      toast.success("ট্রানজেকশন তথ্য সফলভাবে পাঠানো হয়েছে!");
-    }
+    setSubmitted(true);
+    toast.success("অ্যাকাউন্ট তৈরি হয়েছে এবং ট্রানজেকশন তথ্য পাঠানো হয়েছে!");
   };
 
   if (isLoading) {
@@ -114,7 +158,6 @@ const Hadiya = () => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {/* বিকাশ */}
           {bkashNumber && (
             <Card className="border-pink-200 dark:border-pink-900 overflow-hidden">
               <CardHeader className="bg-pink-50 dark:bg-pink-950/30 pb-3">
@@ -136,7 +179,6 @@ const Hadiya = () => {
             </Card>
           )}
 
-          {/* নগদ */}
           {nagadNumber && (
             <Card className="border-orange-200 dark:border-orange-900 overflow-hidden">
               <CardHeader className="bg-orange-50 dark:bg-orange-950/30 pb-3">
@@ -165,24 +207,41 @@ const Hadiya = () => {
           </div>
         )}
 
-        {/* ট্রানজেকশন কনফার্মেশন ফর্ম */}
+        {/* পেমেন্ট কনফার্মেশন + অটো রেজিস্ট্রেশন ফর্ম */}
         {(bkashNumber || nagadNumber) && (
           <Card className="mt-10 border-primary/20">
             <CardHeader className="bg-primary/5 pb-3">
               <CardTitle className="text-lg text-primary flex items-center gap-2">
                 <Send className="h-5 w-5" />
-                পেমেন্ট কনফার্ম করুন
+                পেমেন্ট কনফার্ম করুন ও অ্যাকাউন্ট তৈরি করুন
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-5">
               {submitted ? (
                 <div className="text-center py-8 space-y-3">
                   <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto" />
-                  <h3 className="text-lg font-semibold">ধন্যবাদ!</h3>
-                  <p className="text-muted-foreground">আপনার ট্রানজেকশন তথ্য সফলভাবে পাঠানো হয়েছে। যাচাই করা হলে আপনাকে জানানো হবে।</p>
-                  <Button variant="outline" onClick={() => { setSubmitted(false); setFormData({ donor_name: "", donor_phone: "", payment_method: "", transaction_id: "", amount: "" }); }}>
-                    আরেকটি পেমেন্ট কনফার্ম করুন
-                  </Button>
+                  <h3 className="text-lg font-semibold">ধন্যবাদ! আপনার অ্যাকাউন্ট তৈরি হয়েছে!</h3>
+                  {generatedUserId && (
+                    <div className="bg-muted rounded-lg p-4 inline-block">
+                      <p className="text-sm text-muted-foreground">আপনার আইডি</p>
+                      <p className="text-2xl font-bold text-primary">{generatedUserId}</p>
+                    </div>
+                  )}
+                  <p className="text-muted-foreground">
+                    আপনার ইমেইলে একটি যাচাই লিংক পাঠানো হয়েছে। ইমেইল যাচাই করে লগইন করুন।
+                  </p>
+                  <div className="flex gap-3 justify-center pt-2">
+                    <Button variant="outline" asChild>
+                      <Link to="/login">লগইন করুন</Link>
+                    </Button>
+                    <Button variant="outline" onClick={() => {
+                      setSubmitted(false);
+                      setGeneratedUserId("");
+                      setFormData({ donor_name: "", donor_phone: "", payment_method: "", transaction_id: "", amount: "", email: "", password: "" });
+                    }}>
+                      আরেকটি পেমেন্ট
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -224,9 +283,34 @@ const Hadiya = () => {
                     {errors.transaction_id && <p className="text-sm text-destructive">{errors.transaction_id}</p>}
                   </div>
 
+                  <div className="border-t pt-4 mt-2">
+                    <p className="text-sm text-muted-foreground mb-3 flex items-center gap-1">
+                      <Lock className="h-3.5 w-3.5" />
+                      অ্যাকাউন্ট তৈরি করতে নিচের তথ্য দিন
+                    </p>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="email">ইমেইল *</Label>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Input id="email" type="email" placeholder="example@mail.com" className="pl-9" value={formData.email} onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))} />
+                        </div>
+                        {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="password">পাসওয়ার্ড *</Label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Input id="password" type="password" placeholder="কমপক্ষে ৬ অক্ষর" className="pl-9" value={formData.password} onChange={(e) => setFormData((p) => ({ ...p, password: e.target.value }))} />
+                        </div>
+                        {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
+                      </div>
+                    </div>
+                  </div>
+
                   <Button type="submit" className="w-full" disabled={submitting}>
                     {submitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Send className="h-4 w-4 mr-2" />}
-                    কনফার্ম করুন
+                    কনফার্ম করুন ও অ্যাকাউন্ট তৈরি করুন
                   </Button>
                 </form>
               )}
