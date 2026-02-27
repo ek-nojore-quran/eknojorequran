@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { BookOpen, Users, Award, ArrowRight } from "lucide-react";
 import heroBanner from "@/assets/hero-banner.png";
+import SurahDialog from "@/components/SurahDialog";
 
 const surahs = [
   { number: 96, name: "আলাক্ব" },
@@ -45,6 +47,8 @@ const features = [
 ];
 
 const Index = () => {
+  const [selectedSurah, setSelectedSurah] = useState<number | null>(null);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -121,13 +125,20 @@ const Index = () => {
             {surahs.map((surah) => (
               <div
                 key={surah.number}
-                className="bg-card rounded-lg p-4 text-center shadow-sm hover:shadow-md transition-shadow border"
+                onClick={() => setSelectedSurah(surah.number)}
+                className="bg-card rounded-lg p-4 text-center shadow-sm hover:shadow-lg hover:border-primary/50 transition-all border cursor-pointer"
               >
                 <span className="text-sm text-muted-foreground">সূরা নং {surah.number}</span>
                 <p className="font-semibold mt-1">{surah.name}</p>
               </div>
             ))}
           </div>
+
+          <SurahDialog
+            surahNumber={selectedSurah}
+            open={!!selectedSurah}
+            onOpenChange={(open) => !open && setSelectedSurah(null)}
+          />
         </div>
       </section>
 
