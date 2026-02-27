@@ -196,6 +196,7 @@ export type Database = {
           id: string
           important_ayat: string | null
           key_teachings: string | null
+          pdf_url: string | null
           revelation_type: string
           surah_name_arabic: string
           surah_name_bengali: string
@@ -209,6 +210,7 @@ export type Database = {
           id?: string
           important_ayat?: string | null
           key_teachings?: string | null
+          pdf_url?: string | null
           revelation_type?: string
           surah_name_arabic: string
           surah_name_bengali: string
@@ -222,6 +224,7 @@ export type Database = {
           id?: string
           important_ayat?: string | null
           key_teachings?: string | null
+          pdf_url?: string | null
           revelation_type?: string
           surah_name_arabic?: string
           surah_name_bengali?: string
