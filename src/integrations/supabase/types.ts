@@ -55,6 +55,45 @@ export type Database = {
           },
         ]
       }
+      donations: {
+        Row: {
+          admin_note: string | null
+          amount: number | null
+          created_at: string | null
+          donor_name: string
+          donor_phone: string | null
+          id: string
+          payment_method: string
+          status: string
+          transaction_id: string
+          verified_at: string | null
+        }
+        Insert: {
+          admin_note?: string | null
+          amount?: number | null
+          created_at?: string | null
+          donor_name: string
+          donor_phone?: string | null
+          id?: string
+          payment_method: string
+          status?: string
+          transaction_id: string
+          verified_at?: string | null
+        }
+        Update: {
+          admin_note?: string | null
+          amount?: number | null
+          created_at?: string | null
+          donor_name?: string
+          donor_phone?: string | null
+          id?: string
+          payment_method?: string
+          status?: string
+          transaction_id?: string
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           auth_user_id: string

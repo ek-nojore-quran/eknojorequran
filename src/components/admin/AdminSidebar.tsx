@@ -1,4 +1,4 @@
-import { LayoutDashboard, BookOpen, HelpCircle, Users, FileText, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, BookOpen, HelpCircle, Users, FileText, Settings, LogOut, HandCoins } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,6 +22,7 @@ const menuItems = [
   { title: "MCQ ব্যবস্থাপনা", url: "/admin/mcq", icon: HelpCircle },
   { title: "ব্যবহারকারী", url: "/admin/users", icon: Users },
   { title: "সাবমিশন", url: "/admin/submissions", icon: FileText },
+  { title: "ডোনেশন", url: "/admin/donations", icon: HandCoins },
   { title: "সেটিংস", url: "/admin/settings", icon: Settings },
 ];
 
