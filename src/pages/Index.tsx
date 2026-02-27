@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { BookOpen, Users, Award, ArrowRight } from "lucide-react";
+import heroBanner from "@/assets/hero-banner.png";
 
 const surahs = [
   { number: 96, name: "আলাক্ব" },
@@ -61,7 +62,18 @@ const Index = () => {
           </div>
         </nav>
 
-        <div className="relative z-10 container mx-auto px-4 py-20 md:py-32 text-center">
+        {/* Hero Banner */}
+        <div className="relative z-10 container mx-auto px-4 pt-8 pb-4">
+          <div className="rounded-2xl overflow-hidden shadow-xl">
+            <img
+              src={heroBanner}
+              alt="এক নজরে কুরআন - ড. মিজানুর রহমান আজহারী"
+              className="w-full h-auto object-cover"
+            />
+          </div>
+        </div>
+
+        <div className="relative z-10 container mx-auto px-4 py-16 md:py-24 text-center">
           <p className="text-accent font-semibold mb-4 animate-fade-in">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
           <h1 className="text-4xl md:text-6xl font-extrabold text-foreground mb-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
             এক নজরে কুরআন
