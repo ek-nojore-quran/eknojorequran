@@ -8,6 +8,13 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
+import AdminLayout from "./components/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import SurahManagement from "./pages/admin/SurahManagement";
+import MCQManagement from "./pages/admin/MCQManagement";
+import UserManagement from "./pages/admin/UserManagement";
+import SubmissionManagement from "./pages/admin/SubmissionManagement";
+import AdminSettings from "./pages/admin/AdminSettings";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +29,14 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="surahs" element={<SurahManagement />} />
+            <Route path="mcq" element={<MCQManagement />} />
+            <Route path="users" element={<UserManagement />} />
+            <Route path="submissions" element={<SubmissionManagement />} />
+            <Route path="settings" element={<AdminSettings />} />
+          </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
