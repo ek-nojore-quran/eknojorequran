@@ -1,26 +1,22 @@
 
 
-## পরিকল্পনা: প্রতিটি সূরার জন্য আলাদা Google Form লিংক
+## পরিকল্পনা: সূরা ভিত্তিক PDF সেকশনে নতুন সূরা যোগ করার ট্যাব
 
-### সমস্যা
-বর্তমানে একটি মাত্র গ্লোবাল Google Form লিংক আছে। আপনি চান প্রতিটি সূরার জন্য আলাদা লিংক সেট করা যাক — সূরা টেবিলের কলাম ব্যবহার করে।
+### যা করা হবে
 
-### পরিবর্তনসমূহ
-
-**ধাপ ১: ডাটাবেস — `surahs` টেবিলে নতুন কলাম যোগ**
-- `google_form_link` (text, nullable) কলাম যোগ করা
-
-**ধাপ ২: `GoogleFormLinkCard.tsx` রিফ্যাক্টর**
-- গ্লোবাল একটি লিংকের বদলে, প্রতিটি সূরার তালিকা দেখাবে (surah_number, surah_name_bengali)
-- প্রতিটি সূরার পাশে একটি লিংক ইনপুট + সেভ বাটন + প্রিভিউ বাটন থাকবে
-- সরাসরি `surahs` টেবিলের `google_form_link` কলাম আপডেট করবে
-- ডিজাইন `SurahPdfUpload` এর মতো — প্রতিটি সূরা একটি row তে
-
-**ধাপ ৩: `MCQManagement.tsx`**
-- `GoogleFormLinkCard`-এ surahs ডাটা props হিসেবে পাস করা (ইতিমধ্যে surahs ফেচ করা আছে)
+**`SurahPdfUpload.tsx` রিফ্যাক্টর — Tabs যোগ**
+- দুটি ট্যাব থাকবে:
+  1. **PDF তালিকা** (বর্তমান UI — সূরা লিস্ট + PDF আপলোড/দেখুন/মুছুন)
+  2. **নতুন সূরা যোগ** — একটি ফর্ম যেখানে:
+     - সূরা নম্বর (number)
+     - সূরা নাম বাংলা (text, required)
+     - সূরা নাম আরবি (text, required)
+     - সূরা নাম ইংরেজি (text, required)
+     - মোট আয়াত (number, required)
+     - ওহীর ধরন — মাক্কী/মাদানী (select, default মাক্কী)
+     - "সংরক্ষণ করুন" বাটন
+- সেভ করলে `surahs` টেবিলে INSERT হবে এবং তালিকা রিফ্রেশ হবে
 
 ### পরিবর্তিত ফাইল
-- **Migration**: `surahs` টেবিলে `google_form_link` কলাম
-- `src/components/admin/GoogleFormLinkCard.tsx` — প্রতি-সূরা লিংক UI
-- `src/pages/admin/MCQManagement.tsx` — surahs prop পাস
+- `src/components/admin/SurahPdfUpload.tsx` — Tabs UI + নতুন সূরা ফর্ম যোগ
 
