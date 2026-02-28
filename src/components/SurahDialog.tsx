@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -19,6 +20,7 @@ interface SurahDialogProps {
 const SurahDialog = ({ surahNumber, open, onOpenChange }: SurahDialogProps) => {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   const { data: surah } = useQuery({
     queryKey: ["surah", surahNumber],
@@ -53,7 +55,9 @@ const SurahDialog = ({ surahNumber, open, onOpenChange }: SurahDialogProps) => {
   const handleSubmit = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      toast.error("উত্তর জমা দিতে লগইন করুন");
+      toast.error("উত্তর জমা দিতে প্রথমে রেজিস্ট্রেশন করুন");
+      handleClose(false);
+      navigate("/register");
       return;
     }
 
