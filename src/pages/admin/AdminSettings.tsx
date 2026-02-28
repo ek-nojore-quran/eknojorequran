@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Settings, Upload, Clock, CheckCircle, Loader2, MessageCircle } from "lucide-react";
+import { Settings, Upload, Clock, CheckCircle, Loader2, MessageCircle, UserCircle } from "lucide-react";
 import { toast } from "sonner";
 
 
@@ -17,6 +17,7 @@ const AdminSettings = () => {
   const [mcqTimeLimit, setMcqTimeLimit] = useState("30");
   const [autoMarking, setAutoMarking] = useState(true);
   const [whatsappLink, setWhatsappLink] = useState("");
+  const [managerName, setManagerName] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -37,6 +38,7 @@ const AdminSettings = () => {
       setMcqTimeLimit(map.mcq_time_limit || "30");
       setAutoMarking(map.auto_marking === "true");
       setWhatsappLink(map.whatsapp_group_link || "");
+      setManagerName(map.manager_name || "");
       if (map.logo_url) setLogoPreview(map.logo_url);
     }
   }, [settings]);
@@ -61,6 +63,7 @@ const AdminSettings = () => {
         updateSetting("mcq_time_limit", mcqTimeLimit),
         updateSetting("auto_marking", autoMarking ? "true" : "false"),
         updateSetting("whatsapp_group_link", whatsappLink),
+        updateSetting("manager_name", managerName),
       ]);
     },
     onSuccess: () => {
@@ -162,6 +165,27 @@ const AdminSettings = () => {
                 </div>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <UserCircle className="h-5 w-5" />
+              পরিচালক সেটিংস
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Label htmlFor="manager-name">পরিচালকের নাম</Label>
+            <Input
+              id="manager-name"
+              value={managerName}
+              onChange={(e) => setManagerName(e.target.value)}
+              placeholder="যেমন: MD RONY"
+            />
+            <p className="text-sm text-muted-foreground">
+              হোমপেজে পরিচালকের নাম দেখানো হবে
+            </p>
           </CardContent>
         </Card>
 

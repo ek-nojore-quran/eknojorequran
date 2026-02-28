@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { BookOpen, Users, Award, ArrowRight, MessageCircle } from "lucide-react";
+import { BookOpen, Users, Award, ArrowRight, MessageCircle, UserCircle } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import heroBanner from "@/assets/hero-banner.png";
 import SurahDialog from "@/components/SurahDialog";
 import WhatsAppJoinDialog from "@/components/WhatsAppJoinDialog";
@@ -50,6 +51,13 @@ const features = [
 const Index = () => {
   const [selectedSurah, setSelectedSurah] = useState<number | null>(null);
   const [whatsappDialogOpen, setWhatsappDialogOpen] = useState(false);
+  const [managerName, setManagerName] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.from("settings").select("value").eq("key", "manager_name").maybeSingle().then(({ data }) => {
+      if (data?.value) setManagerName(data.value);
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -99,6 +107,19 @@ const Index = () => {
             </Button>
           </div>
         </div>
+
+        {/* Manager Section */}
+        {managerName && (
+          <div className="relative z-10 container mx-auto px-4 pb-12">
+            <div className="flex items-center justify-center gap-3 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+              <div className="flex items-center gap-2.5 bg-card border rounded-full px-5 py-2.5 shadow-sm">
+                <UserCircle className="h-5 w-5 text-primary" />
+                <span className="text-sm text-muted-foreground">পরিচালক:</span>
+                <span className="font-semibold text-foreground">{managerName}</span>
+              </div>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* WhatsApp Join Dialog */}
