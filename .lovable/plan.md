@@ -1,20 +1,32 @@
 
 
-## পরিকল্পনা: ফুটার ব্র্যান্ডিং আপডেট
+## পরিকল্পনা: লগইন পরে অ্যাডমিন রিডাইরেক্ট
 
-### পরিবর্তন: `src/pages/Index.tsx`
+### বর্তমান সমস্যা
+এখন লগইন করলে সবাইকে `/dashboard`-এ পাঠানো হয়। অ্যাডমিন হলেও `/dashboard`-এ যায়, `/admin`-এ যায় না। অ্যাডমিনকে ম্যানুয়ালি `/admin` URL টাইপ করতে হয়।
 
-ফুটারের ব্র্যান্ডিং লাইন আপডেট:
+### সমাধান: `src/pages/Login.tsx`
 
-1. **নাম পরিবর্তন**: "ফ্রি ডিজাইনার রনি" → "মোহাম্মদ রনি"
-2. **হাইলাইট স্টাইল**: হালকা ব্যাকগ্রাউন্ড ও প্যাডিং দিয়ে আলাদা করা
-3. **লিংক যোগ**: নামে ক্লিক করলে `https://me.coachrony.com/` ওপেন হবে (নতুন ট্যাবে)
-4. **কপিরাইট লাইনের উপরে** রাখা হবে
+লগইন সফল হওয়ার পর `user_roles` টেবিল থেকে চেক করা হবে ইউজার অ্যাডমিন কিনা:
+- **অ্যাডমিন হলে** → `/admin`-এ রিডাইরেক্ট
+- **সাধারণ ইউজার হলে** → `/dashboard`-এ রিডাইরেক্ট
 
-```html
-<p className="mb-2 text-xs bg-primary/5 inline-block px-4 py-1.5 rounded-full">
-  Designed by <a href="https://me.coachrony.com/" target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline">মোহাম্মদ রনি</a>
-</p>
-<p>© 2026 এক নজরে কুরআন। সকল অধিকার সংরক্ষিত।</p>
+```typescript
+// লগইন সফল হওয়ার পর:
+const { data: { user } } = await supabase.auth.getUser();
+const { data: roleData } = await supabase
+  .from("user_roles")
+  .select("role")
+  .eq("user_id", user.id)
+  .eq("role", "admin")
+  .maybeSingle();
+
+if (roleData) {
+  navigate("/admin");
+} else {
+  navigate("/dashboard");
+}
 ```
+
+কোনো ডাটাবেস পরিবর্তন দরকার নেই — `user_roles` টেবিল এবং RLS পলিসি আগে থেকেই আছে।
 
