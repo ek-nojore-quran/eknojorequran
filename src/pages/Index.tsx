@@ -183,6 +183,7 @@ const Index = () => {
       <footer className="border-t py-8">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
           <p>© {new Date().getFullYear()} এক নজরে কুরআন। সকল অধিকার সংরক্ষিত।</p>
+          <p className="mt-2 text-xs">Designed by ফ্রি ডিজাইনার রনি</p>
         </div>
       </footer>
     </div>);
