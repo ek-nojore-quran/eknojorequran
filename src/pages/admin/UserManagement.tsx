@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
+import { Eye, Download } from "lucide-react";
 
 type Profile = {
   id: string;
@@ -51,9 +51,29 @@ const UserManagement = () => {
       u.user_id.includes(search)
   );
 
+  const downloadCSV = () => {
+    if (!filtered.length) return;
+    const header = "আইডি,নাম,ইমেইল,ফোন,যোগদান\n";
+    const rows = filtered.map((u) =>
+      `"${u.user_id}","${u.name}","${u.email}","${u.phone || ""}","${new Date(u.created_at).toLocaleDateString("bn-BD")}"`
+    ).join("\n");
+    const blob = new Blob(["\uFEFF" + header + rows], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "users.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">ব্যবহারকারী ব্যবস্থাপনা</h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold">ব্যবহারকারী ব্যবস্থাপনা</h2>
+        <Button variant="outline" size="sm" onClick={downloadCSV} disabled={!filtered.length}>
+          <Download className="h-4 w-4 mr-2" /> CSV ডাউনলোড
+        </Button>
+      </div>
       <Input placeholder="নাম, ইমেইল বা আইডি দিয়ে খুঁজুন..." value={search} onChange={(e) => setSearch(e.target.value)} className="mb-4 max-w-sm" />
 
       <div className="rounded-lg border bg-card">
