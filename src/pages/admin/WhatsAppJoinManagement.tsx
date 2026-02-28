@@ -3,7 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { MessageCircle, Download } from "lucide-react";
 
 const WhatsAppJoinManagement = () => {
   const { data: joins, isLoading } = useQuery({
@@ -21,11 +22,31 @@ const WhatsAppJoinManagement = () => {
   const freeCount = joins?.filter((j) => j.join_type === "free").length ?? 0;
   const paidCount = joins?.filter((j) => j.join_type === "paid").length ?? 0;
 
+  const downloadCSV = () => {
+    if (!joins?.length) return;
+    const header = "নাম,ফোন,ধরন,তারিখ\n";
+    const rows = joins.map((j) =>
+      `"${j.name}","${j.phone}","${j.join_type === "paid" ? "হাদিয়া" : "ফ্রি"}","${new Date(j.created_at).toLocaleDateString("bn-BD")}"`
+    ).join("\n");
+    const blob = new Blob(["\uFEFF" + header + rows], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "whatsapp-joins.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold flex items-center gap-2">
-        <MessageCircle className="h-6 w-6" /> WhatsApp জয়েন ডেটা
-      </h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold flex items-center gap-2">
+          <MessageCircle className="h-6 w-6" /> WhatsApp জয়েন ডেটা
+        </h1>
+        <Button variant="outline" size="sm" onClick={downloadCSV} disabled={!joins?.length}>
+          <Download className="h-4 w-4 mr-2" /> CSV ডাউনলোড
+        </Button>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card>
