@@ -49,6 +49,7 @@ const features = [
 }];
 
 
+// Index component
 const Index = () => {
   const [selectedSurah, setSelectedSurah] = useState<number | null>(null);
   const [whatsappDialogOpen, setWhatsappDialogOpen] = useState(false);
