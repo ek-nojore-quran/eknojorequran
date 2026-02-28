@@ -65,14 +65,14 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    supabase.from("settings").select("*").in("key", ["manager_name", "logo_url"])
-      .then(({ data }) => {
-        if (data) {
-          const map = Object.fromEntries(data.map((s) => [s.key, s.value]));
-          if (map.manager_name) setManagerName(map.manager_name);
-          if (map.logo_url) setLogoUrl(map.logo_url);
-        }
-      });
+    supabase.from("settings").select("*").in("key", ["manager_name", "logo_url"]).
+    then(({ data }) => {
+      if (data) {
+        const map = Object.fromEntries(data.map((s) => [s.key, s.value]));
+        if (map.manager_name) setManagerName(map.manager_name);
+        if (map.logo_url) setLogoUrl(map.logo_url);
+      }
+    });
   }, []);
 
   return (
@@ -81,10 +81,10 @@ const Index = () => {
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "py-2" : "py-4"}`}>
         <div className="container mx-auto px-4">
           <div className={`flex items-center justify-between rounded-2xl px-6 py-3 transition-all duration-300 ${
-            scrolled 
-              ? "bg-card/95 backdrop-blur-xl border border-border/60 shadow-xl" 
-              : "bg-card/80 backdrop-blur-md border border-border/50 shadow-lg"
-          }`}>
+          scrolled ?
+          "bg-card/95 backdrop-blur-xl border border-border/60 shadow-xl" :
+          "bg-card/80 backdrop-blur-md border border-border/50 shadow-lg"}`
+          }>
             <h2 className="text-xl font-bold text-primary tracking-tight">এক নজরে কুরআন</h2>
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm" className="rounded-xl font-medium" asChild>
@@ -136,14 +136,14 @@ const Index = () => {
           <div className="mt-10 animate-fade-in" style={{ animationDelay: "0.4s" }}>
             <div className="inline-flex items-center gap-3 bg-card/70 backdrop-blur-sm border border-border/50 rounded-full px-6 py-3 shadow-md">
               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary overflow-hidden">
-                {logoUrl ? (
-                  <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                ) : (
-                  <UserCircle className="h-6 w-6" />
-                )}
+                {logoUrl ?
+                <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" /> :
+
+                <UserCircle className="h-6 w-6" />
+                }
               </div>
               <div className="text-left">
-                <p className="text-xs text-muted-foreground">পরিচালক</p>
+                <p className="text-xs text-muted-foreground">পরিচালনায়</p>
                 <p className="font-semibold text-foreground">{managerName || "—"}</p>
               </div>
             </div>
