@@ -118,11 +118,6 @@ const Index = () => {
             কুরআনের শেষ ১৯টি সূরা সহজভাবে বুঝুন। নিয়মিত পড়ার অভ্যাস তৈরি করুন। আমলমুখী জীবন গড়ুন।
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: "0.3s" }}>
-            <Button size="lg" className="text-lg px-8 py-6" asChild>
-              <Link to="/register">
-                যোগ দিন <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
             <Button size="lg" variant="outline" className="text-lg px-8 py-6" onClick={() => setHadiyaDialogOpen(true)}>
               হাদিয়া দিন <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
