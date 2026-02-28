@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -91,14 +91,9 @@ const WhatsAppJoinDialog = ({ open, onOpenChange }: WhatsAppJoinDialogProps) => 
             ) : (
               <Button size="lg" className="text-lg py-6" disabled={loading} onClick={async () => {
                 await handleSubmit("paid");
-              }} asChild={!loading}>
-                {loading ? (
-                  <span>অপেক্ষা করুন...</span>
-                ) : (
-                  <Link to="/hadiya" onClick={() => handleSubmit("paid")}>
-                    <Award className="mr-2 h-5 w-5" /> হাদিয়া পেজে যান
-                  </Link>
-                )}
+                window.open("https://hcsb.org.bd/donate", "_blank");
+              }}>
+                <Award className="mr-2 h-5 w-5" /> {loading ? "অপেক্ষা করুন..." : "হাদিয়া দিন"}
               </Button>
             )}
           </div>

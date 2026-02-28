@@ -159,9 +159,9 @@ const Index = () => {
             কুরআন শিক্ষার এই প্রকল্পে আপনার হাদিয়া আমাদের জন্য অত্যন্ত মূল্যবান।
           </p>
           <Button size="lg" variant="outline" className="text-lg px-8 py-6" asChild>
-            <Link to="/hadiya">
+            <a href="https://hcsb.org.bd/donate" target="_blank" rel="noopener noreferrer">
               হাদিয়া দিন <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
+            </a>
           </Button>
         </div>
       </section>
