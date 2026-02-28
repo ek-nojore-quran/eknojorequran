@@ -4,10 +4,7 @@ interface ManagerSectionProps {
   g: (key: string, fallback: string) => string;
 }
 
-const ManagerSection = ({ g }: ManagerSectionProps) =>
-<section className="py-4">
-    <div className="flex flex-wrap justify-center gap-4">
-      {[0, 1].map((i) => {}
+const ManagerSection = ({ g }: ManagerSectionProps) => {};
 
 
 
@@ -20,9 +17,12 @@ const ManagerSection = ({ g }: ManagerSectionProps) =>
 
 
 
-    )}
-    </div>
-  </section>;
+
+
+
+
+
+
 
 
 export default ManagerSection;
