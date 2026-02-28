@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -52,14 +52,24 @@ const Index = () => {
   const [selectedSurah, setSelectedSurah] = useState<number | null>(null);
   const [whatsappDialogOpen, setWhatsappDialogOpen] = useState(false);
   const [hadiyaDialogOpen, setHadiyaDialogOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <header className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/5" />
-        <nav className="relative z-10 container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between bg-card/80 backdrop-blur-md border border-border/50 rounded-2xl px-6 py-3 shadow-lg">
+      {/* Sticky Navbar */}
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "py-2" : "py-4"}`}>
+        <div className="container mx-auto px-4">
+          <div className={`flex items-center justify-between rounded-2xl px-6 py-3 transition-all duration-300 ${
+            scrolled 
+              ? "bg-card/95 backdrop-blur-xl border border-border/60 shadow-xl" 
+              : "bg-card/80 backdrop-blur-md border border-border/50 shadow-lg"
+          }`}>
             <h2 className="text-xl font-bold text-primary tracking-tight">এক নজরে কুরআন</h2>
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm" className="rounded-xl font-medium" asChild>
@@ -70,7 +80,11 @@ const Index = () => {
               </Button>
             </div>
           </div>
-        </nav>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <header className="relative overflow-hidden pt-20">
 
         {/* Hero Banner */}
         <div className="relative z-10 container mx-auto px-4 pt-8 pb-4">
