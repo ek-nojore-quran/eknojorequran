@@ -133,7 +133,7 @@ const Index = () => {
           </div>
 
           {/* পরিচালক সেকশন */}
-          <div className="mt-10 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+          <div className="mt-10 animate-fade-in my-[38px] px-px text-secondary-foreground bg-muted" style={{ animationDelay: "0.4s" }}>
             <div className="inline-flex items-center gap-3 bg-card/70 backdrop-blur-sm border border-border/50 rounded-full px-6 py-3 shadow-md">
               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary overflow-hidden">
                 {logoUrl ?
