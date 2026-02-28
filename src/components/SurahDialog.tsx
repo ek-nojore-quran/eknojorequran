@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -16,6 +16,7 @@ interface SurahDialogProps {
 
 const SurahDialog = ({ surahNumber, open, onOpenChange }: SurahDialogProps) => {
   const [userId, setUserId] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
 
   const { data: formLink } = useQuery({
     queryKey: ["google-form-link"],
@@ -24,15 +25,16 @@ const SurahDialog = ({ surahNumber, open, onOpenChange }: SurahDialogProps) => {
         .from("settings")
         .select("value")
         .eq("key", "google_form_link")
-        .single();
+        .maybeSingle();
       if (error) throw error;
       return data?.value || "";
     },
     enabled: open,
   });
 
-  const handleOpenForm = () => {
-    if (!userId.trim()) {
+  const handleOpenForm = async () => {
+    const trimmed = userId.trim();
+    if (!trimmed) {
       toast.error("আপনার User ID দিন (যেমন: QUR-0001)");
       return;
     }
@@ -40,7 +42,23 @@ const SurahDialog = ({ surahNumber, open, onOpenChange }: SurahDialogProps) => {
       toast.error("ফর্ম লিংক এখনো সেট করা হয়নি");
       return;
     }
-    window.open(formLink, "_blank");
+
+    setIsVerifying(true);
+    try {
+      const { data, error } = await supabase.rpc("verify_user_id", {
+        input_user_id: trimmed,
+      });
+      if (error) throw error;
+      if (!data) {
+        toast.error("এই User ID পাওয়া যায়নি। সঠিক ID দিন।");
+        return;
+      }
+      window.open(formLink, "_blank");
+    } catch {
+      toast.error("যাচাই করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+    } finally {
+      setIsVerifying(false);
+    }
   };
 
   const handleClose = (val: boolean) => {
@@ -77,9 +95,13 @@ const SurahDialog = ({ surahNumber, open, onOpenChange }: SurahDialogProps) => {
             </p>
           </div>
 
-          <Button onClick={handleOpenForm} className="w-full" size="lg">
-            <ExternalLink className="mr-2 h-4 w-4" />
-            ফর্ম খুলুন
+          <Button onClick={handleOpenForm} className="w-full" size="lg" disabled={isVerifying}>
+            {isVerifying ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <ExternalLink className="mr-2 h-4 w-4" />
+            )}
+            {isVerifying ? "যাচাই করা হচ্ছে..." : "ফর্ম খুলুন"}
           </Button>
         </div>
       </DialogContent>
