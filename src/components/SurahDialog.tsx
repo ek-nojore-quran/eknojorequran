@@ -115,11 +115,14 @@ const SurahDialog = ({ surahNumber, open, onOpenChange }: SurahDialogProps) => {
               </DialogDescription>
             </DialogHeader>
 
-            {surah?.explanation && (
-              <div className="mb-6 p-4 rounded-lg bg-muted/50 border">
+            <div className="mb-6 p-4 rounded-lg bg-muted/50 border space-y-3">
+              <p className="text-sm font-medium text-foreground">
+                বিস্তারিত দেখবেন এবং পড়বেন। পড়ে Answer পূরণ করবেন। PDF এ Click করে পুরা PDF টা আগে দেখবেন, দেখার পরে Answer গুলা উত্তর দিবেন।
+              </p>
+              {surah?.explanation && (
                 <p className="text-sm text-muted-foreground">{surah.explanation}</p>
-              </div>
-            )}
+              )}
+            </div>
 
             {submitted ? (
               <div className="text-center py-8">
