@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { BookOpen, Users, Award, ArrowRight, MessageCircle } from "lucide-react";
+import { BookOpen, Users, Award, ArrowRight, MessageCircle, UserCircle } from "lucide-react";
 import heroBanner from "@/assets/hero-banner.png";
 import SurahDialog from "@/components/SurahDialog";
 import WhatsAppJoinDialog from "@/components/WhatsAppJoinDialog";
 import HadiyaDialog from "@/components/HadiyaDialog";
+import { supabase } from "@/integrations/supabase/client";
 
 const surahs = [
 { number: 96, name: "আলাক্ব" },
@@ -53,11 +54,17 @@ const Index = () => {
   const [whatsappDialogOpen, setWhatsappDialogOpen] = useState(false);
   const [hadiyaDialogOpen, setHadiyaDialogOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [managerName, setManagerName] = useState("");
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    supabase.from("settings").select("value").eq("key", "manager_name").single()
+      .then(({ data }) => { if (data?.value) setManagerName(data.value); });
   }, []);
 
   return (
@@ -115,6 +122,19 @@ const Index = () => {
 
               <MessageCircle className="mr-2 h-5 w-5" /> WhatsApp যোগ দিন
             </Button>
+          </div>
+
+          {/* পরিচালক সেকশন */}
+          <div className="mt-10 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+            <div className="inline-flex items-center gap-3 bg-card/70 backdrop-blur-sm border border-border/50 rounded-full px-6 py-3 shadow-md">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary">
+                <UserCircle className="h-6 w-6" />
+              </div>
+              <div className="text-left">
+                <p className="text-xs text-muted-foreground">পরিচালক</p>
+                <p className="font-semibold text-foreground">{managerName || "—"}</p>
+              </div>
+            </div>
           </div>
         </div>
       </header>
