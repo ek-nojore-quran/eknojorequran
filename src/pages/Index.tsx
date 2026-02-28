@@ -86,7 +86,7 @@ const Index = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: "0.3s" }}>
             <Button size="lg" className="text-lg px-8 py-6" asChild>
               <Link to="/register">
-                যাত্রায় যোগ দিন <ArrowRight className="ml-2 h-5 w-5" />
+                যোগ দিন <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button
@@ -174,7 +174,7 @@ const Index = () => {
         </p>
         <Button size="lg" className="text-lg px-8 py-6" asChild>
           <Link to="/register">
-            যাত্রায় যোগ দিন <ArrowRight className="ml-2 h-5 w-5" />
+            যোগ দিন <ArrowRight className="ml-2 h-5 w-5" />
           </Link>
         </Button>
       </section>
