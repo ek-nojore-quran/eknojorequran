@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Settings, Upload, Clock, CheckCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import HadiyaSettings from "@/components/admin/HadiyaSettings";
+
 
 const AdminSettings = () => {
   const queryClient = useQueryClient();
@@ -19,11 +19,6 @@ const AdminSettings = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [bkashNumber, setBkashNumber] = useState("");
-  const [nagadNumber, setNagadNumber] = useState("");
-  const [hadiyaDescription, setHadiyaDescription] = useState("");
-  const [bkashQrUrl, setBkashQrUrl] = useState("");
-  const [nagadQrUrl, setNagadQrUrl] = useState("");
 
   const { data: settings, isLoading } = useQuery({
     queryKey: ["admin-settings"],
@@ -41,11 +36,6 @@ const AdminSettings = () => {
       setMcqTimeLimit(map.mcq_time_limit || "30");
       setAutoMarking(map.auto_marking === "true");
       if (map.logo_url) setLogoPreview(map.logo_url);
-      setBkashNumber(map.bkash_number || "");
-      setNagadNumber(map.nagad_number || "");
-      setHadiyaDescription(map.hadiya_description || "");
-      setBkashQrUrl(map.bkash_qr_url || "");
-      setNagadQrUrl(map.nagad_qr_url || "");
     }
   }, [settings]);
 
@@ -68,9 +58,6 @@ const AdminSettings = () => {
         updateSetting("site_name", siteName),
         updateSetting("mcq_time_limit", mcqTimeLimit),
         updateSetting("auto_marking", autoMarking ? "true" : "false"),
-        updateSetting("bkash_number", bkashNumber),
-        updateSetting("nagad_number", nagadNumber),
-        updateSetting("hadiya_description", hadiyaDescription),
       ]);
     },
     onSuccess: () => {
@@ -212,21 +199,6 @@ const AdminSettings = () => {
             </div>
           </CardContent>
         </Card>
-
-        <HadiyaSettings
-          bkashNumber={bkashNumber}
-          setBkashNumber={setBkashNumber}
-          nagadNumber={nagadNumber}
-          setNagadNumber={setNagadNumber}
-          hadiyaDescription={hadiyaDescription}
-          setHadiyaDescription={setHadiyaDescription}
-          bkashQrUrl={bkashQrUrl}
-          setBkashQrUrl={setBkashQrUrl}
-          nagadQrUrl={nagadQrUrl}
-          setNagadQrUrl={setNagadQrUrl}
-          updateSetting={updateSetting}
-          onInvalidate={() => queryClient.invalidateQueries({ queryKey: ["admin-settings"] })}
-        />
 
         <Button
           onClick={() => saveMutation.mutate()}
