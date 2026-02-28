@@ -130,13 +130,24 @@ const Index = () => {
 
           {/* পরিচালক সেকশন */}
           <div className="mt-10 animate-fade-in my-[38px] px-px text-secondary-foreground bg-muted" style={{ animationDelay: "0.4s" }}>
-            <div className="inline-flex items-center gap-4 bg-card/70 backdrop-blur-sm border border-border/50 rounded-full px-8 py-4 shadow-md">
-              <div className="flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 text-primary overflow-hidden">
-                <img src={managerLogo} alt="Logo" className="w-full h-full object-cover" />
+            <div className="flex flex-wrap justify-center gap-4">
+              <div className="inline-flex items-center gap-4 bg-card/70 backdrop-blur-sm border border-border/50 rounded-full px-8 py-4 shadow-md">
+                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 text-primary overflow-hidden">
+                  <img src={managerLogo} alt="Logo" className="w-full h-full object-cover" />
+                </div>
+                <div className="text-left">
+                  <p className="text-sm text-muted-foreground">পরিচালনায়</p>
+                  <p className="text-lg font-semibold text-foreground">{managerName || "—"}</p>
+                </div>
               </div>
-              <div className="text-left">
-                <p className="text-sm text-muted-foreground">পরিচালনায়</p>
-                <p className="text-lg font-semibold text-foreground">{managerName || "—"}</p>
+              <div className="inline-flex items-center gap-4 bg-card/70 backdrop-blur-sm border border-border/50 rounded-full px-8 py-4 shadow-md">
+                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 text-primary overflow-hidden">
+                  <img src={managerLogo} alt="Logo" className="w-full h-full object-cover" />
+                </div>
+                <div className="text-left">
+                  <p className="text-sm text-muted-foreground">পরিচালনায়</p>
+                  <p className="text-lg font-semibold text-foreground">{managerName || "—"}</p>
+                </div>
               </div>
             </div>
           </div>
