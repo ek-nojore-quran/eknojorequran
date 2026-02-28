@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Settings, Upload, Clock, CheckCircle, Loader2, MessageCircle, UserCircle, Layout, ArrowRight } from "lucide-react";
+import SectionOrderSettings from "@/components/admin/settings/SectionOrderSettings";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
@@ -164,6 +165,8 @@ const AdminSettings = () => {
     <div className="max-w-2xl">
       <h2 className="text-2xl font-bold mb-6">সেটিংস</h2>
       <div className="space-y-6">
+        {/* Section Order */}
+        <SectionOrderSettings />
         {/* General Settings */}
         <Card>
           <CardHeader>
