@@ -19,7 +19,8 @@ const FeaturesSection = ({ g }: FeaturesSectionProps) => {
 
   return (
     <section className="container mx-auto px-4 py-16">
-      <h2 className="text-3xl font-bold text-center mb-12">{g("features_title", "কেন এই কোর্স?")}</h2>
+      <h2 className="text-3xl font-bold text-center mb-4">{g("features_title", "কেন এই কোর্স?")}</h2>
+      <p className="text-center text-muted-foreground mb-12">{g("features_subtitle", "এই কোর্সটি আপনাকে কুরআনের শেষ ১৯টি সূরা সহজে বুঝতে সাহায্য করবে")}</p>
       <div className="grid md:grid-cols-3 gap-8">
         {features.map((feature, i) => (
           <Card key={i} className="border-none shadow-md hover:shadow-lg transition-shadow">
