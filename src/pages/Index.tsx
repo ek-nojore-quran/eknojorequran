@@ -99,8 +99,6 @@ const Index = () => {
 
       <footer className="border-t py-10">
         <div className="container mx-auto px-4 flex flex-col items-center gap-4">
-          <ManagerSection g={g} />
-          <div className="w-16 h-px bg-border" />
           <div className="text-center text-sm text-muted-foreground">
             <p className="mb-2 text-xs bg-primary/5 inline-block px-4 py-1.5 rounded-full">Website
               Designed by <a href="https://me.coachrony.com/" target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline">MD RONY</a>
