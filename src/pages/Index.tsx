@@ -9,7 +9,7 @@ import FeaturesSection from "@/components/home/FeaturesSection";
 import CourseSection from "@/components/home/CourseSection";
 import CtaSection from "@/components/home/CtaSection";
 import WhatsAppSection from "@/components/home/WhatsAppSection";
-import ManagerSection from "@/components/home/ManagerSection";
+
 import CustomSection, { type CustomSectionData } from "@/components/home/CustomSection";
 
 const DEFAULT_ORDER = ["hero", "features", "course", "cta", "whatsapp"];
@@ -58,7 +58,7 @@ const Index = () => {
 
   const builtinMap: Record<string, React.ReactNode> = {
     hero: <HeroSection key="hero" g={g} setHadiyaDialogOpen={setHadiyaDialogOpen} />,
-    manager: <ManagerSection key="manager" g={g} />,
+    
     features: <FeaturesSection key="features" g={g} />,
     course: <CourseSection key="course" g={g} />,
     cta: <CtaSection key="cta" g={g} />,
