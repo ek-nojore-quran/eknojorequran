@@ -11,7 +11,6 @@ import NotFound from "./pages/NotFound";
 
 import AdminLayout from "./components/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import SurahManagement from "./pages/admin/SurahManagement";
 import MCQManagement from "./pages/admin/MCQManagement";
 import UserManagement from "./pages/admin/UserManagement";
 import SubmissionManagement from "./pages/admin/SubmissionManagement";
@@ -35,7 +34,6 @@ const App = () => (
           {/* hadiya route removed - using external link */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
-            <Route path="surahs" element={<SurahManagement />} />
             <Route path="mcq" element={<MCQManagement />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="submissions" element={<SubmissionManagement />} />
