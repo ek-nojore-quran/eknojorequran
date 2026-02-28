@@ -58,15 +58,17 @@ const Index = () => {
       {/* Hero Section */}
       <header className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/5" />
-        <nav className="relative z-10 container mx-auto px-4 py-5 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-primary">এক নজরে কুরআন</h2>
-          <div className="flex gap-3">
-            <Button variant="ghost" asChild>
-              <Link to="/login">লগইন</Link>
-            </Button>
-            <Button asChild>
-              <Link to="/register">রেজিস্ট্রেশন</Link>
-            </Button>
+        <nav className="relative z-10 container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between bg-card/80 backdrop-blur-md border border-border/50 rounded-2xl px-6 py-3 shadow-lg">
+            <h2 className="text-xl font-bold text-primary tracking-tight">এক নজরে কুরআন</h2>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" className="rounded-xl font-medium" asChild>
+                <Link to="/login">লগইন</Link>
+              </Button>
+              <Button size="sm" className="rounded-xl font-medium shadow-md" asChild>
+                <Link to="/register">রেজিস্ট্রেশন</Link>
+              </Button>
+            </div>
           </div>
         </nav>
 
