@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { BookOpen, Users, Award, ArrowRight, MessageCircle, UserCircle } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { BookOpen, Users, Award, ArrowRight, MessageCircle } from "lucide-react";
 import heroBanner from "@/assets/hero-banner.png";
 import SurahDialog from "@/components/SurahDialog";
 import WhatsAppJoinDialog from "@/components/WhatsAppJoinDialog";
@@ -51,13 +50,6 @@ const features = [
 const Index = () => {
   const [selectedSurah, setSelectedSurah] = useState<number | null>(null);
   const [whatsappDialogOpen, setWhatsappDialogOpen] = useState(false);
-  const [managerName, setManagerName] = useState<string | null>(null);
-
-  useEffect(() => {
-    supabase.from("settings").select("value").eq("key", "manager_name").maybeSingle().then(({ data }) => {
-      if (data?.value) setManagerName(data.value);
-    });
-  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -101,25 +93,12 @@ const Index = () => {
               size="lg"
               variant="secondary"
               className="text-lg px-8 py-6 bg-[#25D366] hover:bg-[#20bd5a] text-white"
-              onClick={() => setWhatsappDialogOpen(true)}
-            >
+              onClick={() => setWhatsappDialogOpen(true)}>
+
               <MessageCircle className="mr-2 h-5 w-5" /> WhatsApp যোগ দিন
             </Button>
           </div>
         </div>
-
-        {/* Manager Section */}
-        {managerName && (
-          <div className="relative z-10 container mx-auto px-4 pb-12">
-            <div className="flex items-center justify-center gap-3 animate-fade-in" style={{ animationDelay: "0.4s" }}>
-              <div className="flex items-center gap-2.5 bg-card border rounded-full px-5 py-2.5 shadow-sm">
-                <UserCircle className="h-5 w-5 text-primary" />
-                <span className="text-sm text-muted-foreground">পরিচালক:</span>
-                <span className="font-semibold text-foreground">{managerName}</span>
-              </div>
-            </div>
-          </div>
-        )}
       </header>
 
       {/* WhatsApp Join Dialog */}
@@ -132,9 +111,9 @@ const Index = () => {
           {features.map((feature, i) =>
           <Card key={i} className="border-none shadow-md hover:shadow-lg transition-shadow">
               <CardContent className="pt-8 text-center">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 text-primary mb-5">
-                  <feature.icon className="h-7 w-7" />
-                </div>
+                
+
+
                 <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
                 <p className="text-muted-foreground">{feature.description}</p>
               </CardContent>
