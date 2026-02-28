@@ -18,7 +18,6 @@ import { Button } from "@/components/ui/button";
 
 const menuItems = [
   { title: "ড্যাশবোর্ড", url: "/admin", icon: LayoutDashboard },
-  { title: "সূরা ব্যবস্থাপনা", url: "/admin/surahs", icon: BookOpen },
   { title: "MCQ ব্যবস্থাপনা", url: "/admin/mcq", icon: HelpCircle },
   { title: "ব্যবহারকারী", url: "/admin/users", icon: Users },
   { title: "সাবমিশন", url: "/admin/submissions", icon: FileText },

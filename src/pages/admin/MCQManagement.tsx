@@ -12,6 +12,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import SurahPdfUpload from "@/components/admin/SurahPdfUpload";
+import GoogleFormLinkCard from "@/components/admin/GoogleFormLinkCard";
 
 type Question = {
   id: string;
@@ -127,6 +128,7 @@ const MCQManagement = () => {
         <Button onClick={openAdd}><Plus className="mr-2 h-4 w-4" /> নতুন প্রশ্ন</Button>
       </div>
 
+      <GoogleFormLinkCard />
       <SurahPdfUpload surahs={surahs as any} />
 
       <div className="flex gap-4 mb-4">
