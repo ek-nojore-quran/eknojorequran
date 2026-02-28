@@ -9,8 +9,10 @@ import FeaturesSection from "@/components/home/FeaturesSection";
 import CourseSection from "@/components/home/CourseSection";
 import CtaSection from "@/components/home/CtaSection";
 import WhatsAppSection from "@/components/home/WhatsAppSection";
+import ManagerSection from "@/components/home/ManagerSection";
+import CustomSection, { type CustomSectionData } from "@/components/home/CustomSection";
 
-const DEFAULT_ORDER = ["hero", "features", "course", "cta", "whatsapp"];
+const DEFAULT_ORDER = ["hero", "manager", "features", "course", "cta", "whatsapp"];
 
 const Index = () => {
   const [whatsappDialogOpen, setWhatsappDialogOpen] = useState(false);
@@ -44,17 +46,34 @@ const Index = () => {
     return DEFAULT_ORDER;
   })();
 
-  const sectionMap: Record<string, React.ReactNode> = {
+  const customSections: CustomSectionData[] = (() => {
+    try {
+      if (s.custom_sections) {
+        const parsed = JSON.parse(s.custom_sections);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {}
+    return [];
+  })();
+
+  const builtinMap: Record<string, React.ReactNode> = {
     hero: <HeroSection key="hero" g={g} setHadiyaDialogOpen={setHadiyaDialogOpen} />,
+    manager: <ManagerSection key="manager" g={g} />,
     features: <FeaturesSection key="features" g={g} />,
     course: <CourseSection key="course" g={g} />,
     cta: <CtaSection key="cta" g={g} />,
     whatsapp: <WhatsAppSection key="whatsapp" g={g} setWhatsappDialogOpen={setWhatsappDialogOpen} />,
   };
 
+  const renderSection = (key: string) => {
+    if (builtinMap[key]) return builtinMap[key];
+    const custom = customSections.find((c) => c.id === key);
+    if (custom) return <CustomSection key={key} section={custom} />;
+    return null;
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Sticky Navbar */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "py-2" : "py-4"}`}>
         <div className="container mx-auto px-4">
           <div className={`flex items-center justify-between rounded-2xl px-6 py-3 transition-all duration-300 ${
@@ -76,10 +95,8 @@ const Index = () => {
       <WhatsAppJoinDialog open={whatsappDialogOpen} onOpenChange={setWhatsappDialogOpen} />
       <HadiyaDialog open={hadiyaDialogOpen} onOpenChange={setHadiyaDialogOpen} />
 
-      {/* Dynamic sections based on order */}
-      {sectionOrder.map((key) => sectionMap[key] || null)}
+      {sectionOrder.map((key) => renderSection(key))}
 
-      {/* Footer */}
       <footer className="border-t py-8">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
           <p className="mb-2 text-xs bg-primary/5 inline-block px-4 py-1.5 rounded-full">Website
