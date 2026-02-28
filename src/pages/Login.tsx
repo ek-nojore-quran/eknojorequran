@@ -29,7 +29,18 @@ const Login = () => {
       toast.error(error.message === "Invalid login credentials" ? "ইমেইল বা পাসওয়ার্ড ভুল" : error.message);
     } else {
       toast.success("সফলভাবে লগইন হয়েছে!");
-      navigate("/dashboard");
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: roleData } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", user.id)
+          .eq("role", "admin")
+          .maybeSingle();
+        navigate(roleData ? "/admin" : "/dashboard");
+      } else {
+        navigate("/dashboard");
+      }
     }
   };
 
