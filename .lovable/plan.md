@@ -1,32 +1,26 @@
 
 
-## পরিকল্পনা: লগইন পরে অ্যাডমিন রিডাইরেক্ট
+## পরিকল্পনা: WhatsApp গ্রুপ লিংক ডাইনামিক করা
 
-### বর্তমান সমস্যা
-এখন লগইন করলে সবাইকে `/dashboard`-এ পাঠানো হয়। অ্যাডমিন হলেও `/dashboard`-এ যায়, `/admin`-এ যায় না। অ্যাডমিনকে ম্যানুয়ালি `/admin` URL টাইপ করতে হয়।
+### সমস্যা
+WhatsApp গ্রুপ লিংক হার্ডকোড করা আছে `WhatsAppJoinDialog.tsx`-এ। লিংক পরিবর্তন করতে কোড এডিট করতে হয়।
 
-### সমাধান: `src/pages/Login.tsx`
+### সমাধান
+`settings` টেবিলে `whatsapp_group_link` নামে একটি সেটিং রাখা হবে। অ্যাডমিন প্যানেলের সেটিংস পেজে এটি এডিট করা যাবে। ফ্রন্টেন্ড এই সেটিং থেকে লিংক পড়বে।
 
-লগইন সফল হওয়ার পর `user_roles` টেবিল থেকে চেক করা হবে ইউজার অ্যাডমিন কিনা:
-- **অ্যাডমিন হলে** → `/admin`-এ রিডাইরেক্ট
-- **সাধারণ ইউজার হলে** → `/dashboard`-এ রিডাইরেক্ট
+### পরিবর্তন
 
-```typescript
-// লগইন সফল হওয়ার পর:
-const { data: { user } } = await supabase.auth.getUser();
-const { data: roleData } = await supabase
-  .from("user_roles")
-  .select("role")
-  .eq("user_id", user.id)
-  .eq("role", "admin")
-  .maybeSingle();
+**1. `settings` টেবিলে ডিফল্ট ডেটা ইনসার্ট**
+- `whatsapp_group_link` কী-তে বর্তমান লিংক (`https://chat.whatsapp.com/BAudhDwBSfkBB1REaQpSA7?mode=gi_t`) ইনসার্ট করা হবে
 
-if (roleData) {
-  navigate("/admin");
-} else {
-  navigate("/dashboard");
-}
-```
+**2. `src/pages/admin/AdminSettings.tsx`**
+- নতুন state: `whatsappLink`
+- `useEffect`-এ `map.whatsapp_group_link` থেকে ভ্যালু লোড
+- সেটিংস কার্ডে WhatsApp লিংক ইনপুট ফিল্ড যোগ (MessageCircle আইকন সহ)
+- সেভ বাটনে `whatsapp_group_link` আপডেট যোগ
 
-কোনো ডাটাবেস পরিবর্তন দরকার নেই — `user_roles` টেবিল এবং RLS পলিসি আগে থেকেই আছে।
+**3. `src/components/WhatsAppJoinDialog.tsx`**
+- `settings` টেবিল থেকে `whatsapp_group_link` ফেচ করা হবে
+- হার্ডকোড লিংকের বদলে ডাটাবেস থেকে পাওয়া লিংক ব্যবহার হবে
+- লিংক না পেলে ফলব্যাক হিসেবে বর্তমান হার্ডকোড লিংক ব্যবহার হবে
 
