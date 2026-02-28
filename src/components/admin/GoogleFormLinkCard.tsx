@@ -1,85 +1,82 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { ExternalLink, Save, Link2 } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-const GoogleFormLinkCard = () => {
+type Surah = {
+  id: string;
+  surah_name_bengali: string;
+  surah_number: number;
+  google_form_link?: string | null;
+};
+
+const GoogleFormLinkCard = ({ surahs }: { surahs: Surah[] }) => {
   const queryClient = useQueryClient();
-  const [link, setLink] = useState("");
-
-  const { data: savedLink, isLoading } = useQuery({
-    queryKey: ["google-form-link"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("settings")
-        .select("value")
-        .eq("key", "google_form_link")
-        .single();
-      if (error) throw error;
-      return data?.value || "";
-    },
-  });
-
-  const currentLink = link || savedLink || "";
+  const [editingLinks, setEditingLinks] = useState<Record<string, string>>({});
 
   const saveMutation = useMutation({
-    mutationFn: async (newLink: string) => {
+    mutationFn: async ({ surahId, link }: { surahId: string; link: string }) => {
       const { error } = await supabase
-        .from("settings")
-        .update({ value: newLink })
-        .eq("key", "google_form_link");
+        .from("surahs")
+        .update({ google_form_link: link || null } as any)
+        .eq("id", surahId);
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["google-form-link"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-surahs-list"] });
       toast.success("Google Form লিংক সংরক্ষণ হয়েছে");
     },
     onError: (e) => toast.error(e.message),
   });
 
+  const getLink = (s: Surah) => editingLinks[s.id] ?? (s as any).google_form_link ?? "";
+
   return (
-    <Card className="max-w-2xl mb-6">
+    <Card className="mb-6">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Link2 className="h-5 w-5" />
-          Google Form লিংক
+          সূরা ভিত্তিক Google Form লিংক
         </CardTitle>
         <CardDescription>
-          ইউজাররা সূরা কার্ডে ক্লিক করলে এই ফর্ম লিংকটি দেখতে পাবে।
+          প্রতিটি সূরার জন্য আলাদা Google Form লিংক সেট করুন।
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div>
-          <Label htmlFor="form-link">ফর্ম লিংক</Label>
-          <Input
-            id="form-link"
-            placeholder="https://docs.google.com/forms/d/e/..."
-            value={currentLink}
-            onChange={(e) => setLink(e.target.value)}
-            disabled={isLoading}
-          />
-        </div>
-        <div className="flex gap-2">
-          <Button
-            onClick={() => saveMutation.mutate(currentLink)}
-            disabled={saveMutation.isPending || isLoading}
-          >
-            <Save className="mr-2 h-4 w-4" />
-            {saveMutation.isPending ? "সংরক্ষণ হচ্ছে..." : "সংরক্ষণ করুন"}
-          </Button>
-          {currentLink && (
-            <Button variant="outline" asChild>
-              <a href={currentLink} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="mr-2 h-4 w-4" />
-                প্রিভিউ
-              </a>
-            </Button>
-          )}
+      <CardContent>
+        <div className="grid gap-2">
+          {surahs.map((s) => (
+            <div key={s.id} className="flex items-center gap-2 p-3 rounded-lg border bg-card">
+              <span className="text-sm font-medium min-w-[140px]">
+                {s.surah_number}. {s.surah_name_bengali}
+              </span>
+              <Input
+                placeholder="https://docs.google.com/forms/d/e/..."
+                value={getLink(s)}
+                onChange={(e) =>
+                  setEditingLinks((prev) => ({ ...prev, [s.id]: e.target.value }))
+                }
+                className="flex-1"
+              />
+              <Button
+                size="sm"
+                onClick={() => saveMutation.mutate({ surahId: s.id, link: getLink(s) })}
+                disabled={saveMutation.isPending}
+              >
+                <Save className="h-4 w-4" />
+              </Button>
+              {getLink(s) && (
+                <Button variant="outline" size="sm" asChild>
+                  <a href={getLink(s)} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                </Button>
+              )}
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>

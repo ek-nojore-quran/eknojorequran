@@ -193,6 +193,7 @@ export type Database = {
         Row: {
           created_at: string
           explanation: string | null
+          google_form_link: string | null
           id: string
           important_ayat: string | null
           key_teachings: string | null
@@ -207,6 +208,7 @@ export type Database = {
         Insert: {
           created_at?: string
           explanation?: string | null
+          google_form_link?: string | null
           id?: string
           important_ayat?: string | null
           key_teachings?: string | null
@@ -221,6 +223,7 @@ export type Database = {
         Update: {
           created_at?: string
           explanation?: string | null
+          google_form_link?: string | null
           id?: string
           important_ayat?: string | null
           key_teachings?: string | null

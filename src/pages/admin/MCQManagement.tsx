@@ -44,7 +44,7 @@ const MCQManagement = () => {
   const { data: surahs = [] } = useQuery({
     queryKey: ["admin-surahs-list"],
     queryFn: async () => {
-      const { data } = await supabase.from("surahs").select("id, surah_name_bengali, surah_number, pdf_url").order("surah_number");
+      const { data } = await supabase.from("surahs").select("id, surah_name_bengali, surah_number, pdf_url, google_form_link").order("surah_number");
       return data || [];
     },
   });
@@ -128,7 +128,7 @@ const MCQManagement = () => {
         <Button onClick={openAdd}><Plus className="mr-2 h-4 w-4" /> নতুন প্রশ্ন</Button>
       </div>
 
-      <GoogleFormLinkCard />
+      <GoogleFormLinkCard surahs={surahs as any} />
       <SurahPdfUpload surahs={surahs as any} />
 
       <div className="flex gap-4 mb-4">

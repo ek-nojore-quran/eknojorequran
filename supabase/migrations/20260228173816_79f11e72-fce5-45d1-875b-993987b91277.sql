@@ -1,0 +1,1 @@
+ALTER TABLE public.surahs ADD COLUMN google_form_link text;
