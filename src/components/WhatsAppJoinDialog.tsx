@@ -72,7 +72,7 @@ const WhatsAppJoinDialog = ({ open, onOpenChange }: WhatsAppJoinDialogProps) => 
 
         {step === "choose" && (
           <div className="flex flex-col gap-4 mt-4">
-            <Button size="lg" className="text-lg py-6" onClick={() => setStep("paid-form")}>
+            <Button size="lg" className="text-lg py-6 opacity-50 cursor-not-allowed" disabled>
               <Award className="mr-2 h-5 w-5" /> হাদিয়া দিয়ে জয়েন করুন
             </Button>
             <Button size="lg" variant="outline" className="text-lg py-6" onClick={() => setStep("free-form")}>
