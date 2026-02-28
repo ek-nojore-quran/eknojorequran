@@ -6,6 +6,7 @@ import { BookOpen, Users, Award, ArrowRight, MessageCircle } from "lucide-react"
 import heroBanner from "@/assets/hero-banner.png";
 import SurahDialog from "@/components/SurahDialog";
 import WhatsAppJoinDialog from "@/components/WhatsAppJoinDialog";
+import HadiyaDialog from "@/components/HadiyaDialog";
 
 const surahs = [
 { number: 96, name: "আলাক্ব" },
@@ -50,6 +51,7 @@ const features = [
 const Index = () => {
   const [selectedSurah, setSelectedSurah] = useState<number | null>(null);
   const [whatsappDialogOpen, setWhatsappDialogOpen] = useState(false);
+  const [hadiyaDialogOpen, setHadiyaDialogOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
@@ -103,6 +105,7 @@ const Index = () => {
 
       {/* WhatsApp Join Dialog */}
       <WhatsAppJoinDialog open={whatsappDialogOpen} onOpenChange={setWhatsappDialogOpen} />
+      <HadiyaDialog open={hadiyaDialogOpen} onOpenChange={setHadiyaDialogOpen} />
 
       {/* Features */}
       <section className="container mx-auto px-4 py-16">
@@ -158,10 +161,8 @@ const Index = () => {
           <p className="text-muted-foreground mb-6">
             কুরআন শিক্ষার এই প্রকল্পে আপনার হাদিয়া আমাদের জন্য অত্যন্ত মূল্যবান।
           </p>
-          <Button size="lg" variant="outline" className="text-lg px-8 py-6" asChild>
-            <a href="https://hcsb.org.bd/donate" target="_blank" rel="noopener noreferrer">
-              হাদিয়া দিন <ArrowRight className="ml-2 h-5 w-5" />
-            </a>
+          <Button size="lg" variant="outline" className="text-lg px-8 py-6" onClick={() => setHadiyaDialogOpen(true)}>
+            হাদিয়া দিন <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </div>
       </section>
