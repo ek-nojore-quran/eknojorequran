@@ -231,7 +231,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t py-8">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p className="mb-2 text-xs bg-primary/5 inline-block px-4 py-1.5 rounded-full">
+          <p className="mb-2 text-xs bg-primary/5 inline-block px-4 py-1.5 rounded-full">Website
             Designed by <a href="https://me.coachrony.com/" target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline">MD RONY</a>
           </p>
           <p>© {new Date().getFullYear()} এক নজরে কুরআন।</p>
