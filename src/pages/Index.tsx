@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { BookOpen, Users, Award, ArrowRight, MessageCircle, UserCircle } from "lucide-react";
 import heroBanner from "@/assets/hero-banner.png";
+import managerLogo from "@/assets/manager-logo.png";
 import SurahDialog from "@/components/SurahDialog";
 import WhatsAppJoinDialog from "@/components/WhatsAppJoinDialog";
 import HadiyaDialog from "@/components/HadiyaDialog";
@@ -131,11 +132,7 @@ const Index = () => {
           <div className="mt-10 animate-fade-in my-[38px] px-px text-secondary-foreground bg-muted" style={{ animationDelay: "0.4s" }}>
             <div className="inline-flex items-center gap-3 bg-card/70 backdrop-blur-sm border border-border/50 rounded-full px-6 py-3 shadow-md">
               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary overflow-hidden">
-                {logoUrl ?
-                <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" /> :
-
-                <UserCircle className="h-6 w-6" />
-                }
+                <img src={managerLogo} alt="Logo" className="w-full h-full object-cover" />
               </div>
               <div className="text-left">
                 <p className="text-xs text-muted-foreground">পরিচালনায়</p>
