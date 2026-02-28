@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -13,11 +13,21 @@ interface WhatsAppJoinDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
+const FALLBACK_LINK = "https://chat.whatsapp.com/BAudhDwBSfkBB1REaQpSA7?mode=gi_t";
+
 const WhatsAppJoinDialog = ({ open, onOpenChange }: WhatsAppJoinDialogProps) => {
   const [step, setStep] = useState<"choose" | "free-form" | "paid-form">("choose");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
+  const [whatsappLink, setWhatsappLink] = useState(FALLBACK_LINK);
+
+  useEffect(() => {
+    supabase.from("settings").select("value").eq("key", "whatsapp_group_link").maybeSingle()
+      .then(({ data }) => {
+        if (data?.value) setWhatsappLink(data.value);
+      });
+  }, []);
 
   const handleClose = (isOpen: boolean) => {
     if (!isOpen) {
@@ -45,7 +55,7 @@ const WhatsAppJoinDialog = ({ open, onOpenChange }: WhatsAppJoinDialogProps) => 
     }
 
     if (joinType === "free") {
-      window.open("https://chat.whatsapp.com/BAudhDwBSfkBB1REaQpSA7?mode=gi_t", "_blank");
+      window.open(whatsappLink, "_blank");
     }
     handleClose(false);
   };

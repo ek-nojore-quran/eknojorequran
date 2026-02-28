@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Settings, Upload, Clock, CheckCircle, Loader2 } from "lucide-react";
+import { Settings, Upload, Clock, CheckCircle, Loader2, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
 
@@ -16,6 +16,7 @@ const AdminSettings = () => {
   const [siteName, setSiteName] = useState("");
   const [mcqTimeLimit, setMcqTimeLimit] = useState("30");
   const [autoMarking, setAutoMarking] = useState(true);
+  const [whatsappLink, setWhatsappLink] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -35,6 +36,7 @@ const AdminSettings = () => {
       setSiteName(map.site_name || "");
       setMcqTimeLimit(map.mcq_time_limit || "30");
       setAutoMarking(map.auto_marking === "true");
+      setWhatsappLink(map.whatsapp_group_link || "");
       if (map.logo_url) setLogoPreview(map.logo_url);
     }
   }, [settings]);
@@ -58,6 +60,7 @@ const AdminSettings = () => {
         updateSetting("site_name", siteName),
         updateSetting("mcq_time_limit", mcqTimeLimit),
         updateSetting("auto_marking", autoMarking ? "true" : "false"),
+        updateSetting("whatsapp_group_link", whatsappLink),
       ]);
     },
     onSuccess: () => {
@@ -159,6 +162,27 @@ const AdminSettings = () => {
                 </div>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <MessageCircle className="h-5 w-5" />
+              WhatsApp সেটিংস
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Label htmlFor="whatsapp-link">WhatsApp গ্রুপ লিংক</Label>
+            <Input
+              id="whatsapp-link"
+              value={whatsappLink}
+              onChange={(e) => setWhatsappLink(e.target.value)}
+              placeholder="https://chat.whatsapp.com/..."
+            />
+            <p className="text-sm text-muted-foreground">
+              ফ্রি জয়েন অপশনে এই লিংক ব্যবহার হবে
+            </p>
           </CardContent>
         </Card>
 
