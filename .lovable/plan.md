@@ -1,27 +1,20 @@
 
 
-## সমস্যা
-`surahs` টেবিলের RLS SELECT পলিসি শুধু `authenticated` রোলের জন্য সেট করা আছে। হোমপেজে লগইন ছাড়া (anon user) সূরায় ক্লিক করলে ডেটা পায় না — তাই "লোড হচ্ছে..." দেখায় এবং প্রশ্ন আসে না।
+## পরিকল্পনা: হাদিয়া পেজ রিমুভ ও এক্সটার্নাল পেমেন্ট লিংক যোগ
 
-`questions` টেবিলেও সম্ভবত একই সমস্যা আছে।
+### যা করা হবে:
 
-## সমাধান
+1. **`src/pages/Hadiya.tsx` ফাইল ডিলিট** — পুরো হাদিয়া পেজ রিমুভ
 
-### ১. ডাটাবেস মাইগ্রেশন
-- `surahs` টেবিলের SELECT পলিসি আপডেট করে `anon` রোলও যোগ করা (যেকোনো ভিজিটর সূরা দেখতে পারবে)
-- `questions` টেবিলের SELECT পলিসিও একইভাবে আপডেট করা
+2. **`src/App.tsx`** — Hadiya import ও `/hadiya` route রিমুভ
 
-```sql
--- Drop existing restrictive policies
-DROP POLICY "Anyone can view surahs" ON surahs;
-CREATE POLICY "Anyone can view surahs" ON surahs FOR SELECT USING (true);
--- This creates policy for all roles including anon
+3. **`src/pages/Index.tsx`** — হাদিয়া সেকশনের `<Link to="/hadiya">` বদলে `<a href="https://hcsb.org.bd/donate" target="_blank">` ব্যবহার
 
--- Same for questions table
-DROP POLICY IF EXISTS "Anyone can view questions" ON questions;
-CREATE POLICY "Anyone can view questions" ON questions FOR SELECT USING (true);
-```
+4. **`src/components/WhatsAppJoinDialog.tsx`** — "হাদিয়া পেজে যান" বাটনের `<Link to="/hadiya">` বদলে `window.open("https://hcsb.org.bd/donate", "_blank")` ব্যবহার
 
-### ২. কোনো ফ্রন্টেন্ড কোড পরিবর্তন লাগবে না
-সূরা ও প্রশ্ন লোডিং কোড ঠিক আছে — শুধু ডাটাবেস পলিসি ঠিক করলেই কাজ করবে।
+5. **অ্যাডমিন সেটিংস থেকে HadiyaSettings কম্পোনেন্ট রিমুভ** — বিকাশ/নগদ নম্বর সেটিংস আর দরকার নেই যেহেতু এক্সটার্নাল লিংক ব্যবহার হবে
+
+6. **`src/components/admin/HadiyaSettings.tsx` ফাইল ডিলিট**
+
+> **নোট:** অ্যাডমিন ডোনেশন ম্যানেজমেন্ট পেজ (`/admin/donations`) ও ডাটাবেস টেবিল (`donations`) রাখা হবে — কারণ আগের ডেটা থাকতে পারে।
 
