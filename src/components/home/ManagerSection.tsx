@@ -5,7 +5,7 @@ interface ManagerSectionProps {
 }
 
 const ManagerSection = ({ g }: ManagerSectionProps) => (
-  <section className="container mx-auto px-4 py-12">
+  <section className="py-4">
     <div className="flex flex-wrap justify-center gap-4">
       {[0, 1].map((i) => (
         <div

@@ -12,7 +12,7 @@ import WhatsAppSection from "@/components/home/WhatsAppSection";
 import ManagerSection from "@/components/home/ManagerSection";
 import CustomSection, { type CustomSectionData } from "@/components/home/CustomSection";
 
-const DEFAULT_ORDER = ["hero", "manager", "features", "course", "cta", "whatsapp"];
+const DEFAULT_ORDER = ["hero", "features", "course", "cta", "whatsapp"];
 
 const Index = () => {
   const [whatsappDialogOpen, setWhatsappDialogOpen] = useState(false);
@@ -98,11 +98,14 @@ const Index = () => {
       {sectionOrder.map((key) => renderSection(key))}
 
       <footer className="border-t py-8">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p className="mb-2 text-xs bg-primary/5 inline-block px-4 py-1.5 rounded-full">Website
-            Designed by <a href="https://me.coachrony.com/" target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline">MD RONY</a>
-          </p>
-          <p>© {new Date().getFullYear()} {g("site_name", "এক নজরে কুরআন")}।</p>
+        <div className="container mx-auto px-4">
+          <ManagerSection g={g} />
+          <div className="text-center text-sm text-muted-foreground mt-4">
+            <p className="mb-2 text-xs bg-primary/5 inline-block px-4 py-1.5 rounded-full">Website
+              Designed by <a href="https://me.coachrony.com/" target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline">MD RONY</a>
+            </p>
+            <p>© {new Date().getFullYear()} {g("site_name", "এক নজরে কুরআন")}।</p>
+          </div>
         </div>
       </footer>
     </div>
