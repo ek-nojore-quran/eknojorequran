@@ -56,6 +56,7 @@ const Index = () => {
   const [hadiyaDialogOpen, setHadiyaDialogOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [managerName, setManagerName] = useState("");
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -64,8 +65,14 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    supabase.from("settings").select("value").eq("key", "manager_name").single()
-      .then(({ data }) => { if (data?.value) setManagerName(data.value); });
+    supabase.from("settings").select("*").in("key", ["manager_name", "logo_url"])
+      .then(({ data }) => {
+        if (data) {
+          const map = Object.fromEntries(data.map((s) => [s.key, s.value]));
+          if (map.manager_name) setManagerName(map.manager_name);
+          if (map.logo_url) setLogoUrl(map.logo_url);
+        }
+      });
   }, []);
 
   return (
@@ -128,8 +135,12 @@ const Index = () => {
           {/* পরিচালক সেকশন */}
           <div className="mt-10 animate-fade-in" style={{ animationDelay: "0.4s" }}>
             <div className="inline-flex items-center gap-3 bg-card/70 backdrop-blur-sm border border-border/50 rounded-full px-6 py-3 shadow-md">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary">
-                <UserCircle className="h-6 w-6" />
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary overflow-hidden">
+                {logoUrl ? (
+                  <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                ) : (
+                  <UserCircle className="h-6 w-6" />
+                )}
               </div>
               <div className="text-left">
                 <p className="text-xs text-muted-foreground">পরিচালক</p>
