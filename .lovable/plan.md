@@ -1,24 +1,26 @@
 
 
-## পরিকল্পনা: Google Form লিংক সূরা ব্যবস্থাপনা থেকে MCQ ব্যবস্থাপনায় স্থানান্তর
+## পরিকল্পনা: প্রতিটি সূরার জন্য আলাদা Google Form লিংক
 
-### যা করা হবে
+### সমস্যা
+বর্তমানে একটি মাত্র গ্লোবাল Google Form লিংক আছে। আপনি চান প্রতিটি সূরার জন্য আলাদা লিংক সেট করা যাক — সূরা টেবিলের কলাম ব্যবহার করে।
 
-**ধাপ ১: SurahManagement পেজ থেকে Google Form লিংক ফিচার সরানো**
-- `SurahManagement.tsx` থেকে Google Form লিংক কার্ডটি রিমুভ করা
-- এই পেজটি এখন শুধু সূরা সম্পর্কিত অন্যান্য কাজের জন্য থাকবে, অথবা রাউট থেকেও সরিয়ে দেওয়া যায়
+### পরিবর্তনসমূহ
 
-**ধাপ ২: MCQ ব্যবস্থাপনায় Google Form লিংক যোগ করা**
-- `MCQManagement.tsx`-এ SurahPdfUpload এর পাশে একটি Google Form লিংক সেকশন যোগ করা
-- প্রতিটি সূরার জন্য আলাদা করে PDF লিংক edit করার অপশন রাখা (SurahPdfUpload ইতিমধ্যে এটা করে - PDF আপলোড/দেখুন/মুছুন)
-- Google Form লিংক সেভ/প্রিভিউ ফিচার MCQ পেজে নিয়ে আসা
+**ধাপ ১: ডাটাবেস — `surahs` টেবিলে নতুন কলাম যোগ**
+- `google_form_link` (text, nullable) কলাম যোগ করা
 
-**ধাপ ৩: সাইডবার/রাউট পরিষ্কার করা**
-- "সূরা ব্যবস্থাপনা" মেনু আইটেমটি সাইডবার থেকে সরানো (কারণ এর কাজ MCQ পেজে চলে যাচ্ছে)
-- অথবা সূরা ব্যবস্থাপনা পেজে অন্য কিছু রাখা হলে রাখা যায়
+**ধাপ ২: `GoogleFormLinkCard.tsx` রিফ্যাক্টর**
+- গ্লোবাল একটি লিংকের বদলে, প্রতিটি সূরার তালিকা দেখাবে (surah_number, surah_name_bengali)
+- প্রতিটি সূরার পাশে একটি লিংক ইনপুট + সেভ বাটন + প্রিভিউ বাটন থাকবে
+- সরাসরি `surahs` টেবিলের `google_form_link` কলাম আপডেট করবে
+- ডিজাইন `SurahPdfUpload` এর মতো — প্রতিটি সূরা একটি row তে
 
-### পরিবর্তিত ফাইলসমূহ
-- `src/pages/admin/MCQManagement.tsx` — Google Form লিংক কার্ড যোগ
-- `src/pages/admin/SurahManagement.tsx` — Google Form লিংক রিমুভ বা পেজ সিম্প্লিফাই
-- `src/components/admin/AdminSidebar.tsx` — সূরা ব্যবস্থাপনা মেনু সরানো (ঐচ্ছিক)
+**ধাপ ৩: `MCQManagement.tsx`**
+- `GoogleFormLinkCard`-এ surahs ডাটা props হিসেবে পাস করা (ইতিমধ্যে surahs ফেচ করা আছে)
+
+### পরিবর্তিত ফাইল
+- **Migration**: `surahs` টেবিলে `google_form_link` কলাম
+- `src/components/admin/GoogleFormLinkCard.tsx` — প্রতি-সূরা লিংক UI
+- `src/pages/admin/MCQManagement.tsx` — surahs prop পাস
 
