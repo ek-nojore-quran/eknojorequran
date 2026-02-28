@@ -17,6 +17,7 @@ import UserManagement from "./pages/admin/UserManagement";
 import SubmissionManagement from "./pages/admin/SubmissionManagement";
 import AdminSettings from "./pages/admin/AdminSettings";
 import DonationManagement from "./pages/admin/DonationManagement";
+import WhatsAppJoinManagement from "./pages/admin/WhatsAppJoinManagement";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="users" element={<UserManagement />} />
             <Route path="submissions" element={<SubmissionManagement />} />
             <Route path="donations" element={<DonationManagement />} />
+            <Route path="whatsapp-joins" element={<WhatsAppJoinManagement />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
