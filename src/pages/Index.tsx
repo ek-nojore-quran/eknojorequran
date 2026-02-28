@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { BookOpen, Users, Award, ArrowRight } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { BookOpen, Users, Award, ArrowRight, MessageCircle } from "lucide-react";
 import heroBanner from "@/assets/hero-banner.png";
 import SurahDialog from "@/components/SurahDialog";
 
@@ -48,6 +49,7 @@ const features = [
 
 const Index = () => {
   const [selectedSurah, setSelectedSurah] = useState<number | null>(null);
+  const [whatsappDialogOpen, setWhatsappDialogOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
@@ -90,9 +92,51 @@ const Index = () => {
             <Button size="lg" variant="outline" className="text-lg px-8 py-6" asChild>
               <Link to="/login">লগইন করুন</Link>
             </Button>
+            <Button
+              size="lg"
+              variant="secondary"
+              className="text-lg px-8 py-6 bg-[#25D366] hover:bg-[#20bd5a] text-white"
+              onClick={() => setWhatsappDialogOpen(true)}
+            >
+              <MessageCircle className="mr-2 h-5 w-5" /> WhatsApp যোগ দিন
+            </Button>
           </div>
         </div>
       </header>
+
+      {/* WhatsApp Join Dialog */}
+      <Dialog open={whatsappDialogOpen} onOpenChange={setWhatsappDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl text-center">WhatsApp গ্রুপে যোগ দিন</DialogTitle>
+            <DialogDescription className="text-center">
+              আপনি কিভাবে যোগ দিতে চান?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-4 mt-4">
+            <Button
+              size="lg"
+              className="text-lg py-6"
+              asChild
+            >
+              <Link to="/hadiya" onClick={() => setWhatsappDialogOpen(false)}>
+                <Award className="mr-2 h-5 w-5" /> হাদিয়া দিয়ে জয়েন করুন
+              </Link>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="text-lg py-6"
+              onClick={() => {
+                window.open("https://chat.whatsapp.com/BAudhDwBSfkBB1REaQpSA7?mode=gi_t", "_blank");
+                setWhatsappDialogOpen(false);
+              }}
+            >
+              <MessageCircle className="mr-2 h-5 w-5" /> ফ্রি-তে জয়েন করুন
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Features */}
       <section className="container mx-auto px-4 py-16">
