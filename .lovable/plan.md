@@ -1,32 +1,27 @@
 
 
-## পরিকল্পনা: WhatsApp জয়েনিং ট্র্যাকিং + হোমপেজ বাটন লেআউট ঠিক করা
+## সমস্যা
+`surahs` টেবিলের RLS SELECT পলিসি শুধু `authenticated` রোলের জন্য সেট করা আছে। হোমপেজে লগইন ছাড়া (anon user) সূরায় ক্লিক করলে ডেটা পায় না — তাই "লোড হচ্ছে..." দেখায় এবং প্রশ্ন আসে না।
 
-### ১. নতুন `whatsapp_joins` টেবিল তৈরি (ডাটাবেস মাইগ্রেশন)
-Free ও Paid দুই ধরনের জয়েনিং ডেটা ট্র্যাক করার জন্য একটি নতুন টেবিল:
-- `id` (uuid, primary key)
-- `name` (text) — ইউজারের নাম
-- `phone` (text) — ফোন নম্বর
-- `join_type` (text) — `'free'` অথবা `'paid'`
-- `created_at` (timestamp)
+`questions` টেবিলেও সম্ভবত একই সমস্যা আছে।
 
-RLS: Anyone can insert, admins can view all.
+## সমাধান
 
-### ২. WhatsApp পপআপে তথ্য সংগ্রহ ফর্ম (Index.tsx)
-- WhatsApp পপআপে "ফ্রি-তে জয়েন" ক্লিক করলে প্রথমে নাম ও ফোন নম্বর চাইবে
-- তথ্য দেওয়ার পর `whatsapp_joins` টেবিলে `join_type: 'free'` সহ ডেটা সেভ হবে, তারপর WhatsApp লিংক ওপেন হবে
-- "হাদিয়া দিয়ে জয়েন" ক্লিক করলেও `join_type: 'paid'` হিসেবে ডেটা সেভ হবে (অথবা হাদিয়া পেজে ইতোমধ্যে donations টেবিলে সেভ হচ্ছে)
+### ১. ডাটাবেস মাইগ্রেশন
+- `surahs` টেবিলের SELECT পলিসি আপডেট করে `anon` রোলও যোগ করা (যেকোনো ভিজিটর সূরা দেখতে পারবে)
+- `questions` টেবিলের SELECT পলিসিও একইভাবে আপডেট করা
 
-### ৩. অ্যাডমিন প্যানেলে WhatsApp জয়েনিং ডেটা দেখা
-- অ্যাডমিন সাইডবারে "WhatsApp জয়েন" মেনু যোগ
-- নতুন পেজ `src/pages/admin/WhatsAppJoinManagement.tsx` — সব জয়েনিং ডেটা টেবিলে দেখাবে (নাম, ফোন, টাইপ free/paid, তারিখ)
+```sql
+-- Drop existing restrictive policies
+DROP POLICY "Anyone can view surahs" ON surahs;
+CREATE POLICY "Anyone can view surahs" ON surahs FOR SELECT USING (true);
+-- This creates policy for all roles including anon
 
-### ৪. হোমপেজ বাটন লেআউট
-বর্তমান তিনটি বাটন (যোগ দিন, লগইন, WhatsApp) ঠিকমতো থাকবে — কোনো পরিবর্তন দরকার নেই, লগইন বাটন ইতোমধ্যে কাজ করছে।
+-- Same for questions table
+DROP POLICY IF EXISTS "Anyone can view questions" ON questions;
+CREATE POLICY "Anyone can view questions" ON questions FOR SELECT USING (true);
+```
 
-### টেকনিক্যাল ডিটেইলস
-- মাইগ্রেশন SQL: `CREATE TABLE whatsapp_joins` + RLS policies
-- পপআপে ছোট ফর্ম (নাম + ফোন) → supabase insert → redirect
-- App.tsx-এ নতুন admin route যোগ
-- AdminSidebar-এ নতুন মেনু আইটেম
+### ২. কোনো ফ্রন্টেন্ড কোড পরিবর্তন লাগবে না
+সূরা ও প্রশ্ন লোডিং কোড ঠিক আছে — শুধু ডাটাবেস পলিসি ঠিক করলেই কাজ করবে।
 
