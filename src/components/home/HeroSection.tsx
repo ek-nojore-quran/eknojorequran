@@ -17,7 +17,7 @@ const HeroSection = ({ g, setHadiyaDialogOpen }: HeroSectionProps) => (
       <p className="text-accent font-semibold mb-4 animate-fade-in">
         {g("hero_bismillah", "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ")}
       </p>
-      <h1 className="text-4xl md:text-6xl font-extrabold text-foreground mb-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
+      <h1 className="text-4xl md:text-6xl font-extrabold text-foreground mb-6 animate-fade-in text-right" style={{ animationDelay: "0.1s" }}>
         {g("hero_title", "এক নজরে কুরআন")}
       </h1>
       <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-in" style={{ animationDelay: "0.2s" }}>
