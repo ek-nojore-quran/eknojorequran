@@ -83,6 +83,9 @@ const SurahDialog = ({ surahNumber, open, onOpenChange }: SurahDialogProps) => {
         <div className="space-y-4 pt-2">
           <div>
             <Label htmlFor="user-id">আপনার User ID</Label>
+            <p className="text-xs text-muted-foreground mt-1">
+              রেজিস্ট্রেশনের সময় পাওয়া আইডি দিন (যেমন: QUR-0001)
+            </p>
             <Input
               id="user-id"
               placeholder="QUR-0001"
@@ -90,9 +93,6 @@ const SurahDialog = ({ surahNumber, open, onOpenChange }: SurahDialogProps) => {
               onChange={(e) => setUserId(e.target.value.toUpperCase())}
               className="mt-1"
             />
-            <p className="text-xs text-muted-foreground mt-1">
-              রেজিস্ট্রেশনের সময় পাওয়া আইডি দিন (যেমন: QUR-0001)
-            </p>
           </div>
 
           <Button onClick={handleOpenForm} className="w-full" size="lg" disabled={isVerifying}>
