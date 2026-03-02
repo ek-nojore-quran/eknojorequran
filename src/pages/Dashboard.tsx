@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import {
   LogOut, Loader2, User, BookOpen, ClipboardList, BarChart3,
   FileText, ExternalLink, CheckCircle2, Circle, Edit2, Save, X,
-  Phone, Mail, Calendar, Hash, Award, TrendingUp, Home
+  Phone, Mail, Calendar, Hash, Award, TrendingUp, Home, Copy
 } from "lucide-react";
 import { format } from "date-fns";
 import { bn } from "date-fns/locale";
@@ -290,7 +290,20 @@ const Dashboard = () => {
                     <Label className="flex items-center gap-1.5 text-muted-foreground">
                       <Hash className="h-3.5 w-3.5" /> ইউজার আইডি
                     </Label>
-                    <p className="font-semibold text-lg">{profile?.user_id}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold text-lg">{profile?.user_id}</p>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={() => {
+                          navigator.clipboard.writeText(profile?.user_id || "");
+                          toast.success("ইউজার আইডি কপি হয়েছে");
+                        }}
+                      >
+                        <Copy className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
                   </div>
                   <div className="space-y-1.5">
                     <Label className="flex items-center gap-1.5 text-muted-foreground">
