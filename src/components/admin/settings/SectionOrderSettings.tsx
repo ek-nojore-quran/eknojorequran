@@ -1,12 +1,9 @@
 import { useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { GripVertical, Layers, Loader2, Plus, Trash2, X } from "lucide-react";
+import { GripVertical, Layers, Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { useSettings, useUpdateSettings } from "@/hooks/useSettings";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import CustomSectionDialog, { type CustomSectionMeta } from "./CustomSectionDialog";
 
 const DEFAULT_ORDER = ["hero", "manager", "features", "course", "cta", "whatsapp"];
 
@@ -18,14 +15,6 @@ const BUILTIN_LABELS: Record<string, string> = {
   cta: "CTA সেকশন",
   whatsapp: "WhatsApp সেকশন",
 };
-
-export interface CustomSectionMeta {
-  id: string;
-  title: string;
-  desc?: string;
-  buttonText?: string;
-  buttonLink?: string;
-}
 
 const SectionOrderSettings = () => {
   const { data: settings } = useSettings();
@@ -56,10 +45,7 @@ const SectionOrderSettings = () => {
     parseCustomSections(settings?.custom_sections)
   );
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [newTitle, setNewTitle] = useState("");
-  const [newDesc, setNewDesc] = useState("");
-  const [newButtonText, setNewButtonText] = useState("");
-  const [newButtonLink, setNewButtonLink] = useState("");
+  const [editingSection, setEditingSection] = useState<CustomSectionMeta | null>(null);
 
   const dragItem = useRef<number | null>(null);
   const dragOverItem = useRef<number | null>(null);
@@ -85,12 +71,8 @@ const SectionOrderSettings = () => {
 
   const isBuiltin = (key: string) => key in BUILTIN_LABELS;
 
-  const handleDragStart = (index: number) => {
-    dragItem.current = index;
-  };
-  const handleDragEnter = (index: number) => {
-    dragOverItem.current = index;
-  };
+  const handleDragStart = (index: number) => { dragItem.current = index; };
+  const handleDragEnter = (index: number) => { dragOverItem.current = index; };
   const handleDragEnd = () => {
     if (dragItem.current === null || dragOverItem.current === null) return;
     const newOrder = [...order];
@@ -101,23 +83,27 @@ const SectionOrderSettings = () => {
     dragOverItem.current = null;
   };
 
-  const handleAddSection = () => {
-    if (!newTitle.trim()) return;
-    const id = `custom_${Date.now()}`;
-    const newCustom: CustomSectionMeta = {
-      id,
-      title: newTitle.trim(),
-      desc: newDesc.trim() || undefined,
-      buttonText: newButtonText.trim() || undefined,
-      buttonLink: newButtonLink.trim() || undefined,
-    };
-    setCustomSections((prev) => [...prev, newCustom]);
-    setOrder((prev) => [...prev, id]);
-    setNewTitle("");
-    setNewDesc("");
-    setNewButtonText("");
-    setNewButtonLink("");
-    setDialogOpen(false);
+  const handleSaveSection = (section: CustomSectionMeta) => {
+    if (editingSection) {
+      setCustomSections((prev) => prev.map((c) => (c.id === section.id ? section : c)));
+    } else {
+      setCustomSections((prev) => [...prev, section]);
+      setOrder((prev) => [...prev, section.id]);
+    }
+    setEditingSection(null);
+  };
+
+  const handleEditClick = (key: string) => {
+    const section = customSections.find((c) => c.id === key);
+    if (section) {
+      setEditingSection(section);
+      setDialogOpen(true);
+    }
+  };
+
+  const handleAddClick = () => {
+    setEditingSection(null);
+    setDialogOpen(true);
   };
 
   const handleRemoveCustom = (id: string) => {
@@ -155,51 +141,38 @@ const SectionOrderSettings = () => {
               {index + 1}. {getLabel(key)}
             </span>
             {!isBuiltin(key) && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 text-destructive hover:text-destructive"
-                onClick={() => handleRemoveCustom(key)}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+              <div className="flex gap-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7"
+                  onClick={() => handleEditClick(key)}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7 text-destructive hover:text-destructive"
+                  onClick={() => handleRemoveCustom(key)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
             )}
           </div>
         ))}
 
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button variant="outline" className="w-full mt-2" size="sm">
-              <Plus className="h-4 w-4 mr-2" /> নতুন সেকশন যোগ করুন
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>নতুন কাস্টম সেকশন</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 pt-2">
-              <div className="space-y-2">
-                <Label>সেকশন টাইটেল *</Label>
-                <Input value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="যেমন: আমাদের সম্পর্কে" />
-              </div>
-              <div className="space-y-2">
-                <Label>বর্ণনা</Label>
-                <Textarea value={newDesc} onChange={(e) => setNewDesc(e.target.value)} placeholder="সেকশনের বিস্তারিত..." rows={3} />
-              </div>
-              <div className="space-y-2">
-                <Label>বাটন টেক্সট (ঐচ্ছিক)</Label>
-                <Input value={newButtonText} onChange={(e) => setNewButtonText(e.target.value)} placeholder="যেমন: আরো জানুন" />
-              </div>
-              <div className="space-y-2">
-                <Label>বাটন লিংক (ঐচ্ছিক)</Label>
-                <Input value={newButtonLink} onChange={(e) => setNewButtonLink(e.target.value)} placeholder="/about বা https://..." />
-              </div>
-              <Button onClick={handleAddSection} disabled={!newTitle.trim()} className="w-full">
-                <Plus className="h-4 w-4 mr-2" /> সেকশন যোগ করুন
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <Button variant="outline" className="w-full mt-2" size="sm" onClick={handleAddClick}>
+          <Plus className="h-4 w-4 mr-2" /> নতুন সেকশন যোগ করুন
+        </Button>
+
+        <CustomSectionDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          section={editingSection}
+          onSave={handleSaveSection}
+        />
 
         <Button
           onClick={handleSave}
@@ -216,3 +189,4 @@ const SectionOrderSettings = () => {
 };
 
 export default SectionOrderSettings;
+export type { CustomSectionMeta };
