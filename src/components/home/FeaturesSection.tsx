@@ -17,8 +17,13 @@ const FeaturesSection = ({ g }: FeaturesSectionProps) => {
     { title: g("feature_3_title", defaultFeatures[2].title), desc: g("feature_3_desc", defaultFeatures[2].desc) },
   ];
 
+  const imageUrl = g("features_image_url", "");
+
   return (
     <section className="container mx-auto px-4 py-16">
+      {imageUrl && (
+        <img src={imageUrl} alt="Features" className="w-full max-h-64 object-cover rounded-xl mb-8" />
+      )}
       <h2 className="text-3xl font-bold text-center mb-4">{g("features_title", "কেন এই কোর্স?")}</h2>
       <p className="text-center text-muted-foreground mb-12">{g("features_subtitle", "এই কোর্সটি আপনাকে কুরআনের শেষ ১৯টি সূরা সহজে বুঝতে সাহায্য করবে")}</p>
       <div className="grid md:grid-cols-3 gap-8">

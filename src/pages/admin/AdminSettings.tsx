@@ -265,6 +265,7 @@ const AdminSettings = () => {
           feature2Desc={feature2Desc} setFeature2Desc={setFeature2Desc}
           feature3Title={feature3Title} setFeature3Title={setFeature3Title}
           feature3Desc={feature3Desc} setFeature3Desc={setFeature3Desc}
+          currentImageUrl={settings?.features_image_url}
         />
 
         {/* Course */}
@@ -273,6 +274,9 @@ const AdminSettings = () => {
           sectionLabel="কোর্স সেকশন"
           title={courseTitle} setTitle={setCourseTitle}
           subtitle={courseSubtitle} setSubtitle={setCourseSubtitle}
+          imageKey="course-image"
+          imageSettingsKey="course_image_url"
+          currentImageUrl={settings?.course_image_url}
         />
 
         {/* CTA */}
@@ -282,6 +286,9 @@ const AdminSettings = () => {
           title={ctaTitle} setTitle={setCtaTitle}
           desc={ctaDesc} setDesc={setCtaDesc}
           buttonText={ctaButtonText} setButtonText={setCtaButtonText}
+          imageKey="cta-image"
+          imageSettingsKey="cta_image_url"
+          currentImageUrl={settings?.cta_image_url}
         />
 
         {/* WhatsApp Section */}
@@ -291,6 +298,9 @@ const AdminSettings = () => {
           title={waTitle} setTitle={setWaTitle}
           desc={waDesc} setDesc={setWaDesc}
           buttonText={waButtonText} setButtonText={setWaButtonText}
+          imageKey="whatsapp-image"
+          imageSettingsKey="whatsapp_image_url"
+          currentImageUrl={settings?.whatsapp_image_url}
         />
 
         <Button onClick={handleSave} disabled={saveMutation.isPending} className="w-full" size="lg">
