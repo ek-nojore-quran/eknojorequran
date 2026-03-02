@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import WhatsAppJoinDialog from "@/components/WhatsAppJoinDialog";
 import HadiyaDialog from "@/components/HadiyaDialog";
-import { supabase } from "@/integrations/supabase/client";
+import { useSettings } from "@/hooks/useSettings";
 import HeroSection from "@/components/home/HeroSection";
 import FeaturesSection from "@/components/home/FeaturesSection";
 import CourseSection from "@/components/home/CourseSection";
@@ -12,26 +12,18 @@ import WhatsAppSection from "@/components/home/WhatsAppSection";
 import ManagerSection from "@/components/home/ManagerSection";
 import CustomSection, { type CustomSectionData } from "@/components/home/CustomSection";
 
-const DEFAULT_ORDER = ["hero", "features", "course", "cta", "whatsapp"];
+const DEFAULT_ORDER = ["hero", "manager", "features", "course", "cta", "whatsapp"];
 
 const Index = () => {
   const [whatsappDialogOpen, setWhatsappDialogOpen] = useState(false);
   const [hadiyaDialogOpen, setHadiyaDialogOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [s, setS] = useState<Record<string, string>>({});
+  const { data: s = {} } = useSettings();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    supabase.from("settings").select("*").then(({ data }) => {
-      if (data) {
-        setS(Object.fromEntries(data.map((r) => [r.key, r.value || ""])));
-      }
-    });
   }, []);
 
   const g = (key: string, fallback: string) => s[key] || fallback;
@@ -58,7 +50,7 @@ const Index = () => {
 
   const builtinMap: Record<string, React.ReactNode> = {
     hero: <HeroSection key="hero" g={g} setHadiyaDialogOpen={setHadiyaDialogOpen} />,
-    
+    manager: <ManagerSection key="manager" g={g} />,
     features: <FeaturesSection key="features" g={g} />,
     course: <CourseSection key="course" g={g} />,
     cta: <CtaSection key="cta" g={g} />,
@@ -99,7 +91,6 @@ const Index = () => {
 
       <footer className="border-t py-10">
         <div className="container mx-auto px-4 flex flex-col items-center gap-4">
-          <ManagerSection g={g} />
           <div className="w-16 h-px bg-border" />
           <div className="text-center text-sm text-muted-foreground">
             <p className="mb-2 text-xs bg-primary/5 inline-block px-4 py-1.5 rounded-full">Website
