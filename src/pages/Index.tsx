@@ -12,7 +12,7 @@ import WhatsAppSection from "@/components/home/WhatsAppSection";
 import ManagerSection from "@/components/home/ManagerSection";
 import CustomSection, { type CustomSectionData } from "@/components/home/CustomSection";
 
-const DEFAULT_ORDER = ["hero", "manager", "features", "course", "cta", "whatsapp"];
+const DEFAULT_ORDER = ["hero", "features", "course", "cta", "whatsapp"];
 
 const Index = () => {
   const [whatsappDialogOpen, setWhatsappDialogOpen] = useState(false);
@@ -50,7 +50,6 @@ const Index = () => {
 
   const builtinMap: Record<string, React.ReactNode> = {
     hero: <HeroSection key="hero" g={g} setHadiyaDialogOpen={setHadiyaDialogOpen} />,
-    manager: <ManagerSection key="manager" g={g} />,
     features: <FeaturesSection key="features" g={g} />,
     course: <CourseSection key="course" g={g} />,
     cta: <CtaSection key="cta" g={g} />,
@@ -91,6 +90,7 @@ const Index = () => {
 
       <footer className="border-t py-10">
         <div className="container mx-auto px-4 flex flex-col items-center gap-4">
+          <ManagerSection g={g} />
           <div className="w-16 h-px bg-border" />
           <div className="text-center text-sm text-muted-foreground">
             <p className="mb-2 text-xs bg-primary/5 inline-block px-4 py-1.5 rounded-full">Website
