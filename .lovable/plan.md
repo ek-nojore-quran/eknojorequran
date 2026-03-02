@@ -1,23 +1,29 @@
 
 
-## পরিকল্পনা: ফুটারে পরিচালকের নাম যোগ
+## পরিকল্পনা: প্রতিটি সেকশনে ছবি আপলোড অপশন যোগ করা
 
-### যা করা হবে
+বর্তমানে শুধু Hero সেকশনে ছবি আপলোড করার সুবিধা আছে। আপনি চাইছেন Features, Course, CTA, এবং WhatsApp সেকশনেও ছবি আপলোড করতে পারবেন।
 
-**1. `ManagerSection.tsx` — পরিচালকের নাম কার্ড তৈরি**
-- Settings থেকে `manager_name` কী দিয়ে পরিচালকের নাম দেখাবে (ডিফল্ট: খালি)
-- `manager-logo.png` ইমেজ + নাম একটি সুন্দর কার্ড/ব্যাজ আকারে দেখাবে
-- "পরিচালনায়" লেবেল সহ নাম প্রদর্শন
-- ডিজাইনার ক্রেডিটের উপরে বসবে, আলাদা শেপ (rounded card with subtle border/gradient)
+### কী করা হবে
 
-**2. `Index.tsx` ফুটার — লেআউট আপডেট**
-- ManagerSection এর পরে ডিজাইনার ক্রেডিট লাইন থাকবে
-- পরিচালক কার্ড ও ডিজাইনার ক্রেডিটের মাঝে সুন্দর separator
+**1. ContentSectionSettings কম্পোনেন্ট আপডেট**
+- `ContentSectionSettings.tsx` এ ছবি আপলোড ফিচার যোগ করা হবে (HeroSettings এর মতো)
+- প্রতিটি সেকশনের জন্য একটি `imageKey` prop নেবে যাতে storage-এ আলাদা নামে সেভ হয়
+- ইমেজ প্রিভিউ, ফাইল সিলেক্ট, এবং আপলোড বাটন থাকবে
 
-**3. Admin Settings — `manager_name` ফিল্ড** (ঐচ্ছিক)
-- অ্যাডমিন সেটিংসে পরিচালকের নাম পরিবর্তন করার অপশন
+**2. FeatureSettings কম্পোনেন্ট আপডেট**  
+- Features সেকশনেও একটি ছবি আপলোড অপশন যোগ হবে
 
-### পরিবর্তিত ফাইল
-- `src/components/home/ManagerSection.tsx`
-- `src/pages/Index.tsx` (ফুটার লেআউট)
+**3. AdminSettings পেজ আপডেট**
+- প্রতিটি সেকশনে `imageKey` এবং বর্তমান ইমেজ URL পাস করা হবে
+
+**4. হোমপেজ সেকশন আপডেট**
+- `FeaturesSection`, `CourseSection`, `CtaSection`, `WhatsAppSection` — প্রতিটিতে settings থেকে ইমেজ দেখানোর সাপোর্ট যোগ হবে
+- ইমেজ থাকলে দেখাবে, না থাকলে আগের মতোই থাকবে
+
+### প্রযুক্তিগত বিবরণ
+
+- ছবি `logos` storage bucket-এ আপলোড হবে (যেমন: `features-image.png`, `course-image.png`, `cta-image.png`, `whatsapp-image.png`)
+- Settings টেবিলে `features_image_url`, `course_image_url`, `cta_image_url`, `whatsapp_image_url` key-তে URL সেভ হবে
+- HeroSettings এ যেভাবে আপলোড কাজ করে ঠিক সেই প্যাটার্ন অনুসরণ করা হবে
 
