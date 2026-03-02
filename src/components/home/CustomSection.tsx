@@ -8,6 +8,7 @@ interface CustomSectionData {
   desc?: string;
   buttonText?: string;
   buttonLink?: string;
+  imageUrl?: string;
 }
 
 interface CustomSectionProps {
@@ -16,6 +17,15 @@ interface CustomSectionProps {
 
 const CustomSection = ({ section }: CustomSectionProps) => (
   <section className="container mx-auto px-4 py-16 text-center">
+    {section.imageUrl && (
+      <div className="mb-6 mx-auto max-w-2xl">
+        <img
+          src={section.imageUrl}
+          alt={section.title}
+          className="w-full rounded-xl object-cover max-h-72 shadow-lg"
+        />
+      </div>
+    )}
     <h2 className="text-3xl font-bold mb-4 text-foreground">{section.title}</h2>
     {section.desc && (
       <p className="text-muted-foreground mb-8 max-w-lg mx-auto">{section.desc}</p>
