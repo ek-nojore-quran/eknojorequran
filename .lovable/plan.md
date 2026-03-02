@@ -2,26 +2,29 @@
 
 ## সমস্যা বিশ্লেষণ
 
-বর্তমানে:
-- CourseSection হার্ডকোডেড সূরা তালিকা ব্যবহার করে, ডাটাবেস থেকে লোড করে না
-- SurahDialog শুধু একটি গ্লোবাল Google Form লিংক দেখায়, প্রতিটি সূরার আলাদা PDF/Form দেখায় না
-- ডাটাবেসে প্রতিটি সূরায় `pdf_url` এবং `google_form_link` ফিল্ড আছে কিন্তু ব্যবহার হচ্ছে না
+বর্তমানে কাস্টম সেকশনে শুধু title, description, button text/link আছে — কিন্তু **ছবি আপলোড** ও **edit** করার কোনো সুবিধা নেই। সব ডাটা `settings` টেবিলে JSON হিসেবে সংরক্ষিত (`custom_sections` key)।
 
 ## সমাধান পরিকল্পনা
 
-### 1. CourseSection আপডেট (`src/components/home/CourseSection.tsx`)
-- হার্ডকোডেড সূরা তালিকা সরিয়ে ডাটাবেস থেকে `surahs` টেবিল ফেচ করা (react-query দিয়ে)
-- প্রতিটি সূরা কার্ডে ক্লিক করলে সেই সূরার `id`, `pdf_url`, `google_form_link` সহ SurahDialog-এ পাঠানো
+### 1. Storage Bucket তৈরি
+- `section-images` নামে একটি public storage bucket তৈরি করা হবে কাস্টম সেকশনের ছবি রাখার জন্য
+- RLS policy: যেকেউ দেখতে পারবে, শুধু authenticated admin আপলোড/ডিলিট করতে পারবে
 
-### 2. SurahDialog আপডেট (`src/components/SurahDialog.tsx`)
-- Props পরিবর্তন: `surahNumber` এর বদলে পুরো surah object নেওয়া (`id`, `surah_name_bengali`, `surah_number`, `pdf_url`, `google_form_link`)
-- User ID যাচাই করার পর:
-  - **PDF আছে** (`pdf_url` not null): PDF embed/link দেখানো + Google Form লিংক (যদি থাকে)
-  - **PDF নেই**: "শীঘ্রই আপলোড হবে, অপেক্ষা করুন" মেসেজ দেখানো
-  - **Google Form আছে এবং সেটা valid URL**: "পরীক্ষা দিন" বাটন দেখানো
-  - **Google Form নেই বা "আপলোড হচ্ছে,,,"**: "পরীক্ষা শীঘ্রই আসছে" মেসেজ
+### 2. CustomSectionMeta তে `imageUrl` ফিল্ড যোগ
+- `SectionOrderSettings.tsx` এর `CustomSectionMeta` interface এ `imageUrl?: string` যোগ করা
+
+### 3. SectionOrderSettings.tsx — Edit ও Image Upload সুবিধা
+- প্রতিটি কাস্টম সেকশনে **Edit বাটন** যোগ (পেন্সিল আইকন)
+- Edit ডায়ালগে: title, description, button text, button link পরিবর্তন + **ছবি আপলোড** এর সুবিধা
+- ছবি আপলোড হলে `section-images` bucket এ সেভ হবে এবং public URL `imageUrl` ফিল্ডে রাখা হবে
+- নতুন সেকশন তৈরির ডায়ালগেও ছবি আপলোড option থাকবে
+
+### 4. CustomSection.tsx — ছবি দেখানো
+- `CustomSectionData` interface এ `imageUrl` যোগ
+- সেকশনে ছবি থাকলে সেটা দেখানো হবে (title এর উপরে বা পাশে)
 
 ### পরিবর্তিত ফাইল
-- `src/components/home/CourseSection.tsx` — ডাটাবেস থেকে সূরা লোড
-- `src/components/SurahDialog.tsx` — PDF ও Form স্ট্যাটাস ভিত্তিক UI
+- **Migration**: `section-images` storage bucket তৈরি + RLS
+- `src/components/admin/settings/SectionOrderSettings.tsx` — edit dialog, image upload
+- `src/components/home/CustomSection.tsx` — imageUrl সাপোর্ট ও UI
 
