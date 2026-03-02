@@ -24,6 +24,9 @@ const CourseSection = ({ g }: CourseSectionProps) => {
   return (
     <section className="bg-muted/50 py-16">
       <div className="container mx-auto px-4">
+        {g("course_image_url", "") && (
+          <img src={g("course_image_url", "")} alt="Course" className="w-full max-h-64 object-cover rounded-xl mb-8" />
+        )}
         <h2 className="text-3xl font-bold text-center mb-4">{g("course_title", "কোর্সের বিষয়বস্তু")}</h2>
         <p className="text-center text-muted-foreground mb-10">{g("course_subtitle", "সূরা আলাক্ব (৯৬) থেকে সূরা নাস (১১৪)")}</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">

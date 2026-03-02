@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { BookOpen } from "lucide-react";
+import SectionImageUpload from "./SectionImageUpload";
 
 interface FeatureSettingsProps {
   featuresTitle: string;
@@ -14,6 +15,7 @@ interface FeatureSettingsProps {
   feature2Desc: string; setFeature2Desc: (v: string) => void;
   feature3Title: string; setFeature3Title: (v: string) => void;
   feature3Desc: string; setFeature3Desc: (v: string) => void;
+  currentImageUrl?: string;
 }
 
 const FeatureSettings = (props: FeatureSettingsProps) => {
@@ -25,6 +27,12 @@ const FeatureSettings = (props: FeatureSettingsProps) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        <SectionImageUpload
+          label="ফিচার সেকশন ছবি"
+          imageKey="features-image"
+          settingsKey="features_image_url"
+          currentUrl={props.currentImageUrl}
+        />
         <div className="space-y-2">
           <Label>সেকশন টাইটেল</Label>
           <Input value={props.featuresTitle} onChange={(e) => props.setFeaturesTitle(e.target.value)} />

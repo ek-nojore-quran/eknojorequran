@@ -8,6 +8,9 @@ interface CtaSectionProps {
 
 const CtaSection = ({ g }: CtaSectionProps) => (
   <section className="container mx-auto px-4 py-20 text-center">
+    {g("cta_image_url", "") && (
+      <img src={g("cta_image_url", "")} alt="CTA" className="w-full max-h-64 object-cover rounded-xl mb-8 mx-auto" />
+    )}
     <h2 className="text-3xl font-bold mb-4">{g("cta_title", "আজই শুরু করুন")}</h2>
     <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
       {g("cta_desc", "কুরআনের জ্ঞান অর্জনের এই সুযোগ হাতছাড়া করবেন না। এখনই রেজিস্ট্রেশন করুন এবং আপনার শেখার যাত্রা শুরু করুন।")}

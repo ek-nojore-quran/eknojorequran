@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { type LucideIcon } from "lucide-react";
+import SectionImageUpload from "./SectionImageUpload";
 
 interface ContentSectionSettingsProps {
   icon: LucideIcon;
@@ -15,6 +16,9 @@ interface ContentSectionSettingsProps {
   setDesc?: (v: string) => void;
   buttonText?: string;
   setButtonText?: (v: string) => void;
+  imageKey?: string;
+  imageSettingsKey?: string;
+  currentImageUrl?: string;
 }
 
 const ContentSectionSettings = ({
@@ -23,6 +27,7 @@ const ContentSectionSettings = ({
   subtitle, setSubtitle,
   desc, setDesc,
   buttonText, setButtonText,
+  imageKey, imageSettingsKey, currentImageUrl,
 }: ContentSectionSettingsProps) => {
   return (
     <Card>
@@ -32,6 +37,14 @@ const ContentSectionSettings = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {imageKey && imageSettingsKey && (
+          <SectionImageUpload
+            label="সেকশন ছবি"
+            imageKey={imageKey}
+            settingsKey={imageSettingsKey}
+            currentUrl={currentImageUrl}
+          />
+        )}
         <div className="space-y-2">
           <Label>টাইটেল</Label>
           <Input value={title} onChange={(e) => setTitle(e.target.value)} />
