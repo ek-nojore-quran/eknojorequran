@@ -1,14 +1,27 @@
 
 
-## সমস্যা
+## সমস্যা বিশ্লেষণ
 
-শেষ এডিটে `ManagerSection` কে footer থেকে সরিয়ে section order সিস্টেমে যোগ করা হয়েছিল। কিন্তু আপনি চান এটা footer-এই থাকুক, আলাদা সেকশন হিসেবে না।
+বর্তমানে:
+- CourseSection হার্ডকোডেড সূরা তালিকা ব্যবহার করে, ডাটাবেস থেকে লোড করে না
+- SurahDialog শুধু একটি গ্লোবাল Google Form লিংক দেখায়, প্রতিটি সূরার আলাদা PDF/Form দেখায় না
+- ডাটাবেসে প্রতিটি সূরায় `pdf_url` এবং `google_form_link` ফিল্ড আছে কিন্তু ব্যবহার হচ্ছে না
 
-## সমাধান
+## সমাধান পরিকল্পনা
 
-### `src/pages/Index.tsx` পরিবর্তন:
-1. **Footer-এ `ManagerSection` ফিরিয়ে আনা** — যেভাবে আগে ছিল সেভাবে footer-এর ভিতরে রাখা হবে
-2. **`builtinMap` থেকে `manager` সরানো** — কারণ এটা section order এর অংশ না, footer-এর অংশ
-3. **`DEFAULT_ORDER` থেকে `manager` সরানো** — `["hero", "features", "course", "cta", "whatsapp"]`
-4. **কাস্টম সেকশন ঠিকমতো কাজ করবে** — `useSettings` হুক ইতিমধ্যে যোগ হয়েছে, তাই অ্যাডমিন থেকে নতুন কাস্টম সেকশন যোগ করলে পেজ রিলোডে হোমপেজে দেখাবে
+### 1. CourseSection আপডেট (`src/components/home/CourseSection.tsx`)
+- হার্ডকোডেড সূরা তালিকা সরিয়ে ডাটাবেস থেকে `surahs` টেবিল ফেচ করা (react-query দিয়ে)
+- প্রতিটি সূরা কার্ডে ক্লিক করলে সেই সূরার `id`, `pdf_url`, `google_form_link` সহ SurahDialog-এ পাঠানো
+
+### 2. SurahDialog আপডেট (`src/components/SurahDialog.tsx`)
+- Props পরিবর্তন: `surahNumber` এর বদলে পুরো surah object নেওয়া (`id`, `surah_name_bengali`, `surah_number`, `pdf_url`, `google_form_link`)
+- User ID যাচাই করার পর:
+  - **PDF আছে** (`pdf_url` not null): PDF embed/link দেখানো + Google Form লিংক (যদি থাকে)
+  - **PDF নেই**: "শীঘ্রই আপলোড হবে, অপেক্ষা করুন" মেসেজ দেখানো
+  - **Google Form আছে এবং সেটা valid URL**: "পরীক্ষা দিন" বাটন দেখানো
+  - **Google Form নেই বা "আপলোড হচ্ছে,,,"**: "পরীক্ষা শীঘ্রই আসছে" মেসেজ
+
+### পরিবর্তিত ফাইল
+- `src/components/home/CourseSection.tsx` — ডাটাবেস থেকে সূরা লোড
+- `src/components/SurahDialog.tsx` — PDF ও Form স্ট্যাটাস ভিত্তিক UI
 
