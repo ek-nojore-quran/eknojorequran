@@ -23,14 +23,8 @@ export const useUpdateSettings = () => {
   const updateSetting = async (key: string, value: string) => {
     const { error } = await supabase
       .from("settings")
-      .update({ value, updated_at: new Date().toISOString() })
-      .eq("key", key);
-    if (error) {
-      const { error: insertError } = await supabase
-        .from("settings")
-        .insert({ key, value });
-      if (insertError) throw insertError;
-    }
+      .upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: "key" });
+    if (error) throw error;
   };
 
   return useMutation({
