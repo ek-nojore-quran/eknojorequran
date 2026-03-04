@@ -95,3 +95,71 @@
     @apply bg-background text-foreground font-bengali;
   }
 }
+
+@layer components {
+  .gradient-heading {
+    background: linear-gradient(135deg, #1B2838 0%, #E8923A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-card {
+    background: linear-gradient(135deg, rgba(27, 40, 56, 0.03) 0%, rgba(232, 146, 58, 0.08) 100%);
+    border-bottom: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+  }
+  .gradient-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: linear-gradient(90deg, #1B2838, #E8923A);
+    border-radius: 2px;
+  }
+
+  .section-shape {
+    position: relative;
+    overflow: hidden;
+  }
+  .section-shape::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -10%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(232, 146, 58, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .section-shape::after {
+    content: '';
+    position: absolute;
+    bottom: -20%;
+    left: -5%;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(27, 40, 56, 0.06) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .btn-gradient {
+    background: linear-gradient(135deg, #1B2838 0%, #E8923A 100%);
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(232, 146, 58, 0.3);
+  }
+  .btn-gradient:hover {
+    background: linear-gradient(135deg, #1B2838 20%, #d4822e 100%);
+    box-shadow: 0 6px 20px rgba(232, 146, 58, 0.4);
+    transform: translateY(-1px);
+  }
+}

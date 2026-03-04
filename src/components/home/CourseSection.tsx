@@ -32,12 +32,12 @@ const CourseSection = ({ g }: CourseSectionProps) => {
   });
 
   return (
-    <section className="bg-muted/50 py-16">
-      <div className="container mx-auto px-4">
+    <section className="py-16 section-shape" style={{ background: 'linear-gradient(180deg, rgba(27,40,56,0.03) 0%, rgba(232,146,58,0.04) 100%)' }}>
+      <div className="container mx-auto px-4 relative z-10">
         {g("course_image_url", "") && (
           <img src={g("course_image_url", "")} alt="Course" className="w-full max-h-64 object-cover rounded-xl mb-8" />
         )}
-        <h2 className="text-3xl font-bold text-center mb-4">{g("course_title", "কোর্সের বিষয়বস্তু")}</h2>
+        <h2 className="text-3xl font-bold text-center mb-4 gradient-heading inline-block w-full">{g("course_title", "কোর্সের বিষয়বস্তু")}</h2>
         <p className="text-center text-muted-foreground mb-10">{g("course_subtitle", "সূরা আলাক্ব (৯৬) থেকে সূরা নাস (১১৪)")}</p>
 
         {isLoading ? (
@@ -50,10 +50,13 @@ const CourseSection = ({ g }: CourseSectionProps) => {
               <div
                 key={surah.id}
                 onClick={() => setSelectedSurah(surah)}
-                className="bg-card rounded-lg p-4 text-center shadow-sm hover:shadow-lg hover:border-primary/50 transition-all border cursor-pointer"
+                className="bg-card rounded-lg p-4 text-center shadow-sm hover:shadow-lg transition-all border cursor-pointer group"
+                style={{ borderColor: 'transparent', backgroundClip: 'padding-box' }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderImage = 'linear-gradient(135deg, #1B2838, #E8923A) 1'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderImage = 'none'; e.currentTarget.style.borderColor = 'hsl(var(--border))'; }}
               >
                 <span className="text-sm text-muted-foreground">সূরা নং {surah.surah_number}</span>
-                <p className="font-semibold mt-1">{surah.surah_name_bengali}</p>
+                <p className="font-semibold mt-1 group-hover:text-[#E8923A] transition-colors">{surah.surah_name_bengali}</p>
               </div>
             ))}
           </div>

@@ -7,17 +7,21 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({ g, setHadiyaDialogOpen }: HeroSectionProps) => (
-  <header className="relative overflow-hidden pt-20">
+  <header className="relative overflow-hidden pt-20 section-shape">
+    {/* Decorative gradient blobs */}
+    <div className="absolute top-10 right-0 w-[500px] h-[500px] rounded-full opacity-20 pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(232,146,58,0.3) 0%, transparent 70%)' }} />
+    <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-15 pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(27,40,56,0.4) 0%, transparent 70%)' }} />
+
     <div className="relative z-10 container mx-auto px-4 pt-8 pb-4">
       <div className="rounded-2xl overflow-hidden shadow-xl">
         <img src={g("hero_banner_url", "") || heroBannerFallback} alt="হিরো ব্যানার" className="w-full h-auto object-cover" />
       </div>
     </div>
     <div className="relative z-10 container mx-auto px-4 py-16 md:py-24 text-center">
-      <p className="text-accent font-semibold mb-4 animate-fade-in">
+      <p className="font-semibold mb-4 animate-fade-in text-[#E8923A]" style={{ textShadow: '0 0 20px rgba(232,146,58,0.3)' }}>
         {g("hero_bismillah", "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ")}
       </p>
-      <h1 className="text-4xl md:text-6xl font-extrabold text-foreground mb-6 animate-fade-in text-center" style={{ animationDelay: "0.1s" }}>
+      <h1 className="text-4xl md:text-6xl font-extrabold mb-6 animate-fade-in text-center gradient-heading" style={{ animationDelay: "0.1s" }}>
         {g("hero_title", "এক নজরে কুরআন")}
       </h1>
       <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-in" style={{ animationDelay: "0.2s" }}>

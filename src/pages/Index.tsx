@@ -70,14 +70,14 @@ const Index = () => {
           <div className={`flex items-center justify-between rounded-2xl px-6 py-3 transition-all duration-300 ${
             scrolled ? "bg-card/95 backdrop-blur-xl border border-border/60 shadow-xl" : "bg-card/80 backdrop-blur-md border border-border/50 shadow-lg"
           }`}>
-            <h2 className="text-xl font-bold text-primary tracking-tight">{g("site_name", "এক নজরে কুরআন")}</h2>
+            <h2 className="text-xl font-bold tracking-tight gradient-heading">{g("site_name", "এক নজরে কুরআন")}</h2>
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm" className="rounded-xl font-medium" asChild>
                 <Link to="/login">লগইন</Link>
               </Button>
-              <Button size="sm" className="rounded-xl font-medium shadow-md" asChild>
-                <Link to="/register">রেজিস্ট্রেশন</Link>
-              </Button>
+              <Link to="/register" className="btn-gradient inline-flex items-center justify-center h-9 rounded-xl px-3 text-sm font-medium">
+                রেজিস্ট্রেশন
+              </Link>
             </div>
           </div>
         </div>
