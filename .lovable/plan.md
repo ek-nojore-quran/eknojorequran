@@ -1,44 +1,36 @@
 
 
-## ভিজ্যুয়াল আপগ্রেড পরিকল্পনা — Gradient, Shape ও Professional Styling
+## ডার্ক নেভি ব্লু থিম রূপান্তর
 
-ব্র্যান্ড কালার (নেভি `#1B2838` + কমলা `#E8923A`) ব্যবহার করে পুরো ল্যান্ডিং পেজে gradient, decorative shapes এবং professional styling যোগ করা হবে।
+ছবি থেকে প্রাপ্ত কালার: গাঢ় নেভি ব্লু (~`#0A1628` / HSL `210 55% 10%`) — পুরো সাইটের ব্যাকগ্রাউন্ড এই কালারে রূপান্তরিত হবে। হেডলাইন ও গুরুত্বপূর্ণ টেক্সট সাদা থাকবে। কমলা অ্যাকসেন্ট বজায় থাকবে।
 
-### পরিবর্তিত ফাইলসমূহ
+### পরিবর্তন: `src/index.css`
 
-#### 1. `src/index.css` — গ্লোবাল CSS ক্লাস যোগ
-- `.gradient-heading` — headline এর জন্য navy-to-orange gradient text
-- `.gradient-card` — card এর জন্য subtle gradient background (navy → transparent)
-- `.section-shape` — সেকশনের background এ decorative gradient shape (radial/circular blobs)
-- `.btn-gradient` — বাটনে navy-to-orange gradient + hover effect
+#### Light mode (`:root`) → ডার্ক নেভি থিমে রূপান্তর
+| Variable | বর্তমান | নতুন |
+|---|---|---|
+| `--background` | হালকা সাদা (210 20% 97%) | গাঢ় নেভি (210 55% 10%) |
+| `--foreground` | গাঢ় নেভি | সাদা/হালকা (210 15% 90%) |
+| `--card` | সাদা | গাঢ় নেভি (210 45% 14%) |
+| `--card-foreground` | গাঢ় | হালকা সাদা |
+| `--popover` | সাদা | গাঢ় নেভি |
+| `--primary` | নেভি | কমলা (28 80% 57%) — বাটন/CTA তে ভালো দেখাবে |
+| `--secondary` | হালকা | গাঢ় নেভি টিন্ট (210 40% 18%) |
+| `--muted` | হালকা ধূসর | গাঢ় নেভি (210 35% 16%) |
+| `--muted-foreground` | ধূসর | হালকা ধূসর (210 15% 65%) |
+| `--border/input` | হালকা | গাঢ় নেভি border (210 30% 20%) |
 
-#### 2. `src/components/home/HeroSection.tsx`
-- Hero background এ decorative gradient shape যোগ (absolute positioned radial gradient blobs — কমলা ও নেভি)
-- Title (`h1`) এ `gradient-heading` ক্লাস — navy থেকে orange gradient text
-- Bismillah টেক্সটে গোল্ডেন glow effect
+#### `.gradient-heading` আপডেট
+- বর্তমান: navy → orange gradient (dark bg তে দেখা যাবে না)
+- নতুন: সাদা → হালকা কমলা gradient, অথবা শুধু সাদা
 
-#### 3. `src/components/home/FeaturesSection.tsx`
-- Section title এ `gradient-heading` ক্লাস
-- Feature card গুলোতে gradient border/background — navy-to-orange subtle gradient bottom border
-- Background এ decorative shape blob
+#### `.gradient-card` আপডেট
+- গাঢ় ব্যাকগ্রাউন্ডের সাথে মানানসই করে কমলা/নেভি গ্লো বাড়ানো
 
-#### 4. `src/components/home/CourseSection.tsx`
-- Section background এ gradient shape (navy radial blob)
-- Title এ gradient heading
-- সূরা card গুলোতে hover এ gradient border effect (navy → orange)
+#### `.section-shape` আপডেট
+- Radial gradient blobs এর opacity বাড়ানো যাতে dark bg তে দেখা যায়
 
-#### 5. `src/components/home/CtaSection.tsx`
-- Title এ gradient heading
-- "যোগ দিন" বাটনে gradient style (navy → orange)
-- Background এ subtle radial gradient shape
-
-#### 6. `src/pages/Index.tsx`
-- নেভবারের "রেজিস্ট্রেশন" বাটনে gradient styling
-- সাইট নামে gradient text effect
-
-### টেকনিক্যাল অ্যাপ্রোচ
-- CSS `background: linear-gradient()` ও `background-clip: text` ব্যবহার করে gradient text
-- `::before` / `::after` pseudo-elements অথবা absolute-positioned divs দিয়ে decorative shapes
-- Card এ `bg-gradient-to-br from-[#1B2838]/5 to-[#E8923A]/10` টাইপ Tailwind gradient
-- বাটনে `bg-gradient-to-r from-[#1B2838] to-[#E8923A]` gradient
+#### কম্পোনেন্ট ফাইলে সম্ভাব্য ছোট পরিবর্তন
+- `HeroSection.tsx`, `CourseSection.tsx`, `FeaturesSection.tsx`, `Index.tsx` — inline style এ যেসব হার্ডকোডেড কালার আছে সেগুলো dark theme এ মানানসই করা
+- Navbar এর `bg-card/95` dark theme এ ঠিকমতো কাজ করবে কারণ card variable আপডেট হবে
 
