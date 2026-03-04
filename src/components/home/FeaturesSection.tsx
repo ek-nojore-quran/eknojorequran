@@ -20,15 +20,15 @@ const FeaturesSection = ({ g }: FeaturesSectionProps) => {
   const imageUrl = g("features_image_url", "");
 
   return (
-    <section className="container mx-auto px-4 py-16">
+    <section className="container mx-auto px-4 py-16 section-shape">
       {imageUrl && (
         <img src={imageUrl} alt="Features" className="w-full max-h-64 object-cover rounded-xl mb-8" />
       )}
-      <h2 className="text-3xl font-bold text-center mb-4">{g("features_title", "কেন এই কোর্স?")}</h2>
+      <h2 className="text-3xl font-bold text-center mb-4 gradient-heading inline-block w-full">{g("features_title", "কেন এই কোর্স?")}</h2>
       <p className="text-center text-muted-foreground mb-12">{g("features_subtitle", "এই কোর্সটি আপনাকে কুরআনের শেষ ১৯টি সূরা সহজে বুঝতে সাহায্য করবে")}</p>
-      <div className="grid md:grid-cols-3 gap-8">
+      <div className="grid md:grid-cols-3 gap-8 relative z-10">
         {features.map((feature, i) => (
-          <Card key={i} className="border-none shadow-md hover:shadow-lg transition-shadow">
+          <Card key={i} className="border-none shadow-md hover:shadow-lg transition-all gradient-card">
             <CardContent className="pt-8 text-center">
               <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
               <p className="text-muted-foreground">{feature.desc}</p>
