@@ -32,7 +32,7 @@ const CourseSection = ({ g }: CourseSectionProps) => {
   });
 
   return (
-    <section className="py-16 section-shape" style={{ background: 'linear-gradient(180deg, rgba(27,40,56,0.03) 0%, rgba(232,146,58,0.04) 100%)' }}>
+    <section className="py-16 section-shape" style={{ background: 'linear-gradient(180deg, rgba(232,146,58,0.05) 0%, rgba(10,22,40,0.3) 100%)' }}>
       <div className="container mx-auto px-4 relative z-10">
         {g("course_image_url", "") && (
           <img src={g("course_image_url", "")} alt="Course" className="w-full max-h-64 object-cover rounded-xl mb-8" />

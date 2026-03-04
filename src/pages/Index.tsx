@@ -93,7 +93,7 @@ const Index = () => {
           <ManagerSection g={g} />
           <div className="w-16 h-px bg-border" />
           <div className="text-center text-sm text-muted-foreground">
-            <p className="mb-2 text-xs bg-primary/5 inline-block px-4 py-1.5 rounded-full">Website
+            <p className="mb-2 text-xs bg-primary/10 inline-block px-4 py-1.5 rounded-full">Website
               Designed by <a href="https://me.coachrony.com/" target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline">MD RONY</a>
             </p>
             <p>© {new Date().getFullYear()} {g("site_name", "এক নজরে কুরআন")}।</p>
