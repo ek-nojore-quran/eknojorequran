@@ -1,30 +1,30 @@
 
 
-## সমস্যা বিশ্লেষণ
+## ব্র্যান্ড কালার বিশ্লেষণ
 
-বর্তমানে কাস্টম সেকশনে শুধু title, description, button text/link আছে — কিন্তু **ছবি আপলোড** ও **edit** করার কোনো সুবিধা নেই। সব ডাটা `settings` টেবিলে JSON হিসেবে সংরক্ষিত (`custom_sections` key)।
+ছবি থেকে দুটি ব্র্যান্ড কালার চিহ্নিত:
+- **ব্যাকগ্রাউন্ড**: গাঢ় নেভি ব্লু (~`#1B2838`, HSL: `210 35% 16%`)
+- **টেক্সট/অ্যাকসেন্ট**: কমলা/সোনালি (~`#E8923A`, HSL: `28 80% 57%`)
 
-## সমাধান পরিকল্পনা
+## পরিবর্তন পরিকল্পনা
 
-### 1. Storage Bucket তৈরি
-- `section-images` নামে একটি public storage bucket তৈরি করা হবে কাস্টম সেকশনের ছবি রাখার জন্য
-- RLS policy: যেকেউ দেখতে পারবে, শুধু authenticated admin আপলোড/ডিলিট করতে পারবে
+### একটি ফাইল পরিবর্তন: `src/index.css`
 
-### 2. CustomSectionMeta তে `imageUrl` ফিল্ড যোগ
-- `SectionOrderSettings.tsx` এর `CustomSectionMeta` interface এ `imageUrl?: string` যোগ করা
+Light mode ও dark mode উভয় থিমের CSS variables আপডেট করা হবে এই দুটি ব্র্যান্ড কালার কেন্দ্র করে:
 
-### 3. SectionOrderSettings.tsx — Edit ও Image Upload সুবিধা
-- প্রতিটি কাস্টম সেকশনে **Edit বাটন** যোগ (পেন্সিল আইকন)
-- Edit ডায়ালগে: title, description, button text, button link পরিবর্তন + **ছবি আপলোড** এর সুবিধা
-- ছবি আপলোড হলে `section-images` bucket এ সেভ হবে এবং public URL `imageUrl` ফিল্ডে রাখা হবে
-- নতুন সেকশন তৈরির ডায়ালগেও ছবি আপলোড option থাকবে
+| Variable | বর্তমান | নতুন (ব্র্যান্ড-ভিত্তিক) |
+|---|---|---|
+| `--primary` | সবুজ (158 45% 30%) | নেভি ব্লু (210 35% 25%) |
+| `--accent` | কমলা (35 80% 55%) | ব্র্যান্ড কমলা (28 80% 57%) |
+| `--background` | হলুদাভ সাদা | হালকা নীলাভ সাদা |
+| `--foreground` | গাঢ় নীল | গাঢ় নেভি |
+| `--secondary` | হলুদাভ | হালকা নেভি টিন্ট |
+| `--muted` | হলুদাভ ধূসর | নীলাভ ধূসর |
+| `--ring` | সবুজ | নেভি ব্লু |
+| `--sidebar-*` | সবুজ-ভিত্তিক | নেভি ব্লু-ভিত্তিক |
+| `--border/input` | হলুদাভ | নীলাভ ধূসর |
 
-### 4. CustomSection.tsx — ছবি দেখানো
-- `CustomSectionData` interface এ `imageUrl` যোগ
-- সেকশনে ছবি থাকলে সেটা দেখানো হবে (title এর উপরে বা পাশে)
+Dark mode ও একই নেভি + কমলা প্যালেটে আপডেট হবে — গাঢ় নেভি ব্যাকগ্রাউন্ড, কমলা অ্যাকসেন্ট।
 
-### পরিবর্তিত ফাইল
-- **Migration**: `section-images` storage bucket তৈরি + RLS
-- `src/components/admin/settings/SectionOrderSettings.tsx` — edit dialog, image upload
-- `src/components/home/CustomSection.tsx` — imageUrl সাপোর্ট ও UI
+সমস্ত কম্পোনেন্ট যেহেতু CSS variables ব্যবহার করে, তাই শুধু `index.css` পরিবর্তনেই পুরো সাইটের কালার বদলে যাবে।
 
