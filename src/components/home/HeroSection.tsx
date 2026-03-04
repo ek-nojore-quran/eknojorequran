@@ -9,8 +9,8 @@ interface HeroSectionProps {
 const HeroSection = ({ g, setHadiyaDialogOpen }: HeroSectionProps) => (
   <header className="relative overflow-hidden pt-20 section-shape">
     {/* Decorative gradient blobs */}
-    <div className="absolute top-10 right-0 w-[500px] h-[500px] rounded-full opacity-20 pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(232,146,58,0.3) 0%, transparent 70%)' }} />
-    <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-15 pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(27,40,56,0.4) 0%, transparent 70%)' }} />
+    <div className="absolute top-10 right-0 w-[500px] h-[500px] rounded-full opacity-30 pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(232,146,58,0.25) 0%, transparent 70%)' }} />
+    <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-25 pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(100,150,220,0.15) 0%, transparent 70%)' }} />
 
     <div className="relative z-10 container mx-auto px-4 pt-8 pb-4">
       <div className="rounded-2xl overflow-hidden shadow-xl">
