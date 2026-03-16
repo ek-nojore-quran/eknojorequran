@@ -63,9 +63,7 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
             {surah ? `সূরা ${surah.surah_name_bengali} (${surah.surah_number})` : "সূরা"}
           </DialogTitle>
           <DialogDescription>
-            {verified
-              ? "এইখানে click করুন"
-              : "আপনার User ID দিয়ে যাচাই করুন।"}
+            {!verified ? "আপনার User ID দিয়ে যাচাই করুন।" : null}
           </DialogDescription>
         </DialogHeader>
 
