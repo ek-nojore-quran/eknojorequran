@@ -10,15 +10,13 @@ type ImportEntry = {
   email: string;
 };
 
-const isValidEmail = (email: string) =>
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const normalizeEntry = (entry: Partial<ImportEntry>): ImportEntry | null => {
   const name = entry.name?.trim();
   const email = entry.email?.trim().toLowerCase();
 
   if (!name || !email || !isValidEmail(email)) return null;
-
   return { name, email };
 };
 
@@ -43,22 +41,19 @@ Deno.serve(async (req) => {
 
     for (const rawEntry of rawEntries) {
       const normalized = normalizeEntry(rawEntry);
-
       if (!normalized) {
-        const fallback = String(rawEntry?.email ?? rawEntry?.name ?? "unknown");
-        skippedInvalid.push(fallback);
+        skippedInvalid.push(String(rawEntry?.email ?? rawEntry?.name ?? "unknown"));
         continue;
       }
-
       if (uniqueEntries.has(normalized.email)) {
         skippedDuplicate.push(normalized.email);
         continue;
       }
-
       uniqueEntries.set(normalized.email, normalized);
     }
 
     const entries = [...uniqueEntries.values()];
+    const emails = entries.map((entry) => entry.email);
 
     const { data: authUsersData, error: authUsersError } = await supabaseAdmin.auth.admin.listUsers({
       page: 1,
@@ -69,10 +64,9 @@ Deno.serve(async (req) => {
     const authUsers = authUsersData.users ?? [];
     const authByEmail = new Map(authUsers.map((user) => [user.email?.toLowerCase(), user]));
 
-    const emails = entries.map((entry) => entry.email);
     const { data: existingProfiles, error: profilesError } = await supabaseAdmin
       .from("profiles")
-      .select("auth_user_id, email, name, user_id")
+      .select("id, auth_user_id, email, name, user_id")
       .in("email", emails);
     if (profilesError) throw profilesError;
 
@@ -88,19 +82,36 @@ Deno.serve(async (req) => {
       const existingAuthUser = authByEmail.get(entry.email);
       const existingProfile = profileByEmail.get(entry.email);
 
-      if (existingAuthUser && existingProfile) {
+      if (existingProfile) {
         const { error } = await supabaseAdmin
           .from("profiles")
           .update({ name: entry.name })
-          .eq("auth_user_id", existingProfile.auth_user_id);
-
+          .eq("id", existingProfile.id);
         if (error) throw error;
         updated.push(entry.email);
         continue;
       }
 
       if (existingAuthUser && !existingProfile) {
-        skippedExisting.push(entry.email);
+        const { data: userIdData, error: userIdError } = await supabaseAdmin.rpc("generate_user_id");
+        if (userIdError) throw userIdError;
+
+        const { error: insertProfileError } = await supabaseAdmin.from("profiles").insert({
+          auth_user_id: existingAuthUser.id,
+          user_id: userIdData,
+          name: entry.name,
+          email: entry.email,
+          phone: null,
+        });
+        if (insertProfileError) throw insertProfileError;
+
+        const { error: roleError } = await supabaseAdmin.from("user_roles").upsert(
+          { user_id: existingAuthUser.id, role: "user" },
+          { onConflict: "user_id,role" }
+        );
+        if (roleError) throw roleError;
+
+        created.push(entry.email);
         continue;
       }
 
@@ -111,15 +122,30 @@ Deno.serve(async (req) => {
         email_confirm: false,
         user_metadata: { name: entry.name },
       });
-
-      if (createUserError) {
+      if (createUserError || !createdUser.user) {
         skippedExisting.push(entry.email);
         continue;
       }
 
-      if (createdUser.user) {
-        created.push(entry.email);
-      }
+      const { data: userIdData, error: userIdError } = await supabaseAdmin.rpc("generate_user_id");
+      if (userIdError) throw userIdError;
+
+      const { error: insertProfileError } = await supabaseAdmin.from("profiles").insert({
+        auth_user_id: createdUser.user.id,
+        user_id: userIdData,
+        name: entry.name,
+        email: entry.email,
+        phone: null,
+      });
+      if (insertProfileError) throw insertProfileError;
+
+      const { error: roleError } = await supabaseAdmin.from("user_roles").upsert(
+        { user_id: createdUser.user.id, role: "user" },
+        { onConflict: "user_id,role" }
+      );
+      if (roleError) throw roleError;
+
+      created.push(entry.email);
     }
 
     return new Response(
@@ -139,10 +165,7 @@ Deno.serve(async (req) => {
         skippedInvalid,
       }),
       {
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/json",
-        },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
   } catch (error) {
@@ -153,10 +176,7 @@ Deno.serve(async (req) => {
       }),
       {
         status: 500,
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/json",
-        },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
   }
