@@ -106,7 +106,7 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
               <Button asChild className="w-full" size="lg">
                 <a href={surah!.google_form_link!} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="mr-2 h-4 w-4" />
-                  পরীক্ষা দিন
+                  এইখানে click করুন
                 </a>
               </Button>
             ) : (
