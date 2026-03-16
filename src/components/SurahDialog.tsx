@@ -29,7 +29,7 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
     setIsVerifying(true);
     try {
       const { data, error } = await supabase.rpc("verify_user_id", {
-        input_user_id: trimmed,
+        input_user_id: trimmed
       });
       if (error) throw error;
       if (!data) {
@@ -67,57 +67,57 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
           </DialogDescription>
         </DialogHeader>
 
-        {!verified ? (
-          <div className="space-y-4 pt-2">
+        {!verified ?
+        <div className="space-y-4 pt-2">
             <div>
               <Label htmlFor="user-id">আপনার User ID</Label>
               <p className="text-xs text-muted-foreground mt-1">
                 রেজিস্ট্রেশনের সময় পাওয়া আইডি দিন (যেমন: QUR-0001)
               </p>
               <Input
-                id="user-id"
-                placeholder="QUR-0001"
-                value={userId}
-                onChange={(e) => setUserId(e.target.value.toUpperCase())}
-                className="mt-1"
-              />
+              id="user-id"
+              placeholder="QUR-0001"
+              value={userId}
+              onChange={(e) => setUserId(e.target.value.toUpperCase())}
+              className="mt-1" />
+            
             </div>
             <Button onClick={handleVerify} className="w-full" size="lg" disabled={isVerifying}>
-              {isVerifying ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : null}
+              {isVerifying ?
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" /> :
+            null}
               {isVerifying ? "যাচাই করা হচ্ছে..." : "যাচাই করুন"}
             </Button>
-          </div>
-        ) : (
-          <div className="space-y-4 pt-2">
-            {hasPdf ? (
-              <Button asChild variant="outline" className="w-full" size="lg">
+          </div> :
+
+        <div className="space-y-4 pt-2">
+            {hasPdf ?
+          <Button asChild variant="outline" className="w-full" size="lg">
                 <a href={surah!.pdf_url!} target="_blank" rel="noopener noreferrer">
                   <FileText className="mr-2 h-4 w-4" />
                   এইখানে click করুন
                 </a>
-              </Button>
-            ) : null}
+              </Button> :
+          null}
 
-            {hasForm ? (
-              <Button asChild className="w-full" size="lg">
+            {hasForm ?
+          <Button asChild className="w-full" size="lg">
                 <a href={surah!.google_form_link!} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="mr-2 h-4 w-4" />
                   এইখানে click করুন
                 </a>
-              </Button>
-            ) : (
-              <div className="flex items-center gap-3 rounded-lg border border-dashed p-4 text-muted-foreground">
+              </Button> :
+
+          <div className="flex items-center gap-3 rounded-lg border border-dashed p-4 text-muted-foreground">
                 <Clock className="h-5 w-5 shrink-0" />
-                <p className="text-sm">পরীক্ষা শীঘ্রই আসছে।</p>
+                <p className="text-sm">শীঘ্রই আসছে।</p>
               </div>
-            )}
+          }
           </div>
-        )}
+        }
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>);
+
 };
 
 export default SurahDialog;
