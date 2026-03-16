@@ -93,7 +93,6 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
           </div>
         ) : (
           <div className="space-y-4 pt-2">
-            {/* PDF Section */}
             {hasPdf ? (
               <Button asChild variant="outline" className="w-full" size="lg">
                 <a href={surah!.pdf_url!} target="_blank" rel="noopener noreferrer">
@@ -101,14 +100,8 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
                   স্টাডি নোট পড়ুন (PDF)
                 </a>
               </Button>
-            ) : (
-              <div className="flex items-center gap-3 rounded-lg border border-dashed p-4 text-muted-foreground">
-                <Clock className="h-5 w-5 shrink-0" />
-                <p className="text-sm">স্টাডি নোট শীঘ্রই আপলোড হবে, অপেক্ষা করুন।</p>
-              </div>
-            )}
+            ) : null}
 
-            {/* Google Form Section */}
             {hasForm ? (
               <Button asChild className="w-full" size="lg">
                 <a href={surah!.google_form_link!} target="_blank" rel="noopener noreferrer">
