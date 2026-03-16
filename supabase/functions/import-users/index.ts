@@ -127,24 +127,6 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      const { data: userIdData, error: userIdError } = await supabaseAdmin.rpc("generate_user_id");
-      if (userIdError) throw userIdError;
-
-      const { error: insertProfileError } = await supabaseAdmin.from("profiles").insert({
-        auth_user_id: createdUser.user.id,
-        user_id: userIdData,
-        name: entry.name,
-        email: entry.email,
-        phone: null,
-      });
-      if (insertProfileError) throw insertProfileError;
-
-      const { error: roleError } = await supabaseAdmin.from("user_roles").upsert(
-        { user_id: createdUser.user.id, role: "user" },
-        { onConflict: "user_id,role" }
-      );
-      if (roleError) throw roleError;
-
       created.push(entry.email);
     }
 
