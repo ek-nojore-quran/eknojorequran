@@ -22,7 +22,7 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
   const handleVerify = async () => {
     const trimmed = userId.trim();
     if (!trimmed) {
-      toast.error("আপনার User ID দিন (যেমন: QUR-0001)");
+      toast.error("আপনার User ID দিন (যেমন: ENQ-0001)");
       return;
     }
 
@@ -72,11 +72,11 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
             <div>
               <Label htmlFor="user-id">আপনার User ID</Label>
               <p className="text-xs text-muted-foreground mt-1">
-                রেজিস্ট্রেশনের সময় পাওয়া আইডি দিন (যেমন: QUR-0001)
+                রেজিস্ট্রেশনের সময় পাওয়া আইডি দিন (যেমন: ENQ-0001)
               </p>
               <Input
               id="user-id"
-              placeholder="QUR-0001"
+              placeholder="ENQ-0001"
               value={userId}
               onChange={(e) => setUserId(e.target.value.toUpperCase())}
               className="mt-1" />
