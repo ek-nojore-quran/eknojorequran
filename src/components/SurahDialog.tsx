@@ -64,7 +64,7 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
           </DialogTitle>
           <DialogDescription>
             {verified
-              ? "নিচে আপনার কন্টেন্ট দেখুন।"
+              ? "এইখানে click করুন"
               : "আপনার User ID দিয়ে যাচাই করুন।"}
           </DialogDescription>
         </DialogHeader>
@@ -97,7 +97,7 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
               <Button asChild variant="outline" className="w-full" size="lg">
                 <a href={surah!.pdf_url!} target="_blank" rel="noopener noreferrer">
                   <FileText className="mr-2 h-4 w-4" />
-                  স্টাডি নোট পড়ুন (PDF)
+                  এইখানে click করুন
                 </a>
               </Button>
             ) : null}
