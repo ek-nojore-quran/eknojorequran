@@ -59,20 +59,18 @@ Deno.serve(async (req) => {
       page: 1,
       perPage: 1000,
     });
-    if (authUsersError) throw authUsersError;
+    if (authUsersError) throw new Error(authUsersError.message);
 
     const authUsers = authUsersData.users ?? [];
     const authByEmail = new Map(authUsers.map((user) => [user.email?.toLowerCase(), user]));
 
     const { data: existingProfiles, error: profilesError } = await supabaseAdmin
       .from("profiles")
-      .select("id, auth_user_id, email, name, user_id")
+      .select("id, email")
       .in("email", emails);
-    if (profilesError) throw profilesError;
+    if (profilesError) throw new Error(profilesError.message);
 
-    const profileByEmail = new Map(
-      (existingProfiles ?? []).map((profile) => [profile.email.toLowerCase(), profile])
-    );
+    const profileByEmail = new Map((existingProfiles ?? []).map((profile) => [profile.email.toLowerCase(), profile]));
 
     const created: string[] = [];
     const updated: string[] = [];
@@ -87,31 +85,13 @@ Deno.serve(async (req) => {
           .from("profiles")
           .update({ name: entry.name })
           .eq("id", existingProfile.id);
-        if (error) throw error;
+        if (error) throw new Error(error.message);
         updated.push(entry.email);
         continue;
       }
 
-      if (existingAuthUser && !existingProfile) {
-        const { data: userIdData, error: userIdError } = await supabaseAdmin.rpc("generate_user_id");
-        if (userIdError) throw userIdError;
-
-        const { error: insertProfileError } = await supabaseAdmin.from("profiles").insert({
-          auth_user_id: existingAuthUser.id,
-          user_id: userIdData,
-          name: entry.name,
-          email: entry.email,
-          phone: null,
-        });
-        if (insertProfileError) throw insertProfileError;
-
-        const { error: roleError } = await supabaseAdmin.from("user_roles").upsert(
-          { user_id: existingAuthUser.id, role: "user" },
-          { onConflict: "user_id,role" }
-        );
-        if (roleError) throw roleError;
-
-        created.push(entry.email);
+      if (existingAuthUser) {
+        skippedExisting.push(entry.email);
         continue;
       }
 
@@ -122,6 +102,7 @@ Deno.serve(async (req) => {
         email_confirm: false,
         user_metadata: { name: entry.name },
       });
+
       if (createUserError || !createdUser.user) {
         skippedExisting.push(entry.email);
         continue;
@@ -130,36 +111,28 @@ Deno.serve(async (req) => {
       created.push(entry.email);
     }
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        totalReceived: rawEntries.length,
-        totalProcessed: entries.length,
-        createdCount: created.length,
-        updatedCount: updated.length,
-        skippedExistingCount: skippedExisting.length,
-        skippedDuplicateCount: skippedDuplicate.length,
-        skippedInvalidCount: skippedInvalid.length,
-        created,
-        updated,
-        skippedExisting,
-        skippedDuplicate,
-        skippedInvalid,
-      }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
-    );
+    return new Response(JSON.stringify({
+      success: true,
+      totalReceived: rawEntries.length,
+      totalProcessed: entries.length,
+      createdCount: created.length,
+      updatedCount: updated.length,
+      skippedExistingCount: skippedExisting.length,
+      skippedDuplicateCount: skippedDuplicate.length,
+      skippedInvalidCount: skippedInvalid.length,
+      created,
+      updated,
+      skippedExisting,
+      skippedDuplicate,
+      skippedInvalid,
+    }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (error) {
-    return new Response(
-      JSON.stringify({
-        success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
-      }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
-    );
+    const message = error instanceof Error ? error.message : String(error);
+    return new Response(JSON.stringify({ success: false, error: message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });
