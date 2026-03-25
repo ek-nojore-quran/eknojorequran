@@ -19,13 +19,9 @@ const WhatsAppSection = ({ g }: WhatsAppSectionProps) => (
       <p className="text-muted-foreground mb-6">
         {g("whatsapp_desc", "আপনার সদকা কুরআন শিক্ষার এই মহৎ কাজে সহায়তা করবে।")}
       </p>
-      <Button
-        size="lg"
-        className="text-lg px-8 py-6"
-        onClick={() => window.open("https://hcsb.org.bd/donate", "_blank")}
-      >
-        <Heart className="mr-2 h-5 w-5" /> {g("whatsapp_button_text", "সদকা দান করুন")}
-      </Button>
+      <p className="text-lg font-semibold text-primary cursor-pointer hover:underline" onClick={() => window.open("https://hcsb.org.bd/donate", "_blank")}>
+        সদকা দিন
+      </p>
     </div>
   </section>
 );
