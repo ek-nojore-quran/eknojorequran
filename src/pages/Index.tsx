@@ -12,7 +12,7 @@ import WhatsAppSection from "@/components/home/WhatsAppSection";
 import ManagerSection from "@/components/home/ManagerSection";
 import CustomSection, { type CustomSectionData } from "@/components/home/CustomSection";
 
-const DEFAULT_ORDER = ["hero", "features", "course", "cta", "whatsapp"];
+const DEFAULT_ORDER = ["hero", "features", "cta", "course", "whatsapp"];
 
 const Index = () => {
   const [whatsappDialogOpen, setWhatsappDialogOpen] = useState(false);
