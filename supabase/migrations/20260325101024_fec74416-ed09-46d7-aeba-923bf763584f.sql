@@ -1,0 +1,2 @@
+UPDATE settings SET value = '["hero","manager","features","course","cta","whatsapp"]', updated_at = now() WHERE key = 'section_order';
+UPDATE settings SET value = '[]', updated_at = now() WHERE key = 'custom_sections';
