@@ -24,7 +24,7 @@ const WhatsAppSection = ({ g }: WhatsAppSectionProps) => (
         className="text-lg px-8 py-6"
         onClick={() => window.open("https://hcsb.org.bd/donate", "_blank")}
       >
-        <Heart className="mr-2 h-5 w-5" /> {g("whatsapp_button_text", "সদকা দিন")}
+        <Heart className="mr-2 h-5 w-5" /> {g("whatsapp_button_text", "সদকা দান করুন")}
       </Button>
     </div>
   </section>
