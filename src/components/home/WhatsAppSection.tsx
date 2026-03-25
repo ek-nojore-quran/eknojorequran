@@ -25,13 +25,17 @@ const WhatsAppSection = ({ g }: WhatsAppSectionProps) => (
         <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-primary/60" />
       </div>
 
-      <h2 className="text-3xl font-bold mb-3 gradient-heading inline-block w-full">
-        {g("whatsapp_title", "সদকা দিন")}
-      </h2>
+      {g("whatsapp_title", "") && (
+        <h2 className="text-3xl font-bold mb-3 gradient-heading inline-block w-full">
+          {g("whatsapp_title", "")}
+        </h2>
+      )}
 
-      <p className="text-muted-foreground mb-8 text-base leading-relaxed max-w-md mx-auto">
-        {g("whatsapp_desc", "আপনার সদকা কুরআন শিক্ষার এই মহৎ কাজে সহায়তা করবে।")}
-      </p>
+      {g("whatsapp_desc", "") && (
+        <p className="text-muted-foreground mb-8 text-base leading-relaxed max-w-md mx-auto">
+          {g("whatsapp_desc", "")}
+        </p>
+      )}
 
       <Button
         size="lg"
