@@ -105,11 +105,6 @@ const Login = () => {
             </CardFooter>
           </form>
         </Card>
-      </div>
-    </div>
-  );
-};
-
       <Dialog open={forgotOpen} onOpenChange={setForgotOpen}>
         <DialogContent>
           <DialogHeader>
