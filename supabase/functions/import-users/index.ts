@@ -95,11 +95,11 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      const tempPassword = `${crypto.randomUUID()}Aa!1`;
+      const tempPassword = entry.email;
       const { data: createdUser, error: createUserError } = await supabaseAdmin.auth.admin.createUser({
         email: entry.email,
         password: tempPassword,
-        email_confirm: false,
+        email_confirm: true,
         user_metadata: { name: entry.name },
       });
 
