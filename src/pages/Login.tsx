@@ -88,6 +88,9 @@ const Login = () => {
               <div className="space-y-2">
                 <Label htmlFor="password">পাসওয়ার্ড</Label>
                 <Input id="password" type="password" placeholder="আপনার পাসওয়ার্ড" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                <button type="button" onClick={() => setForgotOpen(true)} className="text-sm text-primary hover:underline">
+                  পাসওয়ার্ড ভুলে গেছেন?
+                </button>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
