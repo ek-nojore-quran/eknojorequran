@@ -110,4 +110,23 @@ const Login = () => {
   );
 };
 
+      <Dialog open={forgotOpen} onOpenChange={setForgotOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>পাসওয়ার্ড রিসেট</DialogTitle>
+            <DialogDescription>আপনার ইমেইল দিন, রিসেট লিংক পাঠানো হবে</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleForgotPassword} className="space-y-4">
+            <Input type="email" placeholder="আপনার ইমেইল" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} required />
+            <Button type="submit" className="w-full" disabled={resetLoading}>
+              {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              রিসেট লিংক পাঠান
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
 export default Login;
