@@ -38,8 +38,8 @@ const CourseSection = ({ g }: CourseSectionProps) => {
           <img src={g("course_image_url", "")} alt="Course" className="w-full max-h-64 object-cover rounded-xl mb-8" />
         )}
         <h2 className="text-3xl font-bold text-center mb-4 gradient-heading inline-block w-full">{g("course_title", "কোর্সের বিষয়বস্তু")}</h2>
-        <p className="text-center text-muted-foreground mb-2">{g("course_subtitle", "সূরা আলাক্ব (৯৬) থেকে সূরা নাস (১১৪)")}</p>
-        <p className="text-center text-sm font-semibold text-primary mb-10">প্রথম ধাপ</p>
+        <p className="text-center text-sm font-semibold text-primary mb-2">প্রথম ধাপ</p>
+        <p className="text-center text-muted-foreground mb-10">{g("course_subtitle", "সূরা আলাক্ব (৯৬) থেকে সূরা নাস (১১৪)")}</p>
 
         {isLoading ? (
           <div className="flex justify-center py-12">
