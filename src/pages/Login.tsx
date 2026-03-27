@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -13,6 +14,29 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetLoading, setResetLoading] = useState(false);
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resetEmail.trim()) {
+      toast.error("ইমেইল দিন");
+      return;
+    }
+    setResetLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail.trim(), {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setResetLoading(false);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success("পাসওয়ার্ড রিসেট লিংক আপনার ইমেইলে পাঠানো হয়েছে");
+      setForgotOpen(false);
+      setResetEmail("");
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,6 +88,9 @@ const Login = () => {
               <div className="space-y-2">
                 <Label htmlFor="password">পাসওয়ার্ড</Label>
                 <Input id="password" type="password" placeholder="আপনার পাসওয়ার্ড" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                <button type="button" onClick={() => setForgotOpen(true)} className="text-sm text-primary hover:underline">
+                  পাসওয়ার্ড ভুলে গেছেন?
+                </button>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
@@ -79,6 +106,21 @@ const Login = () => {
           </form>
         </Card>
       </div>
+      <Dialog open={forgotOpen} onOpenChange={setForgotOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>পাসওয়ার্ড রিসেট</DialogTitle>
+            <DialogDescription>আপনার ইমেইল দিন, রিসেট লিংক পাঠানো হবে</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleForgotPassword} className="space-y-4">
+            <Input type="email" placeholder="আপনার ইমেইল" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} required />
+            <Button type="submit" className="w-full" disabled={resetLoading}>
+              {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              রিসেট লিংক পাঠান
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
