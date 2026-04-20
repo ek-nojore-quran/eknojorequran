@@ -18,6 +18,7 @@ import SubmissionManagement from "./pages/admin/SubmissionManagement";
 import AdminSettings from "./pages/admin/AdminSettings";
 import DonationManagement from "./pages/admin/DonationManagement";
 import WhatsAppJoinManagement from "./pages/admin/WhatsAppJoinManagement";
+import ManualMarksEntry from "./pages/admin/ManualMarksEntry";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="mcq" element={<MCQManagement />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="submissions" element={<SubmissionManagement />} />
+            <Route path="manual-marks" element={<ManualMarksEntry />} />
             <Route path="donations" element={<DonationManagement />} />
             <Route path="whatsapp-joins" element={<WhatsAppJoinManagement />} />
             <Route path="settings" element={<AdminSettings />} />
