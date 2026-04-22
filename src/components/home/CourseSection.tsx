@@ -41,26 +41,56 @@ const CourseSection = ({ g }: CourseSectionProps) => {
         <p className="text-center text-sm font-semibold text-primary mb-2">প্রথম ধাপ</p>
         <p className="text-center text-muted-foreground mb-10">{g("course_subtitle", "সূরা আলাক্ব (৯৬) থেকে সূরা নাস (১১৪)")}</p>
 
+        <h2 className="text-3xl font-bold text-center mb-4 gradient-heading inline-block w-full">{g("course_title", "কোর্সের বিষয়বস্তু")}</h2>
+
         {isLoading ? (
           <div className="flex justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-            {surahs?.map((surah) => (
-              <div
-                key={surah.id}
-                onClick={() => setSelectedSurah(surah)}
-                className="bg-card rounded-lg p-4 text-center shadow-sm hover:shadow-lg transition-all border cursor-pointer group"
-                style={{ borderColor: 'transparent', backgroundClip: 'padding-box' }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderImage = 'linear-gradient(135deg, #1B2838, #E8923A) 1'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderImage = 'none'; e.currentTarget.style.borderColor = 'hsl(var(--border))'; }}
-              >
-                <span className="text-sm text-muted-foreground">সূরা নং {surah.surah_number}</span>
-                <p className="font-semibold mt-1 group-hover:text-[#E8923A] transition-colors">{surah.surah_name_bengali}</p>
-              </div>
-            ))}
-          </div>
+          <>
+            {(() => {
+              const firstStep = (surahs ?? []).filter((s) => s.surah_number >= 96).sort((a, b) => a.surah_number - b.surah_number);
+              const secondStep = (surahs ?? []).filter((s) => s.surah_number >= 77 && s.surah_number <= 95).sort((a, b) => a.surah_number - b.surah_number);
+
+              const renderGrid = (list: SurahData[]) => (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                  {list.map((surah) => (
+                    <div
+                      key={surah.id}
+                      onClick={() => setSelectedSurah(surah)}
+                      className="bg-card rounded-lg p-4 text-center shadow-sm hover:shadow-lg transition-all border cursor-pointer group"
+                      style={{ borderColor: 'transparent', backgroundClip: 'padding-box' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderImage = 'linear-gradient(135deg, #1B2838, #E8923A) 1'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderImage = 'none'; e.currentTarget.style.borderColor = 'hsl(var(--border))'; }}
+                    >
+                      <span className="text-sm text-muted-foreground">সূরা নং {surah.surah_number}</span>
+                      <p className="font-semibold mt-1 group-hover:text-[#E8923A] transition-colors">{surah.surah_name_bengali}</p>
+                    </div>
+                  ))}
+                </div>
+              );
+
+              return (
+                <>
+                  {firstStep.length > 0 && (
+                    <div className="mb-12">
+                      <p className="text-center text-sm font-semibold text-primary mb-2">প্রথম ধাপ</p>
+                      <p className="text-center text-muted-foreground mb-6">{g("course_subtitle", "সূরা আলাক্ব (৯৬) থেকে সূরা নাস (১১৪)")}</p>
+                      {renderGrid(firstStep)}
+                    </div>
+                  )}
+                  {secondStep.length > 0 && (
+                    <div>
+                      <p className="text-center text-sm font-semibold text-primary mb-2">দ্বিতীয় ধাপ</p>
+                      <p className="text-center text-muted-foreground mb-6">সূরা মুরসালাত (৭৭) থেকে সূরা তীন (৯৫)</p>
+                      {renderGrid(secondStep)}
+                    </div>
+                  )}
+                </>
+              );
+            })()}
+          </>
         )}
 
         <SurahDialog
