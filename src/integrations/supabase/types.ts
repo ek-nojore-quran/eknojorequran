@@ -168,6 +168,42 @@ export type Database = {
           },
         ]
       }
+      quiz_submissions: {
+        Row: {
+          correct_count: number
+          id: string
+          name: string
+          profile_id: string
+          score: number
+          submitted_at: string
+          surah_id: string
+          total_questions: number
+          user_id: string
+        }
+        Insert: {
+          correct_count?: number
+          id?: string
+          name: string
+          profile_id: string
+          score?: number
+          submitted_at?: string
+          surah_id: string
+          total_questions?: number
+          user_id: string
+        }
+        Update: {
+          correct_count?: number
+          id?: string
+          name?: string
+          profile_id?: string
+          score?: number
+          submitted_at?: string
+          surah_id?: string
+          total_questions?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       settings: {
         Row: {
           id: string
@@ -291,6 +327,15 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      submit_quiz: {
+        Args: {
+          p_answers: Json
+          p_name: string
+          p_surah_id: string
+          p_user_id: string
+        }
+        Returns: Json
       }
       verify_user_id: { Args: { input_user_id: string }; Returns: boolean }
     }
