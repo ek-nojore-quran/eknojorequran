@@ -53,6 +53,7 @@ const CourseSection = ({ g }: CourseSectionProps) => {
               const firstStep = (surahs ?? []).filter((s) => s.surah_number >= 96).sort((a, b) => a.surah_number - b.surah_number);
               const secondStep = (surahs ?? []).filter((s) => s.surah_number >= 77 && s.surah_number <= 95).sort((a, b) => a.surah_number - b.surah_number);
               const thirdStep = (surahs ?? []).filter((s) => s.surah_number >= 58 && s.surah_number <= 76).sort((a, b) => a.surah_number - b.surah_number);
+              const fourthStep = (surahs ?? []).filter((s) => s.surah_number >= 39 && s.surah_number <= 57).sort((a, b) => a.surah_number - b.surah_number);
 
               const renderGrid = (list: SurahData[]) => (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -89,10 +90,17 @@ const CourseSection = ({ g }: CourseSectionProps) => {
                     </div>
                   )}
                   {thirdStep.length > 0 && (
-                    <div>
+                    <div className="mb-12">
                       <p className="text-center text-sm font-semibold text-primary mb-2">তৃতীয় ধাপ</p>
                       <p className="text-center text-muted-foreground mb-6">সূরা মুজাদিলা (৫৮) থেকে সূরা ইনসান (৭৬)</p>
                       {renderGrid(thirdStep)}
+                    </div>
+                  )}
+                  {fourthStep.length > 0 && (
+                    <div>
+                      <p className="text-center text-sm font-semibold text-primary mb-2">চতুর্থ ধাপ</p>
+                      <p className="text-center text-muted-foreground mb-6">সূরা যুমার (৩৯) থেকে সূরা হাদীদ (৫৭)</p>
+                      {renderGrid(fourthStep)}
                     </div>
                   )}
                 </>
