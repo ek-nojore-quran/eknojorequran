@@ -19,6 +19,11 @@ import AdminSettings from "./pages/admin/AdminSettings";
 import DonationManagement from "./pages/admin/DonationManagement";
 import WhatsAppJoinManagement from "./pages/admin/WhatsAppJoinManagement";
 import ManualMarksEntry from "./pages/admin/ManualMarksEntry";
+import QuizSubmissions from "./pages/admin/QuizSubmissions";
+
+import MCQEntry from "./pages/mcq/Entry";
+import MCQDashboard from "./pages/mcq/MCQDashboard";
+import QuizPage from "./pages/mcq/QuizPage";
 
 const queryClient = new QueryClient();
 
@@ -34,12 +39,16 @@ const App = () => (
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          {/* hadiya route removed - using external link */}
+          {/* No-auth MCQ flow */}
+          <Route path="/mcq" element={<MCQEntry />} />
+          <Route path="/mcq/dashboard" element={<MCQDashboard />} />
+          <Route path="/mcq/quiz/:surahId" element={<QuizPage />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="mcq" element={<MCQManagement />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="submissions" element={<SubmissionManagement />} />
+            <Route path="quiz-submissions" element={<QuizSubmissions />} />
             <Route path="manual-marks" element={<ManualMarksEntry />} />
             <Route path="donations" element={<DonationManagement />} />
             <Route path="whatsapp-joins" element={<WhatsAppJoinManagement />} />
