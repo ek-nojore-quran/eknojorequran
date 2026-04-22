@@ -54,6 +54,7 @@ const CourseSection = ({ g }: CourseSectionProps) => {
               const secondStep = (surahs ?? []).filter((s) => s.surah_number >= 77 && s.surah_number <= 95).sort((a, b) => a.surah_number - b.surah_number);
               const thirdStep = (surahs ?? []).filter((s) => s.surah_number >= 58 && s.surah_number <= 76).sort((a, b) => a.surah_number - b.surah_number);
               const fourthStep = (surahs ?? []).filter((s) => s.surah_number >= 39 && s.surah_number <= 57).sort((a, b) => a.surah_number - b.surah_number);
+              const fifthStep = (surahs ?? []).filter((s) => s.surah_number >= 20 && s.surah_number <= 38).sort((a, b) => a.surah_number - b.surah_number);
 
               const renderGrid = (list: SurahData[]) => (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
