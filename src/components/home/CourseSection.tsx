@@ -41,8 +41,6 @@ const CourseSection = ({ g }: CourseSectionProps) => {
         <p className="text-center text-sm font-semibold text-primary mb-2">প্রথম ধাপ</p>
         <p className="text-center text-muted-foreground mb-10">{g("course_subtitle", "সূরা আলাক্ব (৯৬) থেকে সূরা নাস (১১৪)")}</p>
 
-        <h2 className="text-3xl font-bold text-center mb-4 gradient-heading inline-block w-full">{g("course_title", "কোর্সের বিষয়বস্তু")}</h2>
-
         {isLoading ? (
           <div className="flex justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
