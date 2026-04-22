@@ -106,10 +106,17 @@ const CourseSection = ({ g }: CourseSectionProps) => {
                     </div>
                   )}
                   {fifthStep.length > 0 && (
-                    <div>
+                    <div className="mb-12">
                       <p className="text-center text-sm font-semibold text-primary mb-2">পঞ্চম ধাপ</p>
                       <p className="text-center text-muted-foreground mb-6">সূরা ত্বা-হা (২০) থেকে সূরা সাদ (৩৮)</p>
                       {renderGrid(fifthStep)}
+                    </div>
+                  )}
+                  {sixthStep.length > 0 && (
+                    <div>
+                      <p className="text-center text-sm font-semibold text-primary mb-2">ষষ্ঠ ধাপ</p>
+                      <p className="text-center text-muted-foreground mb-6">সূরা আল-ফাতিহা (১) থেকে সূরা মারইয়াম (১৯)</p>
+                      {renderGrid(sixthStep)}
                     </div>
                   )}
                 </>
