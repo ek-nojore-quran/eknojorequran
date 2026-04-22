@@ -32,6 +32,20 @@ const MCQEntry = () => {
   const [name, setName] = useState("");
   const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(false);
+  const [warnOpen, setWarnOpen] = useState(false);
+  const [warnInfo, setWarnInfo] = useState<{ count: number; lastAt: string | null }>({
+    count: 0,
+    lastAt: null,
+  });
+  const [pendingSession, setPendingSession] = useState<{ name: string; userId: string } | null>(
+    null,
+  );
+
+  const proceedToDashboard = (s: { name: string; userId: string }) => {
+    sessionStorage.setItem("mcq_session", JSON.stringify(s));
+    toast.success("স্বাগতম, " + s.name);
+    navigate("/mcq/dashboard");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,12 +66,30 @@ const MCQEntry = () => {
         setLoading(false);
         return;
       }
-      sessionStorage.setItem(
-        "mcq_session",
-        JSON.stringify({ name: parsed.data.name, userId: normalizedId }),
-      );
-      toast.success("স্বাগতম, " + parsed.data.name);
-      navigate("/mcq/dashboard");
+
+      const { data: existing, error: existErr } = await supabase
+        .from("quiz_submissions")
+        .select("submitted_at")
+        .eq("user_id", normalizedId)
+        .order("submitted_at", { ascending: false })
+        .limit(1);
+      if (existErr) throw existErr;
+
+      const session = { name: parsed.data.name, userId: normalizedId };
+
+      if (existing && existing.length > 0) {
+        const { count } = await supabase
+          .from("quiz_submissions")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", normalizedId);
+        setWarnInfo({ count: count ?? 0, lastAt: existing[0].submitted_at });
+        setPendingSession(session);
+        setWarnOpen(true);
+        setLoading(false);
+        return;
+      }
+
+      proceedToDashboard(session);
     } catch (err) {
       console.error(err);
       toast.error("যাচাই করতে সমস্যা হয়েছে");
@@ -113,6 +145,42 @@ const MCQEntry = () => {
           </form>
         </CardContent>
       </Card>
+
+      <AlertDialog open={warnOpen} onOpenChange={setWarnOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>এই User ID আগে ব্যবহার হয়েছে</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-2">
+                <p>
+                  <span className="font-mono">{pendingSession?.userId}</span> দিয়ে ইতিমধ্যে{" "}
+                  <span className="font-semibold text-foreground">{warnInfo.count}</span>টি সাবমিশন
+                  রয়েছে।
+                </p>
+                {warnInfo.lastAt && (
+                  <p className="text-sm">
+                    সর্বশেষ:{" "}
+                    <span className="text-foreground">
+                      {new Date(warnInfo.lastAt).toLocaleString("bn-BD")}
+                    </span>
+                  </p>
+                )}
+                <p className="text-sm">আপনি কি আবার নতুন কুইজ দিতে চান?</p>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>বাতিল</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (pendingSession) proceedToDashboard(pendingSession);
+              }}
+            >
+              হ্যাঁ, চালিয়ে যান
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
