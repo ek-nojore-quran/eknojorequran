@@ -98,7 +98,7 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
                 handleClose(false);
                 navigate("/register");
               }}>
-              অথবা, "ফ্রী" রেজিস্ট্রেশন করে আইডি সংগ্রহ করুন।
+              অথবা, "ফ্রী" রেজিস্ট্রেশন করুন।
             </Button>
           </div> :
 
