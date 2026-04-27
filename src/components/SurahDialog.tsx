@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,7 @@ interface SurahDialogProps {
 }
 
 const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
+  const navigate = useNavigate();
   const [userId, setUserId] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [verified, setVerified] = useState(false);
@@ -87,6 +89,16 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
             <Loader2 className="mr-2 h-4 w-4 animate-spin" /> :
             null}
               {isVerifying ? "যাচাই করা হচ্ছে..." : "যাচাই করুন"}
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full"
+              size="lg"
+              onClick={() => {
+                handleClose(false);
+                navigate("/register");
+              }}>
+              অথবা, ফ্রী রেজিস্ট্রেশন করে আইডি সংগ্রহ করুন।
             </Button>
           </div> :
 
