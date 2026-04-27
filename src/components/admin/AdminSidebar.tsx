@@ -1,4 +1,4 @@
-import { LayoutDashboard, BookOpen, HelpCircle, Users, FileText, Settings, LogOut, HandCoins, MessageCircle, ClipboardEdit, ListChecks } from "lucide-react";
+import { LayoutDashboard, BookOpen, HelpCircle, Users, FileText, Settings, LogOut, HandCoins, MessageCircle, ClipboardEdit, ListChecks, Home } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -68,6 +68,14 @@ const AdminSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
+        <Button
+          variant="ghost"
+          className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-primary"
+          onClick={() => navigate("/")}
+        >
+          <Home className="mr-2 h-4 w-4" />
+          {!collapsed && "হোম পেজ"}
+        </Button>
         <Button
           variant="ghost"
           className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-destructive"
