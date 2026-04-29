@@ -73,6 +73,12 @@ const AdminSettings = () => {
       setMcqTimeLimit(s.mcq_time_limit || "30");
       setAutoMarking(s.auto_marking === "true");
       setWhatsappLink(s.whatsapp_group_link || "");
+      setWaStep1(s.whatsapp_link_step_1 || "");
+      setWaStep2(s.whatsapp_link_step_2 || "");
+      setWaStep3(s.whatsapp_link_step_3 || "");
+      setWaStep4(s.whatsapp_link_step_4 || "");
+      setWaStep5(s.whatsapp_link_step_5 || "");
+      setWaStep6(s.whatsapp_link_step_6 || "");
       setManagerName(s.manager_name || "");
       if (s.logo_url) setLogoPreview(s.logo_url);
       setHeroTitle(s.hero_title || "");
