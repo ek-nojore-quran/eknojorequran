@@ -1,18 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, BookOpen, HelpCircle, FileText, TrendingUp, UserCheck } from "lucide-react";
+import { Users, BookOpen, HelpCircle, FileText, TrendingUp, UserCheck, BookMarked, AlertCircle, Flame } from "lucide-react";
 import SubmissionCharts from "@/components/admin/SubmissionCharts";
 
 const AdminDashboard = () => {
   const { data: stats, isLoading } = useQuery({
     queryKey: ["admin-stats"],
     queryFn: async () => {
-      const [usersRes, surahsRes, questionsRes, quizSubsRes] = await Promise.all([
+      const [usersRes, surahsRes, questionsRes, quizSubsRes, recRes] = await Promise.all([
         supabase.from("profiles").select("*", { count: "exact", head: true }),
         supabase.from("surahs").select("*", { count: "exact", head: true }),
         supabase.from("questions").select("*", { count: "exact", head: true }),
         supabase.from("quiz_submissions").select("user_id, score, total_questions, correct_count"),
+        supabase.from("surah_submissions").select("surah_name, mistakes"),
       ]);
 
       const subs = quizSubsRes.data || [];
@@ -21,6 +22,15 @@ const AdminDashboard = () => {
       const avgScore = totalQ > 0 ? ((totalCorrect / totalQ) * 100).toFixed(1) + "%" : "0%";
       const uniqueParticipants = new Set(subs.map((s) => s.user_id)).size;
 
+      // Recitation stats
+      const recList = recRes.data || [];
+      const totalMistakes = recList.reduce((a, r: any) => a + (r.mistakes || 0), 0);
+      const surahMistakeMap: Record<string, number> = {};
+      recList.forEach((r: any) => {
+        surahMistakeMap[r.surah_name] = (surahMistakeMap[r.surah_name] || 0) + (r.mistakes || 0);
+      });
+      const topMistaken = Object.entries(surahMistakeMap).sort((a, b) => b[1] - a[1])[0];
+
       return {
         totalUsers: usersRes.count || 0,
         totalSurahs: surahsRes.count || 0,
@@ -28,6 +38,9 @@ const AdminDashboard = () => {
         totalSubmissions: subs.length,
         participants: uniqueParticipants,
         avgScore,
+        totalRecitations: recList.length,
+        totalMistakes,
+        topMistakenSurah: topMistaken?.[0] || "—",
       };
     },
   });
@@ -39,6 +52,9 @@ const AdminDashboard = () => {
     { title: "মোট MCQ", value: stats?.totalMCQs, icon: HelpCircle, color: "text-accent" },
     { title: "কুইজ সাবমিশন", value: stats?.totalSubmissions, icon: FileText, color: "text-primary" },
     { title: "গড় স্কোর", value: stats?.avgScore, icon: TrendingUp, color: "text-accent" },
+    { title: "রেসিটেশন সাবমিশন", value: stats?.totalRecitations, icon: BookMarked, color: "text-primary" },
+    { title: "মোট ভুল", value: stats?.totalMistakes, icon: AlertCircle, color: "text-destructive" },
+    { title: "সর্বাধিক ভুল-প্রবণ সূরা", value: stats?.topMistakenSurah, icon: Flame, color: "text-destructive" },
   ];
 
   return (
