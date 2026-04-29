@@ -18,7 +18,7 @@ const ManagerSection = ({ g }: ManagerSectionProps) => {
           className="h-10 w-10 rounded-full object-cover border-2 border-primary/20 shadow"
         />
         <div className="text-center">
-          <p className="text-muted-foreground font-medium tracking-wide uppercase text-2xl">পরিচালনায়</p>
+          <p className="font-medium tracking-wide uppercase text-xl text-primary">পরিচালনায়</p>
           <p className="text-sm font-semibold text-foreground">{managerName}</p>
         </div>
       </div>
