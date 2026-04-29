@@ -24,6 +24,8 @@ import QuizSubmissions from "./pages/admin/QuizSubmissions";
 import MCQEntry from "./pages/mcq/Entry";
 import MCQDashboard from "./pages/mcq/MCQDashboard";
 import QuizPage from "./pages/mcq/QuizPage";
+import Leaderboard from "./pages/Leaderboard";
+import SurahSubmissions from "./pages/admin/SurahSubmissions";
 
 const queryClient = new QueryClient();
 
@@ -43,12 +45,14 @@ const App = () => (
           <Route path="/mcq" element={<MCQEntry />} />
           <Route path="/mcq/dashboard" element={<MCQDashboard />} />
           <Route path="/mcq/quiz/:surahId" element={<QuizPage />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="mcq" element={<MCQManagement />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="submissions" element={<SubmissionManagement />} />
             <Route path="quiz-submissions" element={<QuizSubmissions />} />
+            <Route path="surah-submissions" element={<SurahSubmissions />} />
             <Route path="manual-marks" element={<ManualMarksEntry />} />
             <Route path="donations" element={<DonationManagement />} />
             <Route path="whatsapp-joins" element={<WhatsAppJoinManagement />} />

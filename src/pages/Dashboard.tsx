@@ -12,10 +12,14 @@ import { toast } from "sonner";
 import {
   LogOut, Loader2, User, BookOpen, ClipboardList, BarChart3,
   FileText, ExternalLink, CheckCircle2, Circle, Edit2, Save, X,
-  Phone, Mail, Calendar, Hash, Award, TrendingUp, Home, Copy
+  Phone, Mail, Calendar, Hash, Award, TrendingUp, Home, Copy,
+  Trophy, AlertCircle, KeyRound, BookMarked
 } from "lucide-react";
 import { format } from "date-fns";
 import { bn } from "date-fns/locale";
+import SubmissionForm from "@/components/dashboard/SubmissionForm";
+import SubmissionHistory from "@/components/dashboard/SubmissionHistory";
+import { useQuery } from "@tanstack/react-query";
 
 interface Profile {
   id: string;
@@ -60,6 +64,9 @@ const Dashboard = () => {
   const [editName, setEditName] = useState("");
   const [editPhone, setEditPhone] = useState("");
   const [saving, setSaving] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [pwSaving, setPwSaving] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -162,10 +169,48 @@ const Dashboard = () => {
     setEditing(true);
   };
 
+  const handleChangePassword = async () => {
+    if (newPassword.length < 6) {
+      toast.error("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error("পাসওয়ার্ড মিলছে না");
+      return;
+    }
+    setPwSaving(true);
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    setPwSaving(false);
+    if (error) toast.error(error.message);
+    else {
+      toast.success("পাসওয়ার্ড পরিবর্তন সফল");
+      setNewPassword("");
+      setConfirmPassword("");
+    }
+  };
+
+  // Recitation submission stats (live)
+  const { data: recStats } = useQuery({
+    queryKey: ["dashboard-rec-stats", profile?.user_id],
+    enabled: !!profile?.user_id,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("surah_submissions")
+        .select("mistakes, surah_id")
+        .eq("user_id", profile!.user_id);
+      const list = data || [];
+      return {
+        total: list.length,
+        mistakes: list.reduce((a, r: any) => a + (r.mistakes || 0), 0),
+        uniqueSurahs: new Set(list.map((r: any) => r.surah_id).filter(Boolean)).size,
+      };
+    },
+  });
+
   // Stats
-  const totalSubmissions = answers.length;
-  const totalMarks = answers.reduce((sum, a) => sum + (a.marks || 0), 0);
-  const completedSurahs = answeredSurahIds.size;
+  const totalSubmissions = (recStats?.total ?? 0);
+  const totalMistakes = recStats?.mistakes ?? 0;
+  const completedSurahs = Math.max(answeredSurahIds.size, recStats?.uniqueSurahs ?? 0);
   const totalSurahs = surahs.length;
   const progressPercent = totalSurahs > 0 ? Math.round((completedSurahs / totalSurahs) * 100) : 0;
 
@@ -211,14 +256,14 @@ const Dashboard = () => {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-gradient-to-br from-accent/10 to-accent/5 border-accent/20">
+          <Card className="bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20">
             <CardContent className="p-4 flex items-center gap-3">
-              <div className="p-2 rounded-full bg-accent/15">
-                <Award className="h-5 w-5 text-accent-foreground" />
+              <div className="p-2 rounded-full bg-destructive/15">
+                <AlertCircle className="h-5 w-5 text-destructive" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{totalMarks}</p>
-                <p className="text-xs text-muted-foreground">মোট মার্কস</p>
+                <p className="text-2xl font-bold">{totalMistakes}</p>
+                <p className="text-xs text-muted-foreground">মোট ভুল</p>
               </div>
             </CardContent>
           </Card>
@@ -247,18 +292,32 @@ const Dashboard = () => {
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="profile" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-3">
+        <Tabs defaultValue="recitation" className="space-y-4">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="recitation" className="gap-1.5">
+              <BookMarked className="h-4 w-4" /> সাবমিশন
+            </TabsTrigger>
             <TabsTrigger value="profile" className="gap-1.5">
               <User className="h-4 w-4" /> প্রোফাইল
             </TabsTrigger>
             <TabsTrigger value="course" className="gap-1.5">
               <BookOpen className="h-4 w-4" /> কোর্স
             </TabsTrigger>
-            <TabsTrigger value="submissions" className="gap-1.5">
-              <ClipboardList className="h-4 w-4" /> সাবমিশন
+            <TabsTrigger value="quiz" className="gap-1.5">
+              <ClipboardList className="h-4 w-4" /> কুইজ
             </TabsTrigger>
           </TabsList>
+
+          {/* Recitation Tab */}
+          <TabsContent value="recitation" className="space-y-4">
+            <div className="flex justify-end">
+              <Button variant="outline" size="sm" onClick={() => navigate("/leaderboard")}>
+                <Trophy className="h-4 w-4 mr-1" /> লিডারবোর্ড
+              </Button>
+            </div>
+            {profile && <SubmissionForm userId={profile.user_id} />}
+            {profile && <SubmissionHistory userId={profile.user_id} />}
+          </TabsContent>
 
           {/* Profile Tab */}
           <TabsContent value="profile">
@@ -342,6 +401,32 @@ const Dashboard = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Password change */}
+            <Card className="mt-4">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <KeyRound className="h-4 w-4" /> পাসওয়ার্ড পরিবর্তন
+                </CardTitle>
+                <CardDescription>আপনার অ্যাকাউন্টের নতুন পাসওয়ার্ড সেট করুন</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <Label>নতুন পাসওয়ার্ড</Label>
+                    <Input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="কমপক্ষে ৬ অক্ষর" />
+                  </div>
+                  <div>
+                    <Label>পুনরায় পাসওয়ার্ড</Label>
+                    <Input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                  </div>
+                </div>
+                <Button onClick={handleChangePassword} disabled={pwSaving}>
+                  {pwSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  পরিবর্তন করুন
+                </Button>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Course Tab */}
@@ -406,7 +491,7 @@ const Dashboard = () => {
           </TabsContent>
 
           {/* Submissions Tab */}
-          <TabsContent value="submissions">
+          <TabsContent value="quiz">
             <Card>
               <CardHeader>
                 <CardTitle className="text-xl">সাবমিশন ইতিহাস</CardTitle>

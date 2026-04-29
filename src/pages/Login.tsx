@@ -11,46 +11,70 @@ import { Loader2 } from "lucide-react";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [forgotOpen, setForgotOpen] = useState(false);
-  const [resetEmail, setResetEmail] = useState("");
+  const [resetUserId, setResetUserId] = useState("");
   const [resetLoading, setResetLoading] = useState(false);
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!resetEmail.trim()) {
-      toast.error("ইমেইল দিন");
+    const trimmed = resetUserId.trim().toUpperCase();
+    if (!trimmed) {
+      toast.error("আপনার ENQ-XXXX আইডি দিন");
       return;
     }
     setResetLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail.trim(), {
+    // resolve email
+    const { data: emailData, error: emailErr } = await supabase.rpc("get_email_for_user_id", {
+      p_user_id: trimmed,
+    });
+    if (emailErr || !emailData) {
+      setResetLoading(false);
+      toast.error("এই User ID পাওয়া যায়নি");
+      return;
+    }
+    const { error } = await supabase.auth.resetPasswordForEmail(emailData as string, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
     setResetLoading(false);
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success("পাসওয়ার্ড রিসেট লিংক আপনার ইমেইলে পাঠানো হয়েছে");
+      toast.success("পাসওয়ার্ড রিসেট লিংক আপনার রেজিস্টার্ড ইমেইলে পাঠানো হয়েছে");
       setForgotOpen(false);
-      setResetEmail("");
+      setResetUserId("");
     }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !password.trim()) {
+    const trimmedId = userId.trim().toUpperCase();
+    if (!trimmedId || !password.trim()) {
       toast.error("সব ফিল্ড পূরণ করুন");
       return;
     }
 
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+    // resolve email from ENQ-XXXX
+    const { data: emailData, error: emailErr } = await supabase.rpc("get_email_for_user_id", {
+      p_user_id: trimmedId,
+    });
+    if (emailErr || !emailData) {
+      setLoading(false);
+      toast.error("এই User ID পাওয়া যায়নি");
+      return;
+    }
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: emailData as string,
+      password,
+    });
     setLoading(false);
 
     if (error) {
-      toast.error(error.message === "Invalid login credentials" ? "ইমেইল বা পাসওয়ার্ড ভুল" : error.message);
+      toast.error(error.message === "Invalid login credentials" ? "User ID বা পাসওয়ার্ড ভুল" : error.message);
     } else {
       toast.success("সফলভাবে লগইন হয়েছে!");
       const { data: { user } } = await supabase.auth.getUser();
@@ -77,13 +101,20 @@ const Login = () => {
         <Card>
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">লগইন</CardTitle>
-            <CardDescription>আপনার অ্যাকাউন্টে প্রবেশ করুন</CardDescription>
+            <CardDescription>আপনার User ID দিয়ে প্রবেশ করুন</CardDescription>
           </CardHeader>
           <form onSubmit={handleLogin}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">ইমেইল</Label>
-                <Input id="email" type="email" placeholder="আপনার ইমেইল" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <Label htmlFor="userId">User ID</Label>
+                <Input
+                  id="userId"
+                  type="text"
+                  placeholder="ENQ-0001"
+                  value={userId}
+                  onChange={(e) => setUserId(e.target.value.toUpperCase())}
+                  required
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">পাসওয়ার্ড</Label>
@@ -110,10 +141,16 @@ const Login = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>পাসওয়ার্ড রিসেট</DialogTitle>
-            <DialogDescription>আপনার ইমেইল দিন, রিসেট লিংক পাঠানো হবে</DialogDescription>
+            <DialogDescription>আপনার ENQ-XXXX আইডি দিন, রেজিস্টার্ড ইমেইলে রিসেট লিংক পাঠানো হবে</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleForgotPassword} className="space-y-4">
-            <Input type="email" placeholder="আপনার ইমেইল" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} required />
+            <Input
+              type="text"
+              placeholder="ENQ-0001"
+              value={resetUserId}
+              onChange={(e) => setResetUserId(e.target.value.toUpperCase())}
+              required
+            />
             <Button type="submit" className="w-full" disabled={resetLoading}>
               {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               রিসেট লিংক পাঠান
