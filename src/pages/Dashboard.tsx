@@ -256,14 +256,14 @@ const Dashboard = () => {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-gradient-to-br from-accent/10 to-accent/5 border-accent/20">
+          <Card className="bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20">
             <CardContent className="p-4 flex items-center gap-3">
-              <div className="p-2 rounded-full bg-accent/15">
-                <Award className="h-5 w-5 text-accent-foreground" />
+              <div className="p-2 rounded-full bg-destructive/15">
+                <AlertCircle className="h-5 w-5 text-destructive" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{totalMarks}</p>
-                <p className="text-xs text-muted-foreground">মোট মার্কস</p>
+                <p className="text-2xl font-bold">{totalMistakes}</p>
+                <p className="text-xs text-muted-foreground">মোট ভুল</p>
               </div>
             </CardContent>
           </Card>
@@ -292,18 +292,32 @@ const Dashboard = () => {
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="profile" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-3">
+        <Tabs defaultValue="recitation" className="space-y-4">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="recitation" className="gap-1.5">
+              <BookMarked className="h-4 w-4" /> সাবমিশন
+            </TabsTrigger>
             <TabsTrigger value="profile" className="gap-1.5">
               <User className="h-4 w-4" /> প্রোফাইল
             </TabsTrigger>
             <TabsTrigger value="course" className="gap-1.5">
               <BookOpen className="h-4 w-4" /> কোর্স
             </TabsTrigger>
-            <TabsTrigger value="submissions" className="gap-1.5">
-              <ClipboardList className="h-4 w-4" /> সাবমিশন
+            <TabsTrigger value="quiz" className="gap-1.5">
+              <ClipboardList className="h-4 w-4" /> কুইজ
             </TabsTrigger>
           </TabsList>
+
+          {/* Recitation Tab */}
+          <TabsContent value="recitation" className="space-y-4">
+            <div className="flex justify-end">
+              <Button variant="outline" size="sm" onClick={() => navigate("/leaderboard")}>
+                <Trophy className="h-4 w-4 mr-1" /> লিডারবোর্ড
+              </Button>
+            </div>
+            {profile && <SubmissionForm userId={profile.user_id} />}
+            {profile && <SubmissionHistory userId={profile.user_id} />}
+          </TabsContent>
 
           {/* Profile Tab */}
           <TabsContent value="profile">
