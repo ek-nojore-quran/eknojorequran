@@ -25,6 +25,12 @@ const AdminSettings = () => {
   const [mcqTimeLimit, setMcqTimeLimit] = useState("30");
   const [autoMarking, setAutoMarking] = useState(true);
   const [whatsappLink, setWhatsappLink] = useState("");
+  const [waStep1, setWaStep1] = useState("");
+  const [waStep2, setWaStep2] = useState("");
+  const [waStep3, setWaStep3] = useState("");
+  const [waStep4, setWaStep4] = useState("");
+  const [waStep5, setWaStep5] = useState("");
+  const [waStep6, setWaStep6] = useState("");
   const [managerName, setManagerName] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
