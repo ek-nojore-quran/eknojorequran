@@ -169,10 +169,48 @@ const Dashboard = () => {
     setEditing(true);
   };
 
+  const handleChangePassword = async () => {
+    if (newPassword.length < 6) {
+      toast.error("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error("পাসওয়ার্ড মিলছে না");
+      return;
+    }
+    setPwSaving(true);
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    setPwSaving(false);
+    if (error) toast.error(error.message);
+    else {
+      toast.success("পাসওয়ার্ড পরিবর্তন সফল");
+      setNewPassword("");
+      setConfirmPassword("");
+    }
+  };
+
+  // Recitation submission stats (live)
+  const { data: recStats } = useQuery({
+    queryKey: ["dashboard-rec-stats", profile?.user_id],
+    enabled: !!profile?.user_id,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("surah_submissions")
+        .select("mistakes, surah_id")
+        .eq("user_id", profile!.user_id);
+      const list = data || [];
+      return {
+        total: list.length,
+        mistakes: list.reduce((a, r: any) => a + (r.mistakes || 0), 0),
+        uniqueSurahs: new Set(list.map((r: any) => r.surah_id).filter(Boolean)).size,
+      };
+    },
+  });
+
   // Stats
-  const totalSubmissions = answers.length;
-  const totalMarks = answers.reduce((sum, a) => sum + (a.marks || 0), 0);
-  const completedSurahs = answeredSurahIds.size;
+  const totalSubmissions = (recStats?.total ?? 0);
+  const totalMistakes = recStats?.mistakes ?? 0;
+  const completedSurahs = Math.max(answeredSurahIds.size, recStats?.uniqueSurahs ?? 0);
   const totalSurahs = surahs.length;
   const progressPercent = totalSurahs > 0 ? Math.round((completedSurahs / totalSurahs) * 100) : 0;
 
