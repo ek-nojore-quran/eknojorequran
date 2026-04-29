@@ -11,7 +11,7 @@ import CtaSection from "@/components/home/CtaSection";
 import ManagerSection from "@/components/home/ManagerSection";
 import CustomSection, { type CustomSectionData } from "@/components/home/CustomSection";
 
-const DEFAULT_ORDER = ["hero", "features", "cta", "course"];
+const DEFAULT_ORDER = ["hero", "course", "features", "cta"];
 
 const Index = () => {
   const [whatsappDialogOpen, setWhatsappDialogOpen] = useState(false);

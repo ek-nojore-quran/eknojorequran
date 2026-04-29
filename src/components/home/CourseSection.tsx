@@ -136,42 +136,42 @@ const CourseSection = ({ g }: CourseSectionProps) => {
                 <>
                   {firstStep.length > 0 && (
                     <div className="mb-12">
-                      <p className="text-center text-sm font-semibold text-primary mb-2">প্রথম ধাপ</p>
+                      <p className="text-center font-medium tracking-wide uppercase text-xl text-primary mb-2">প্রথম ধাপ</p>
                       <p className="text-center text-muted-foreground mb-6">{g("course_subtitle", "সূরা আলাক্ব (৯৬) থেকে সূরা নাস (১১৪)")}</p>
                       {renderGrid(firstStep)}
                     </div>
                   )}
                   {secondStep.length > 0 && (
                     <div className="mb-12">
-                      <p className="text-center text-sm font-semibold text-primary mb-2">দ্বিতীয় ধাপ</p>
+                      <p className="text-center font-medium tracking-wide uppercase text-xl text-primary mb-2">দ্বিতীয় ধাপ</p>
                       <p className="text-center text-muted-foreground mb-6">সূরা মুরসালাত (৭৭) থেকে সূরা তীন (৯৫)</p>
                       {renderGrid(secondStep)}
                     </div>
                   )}
                   {thirdStep.length > 0 && (
                     <div className="mb-12">
-                      <p className="text-center text-sm font-semibold text-primary mb-2">তৃতীয় ধাপ</p>
+                      <p className="text-center font-medium tracking-wide uppercase text-xl text-primary mb-2">তৃতীয় ধাপ</p>
                       <p className="text-center text-muted-foreground mb-6">সূরা মুজাদিলা (৫৮) থেকে সূরা ইনসান (৭৬)</p>
                       {renderGrid(thirdStep)}
                     </div>
                   )}
                   {fourthStep.length > 0 && (
                     <div className="mb-12">
-                      <p className="text-center text-sm font-semibold text-primary mb-2">চতুর্থ ধাপ</p>
+                      <p className="text-center font-medium tracking-wide uppercase text-xl text-primary mb-2">চতুর্থ ধাপ</p>
                       <p className="text-center text-muted-foreground mb-6">সূরা যুমার (৩৯) থেকে সূরা হাদীদ (৫৭)</p>
                       {renderGrid(fourthStep)}
                     </div>
                   )}
                   {fifthStep.length > 0 && (
                     <div className="mb-12">
-                      <p className="text-center text-sm font-semibold text-primary mb-2">পঞ্চম ধাপ</p>
+                      <p className="text-center font-medium tracking-wide uppercase text-xl text-primary mb-2">পঞ্চম ধাপ</p>
                       <p className="text-center text-muted-foreground mb-6">সূরা ত্বা-হা (২০) থেকে সূরা সাদ (৩৮)</p>
                       {renderGrid(fifthStep)}
                     </div>
                   )}
                   {sixthStep.length > 0 && (
                     <div>
-                      <p className="text-center text-sm font-semibold text-primary mb-2">ষষ্ঠ ধাপ</p>
+                      <p className="text-center font-medium tracking-wide uppercase text-xl text-primary mb-2">ষষ্ঠ ধাপ</p>
                       <p className="text-center text-muted-foreground mb-6">সূরা আল-ফাতিহা (১) থেকে সূরা মারইয়াম (১৯)</p>
                       {renderGrid(sixthStep)}
                     </div>
