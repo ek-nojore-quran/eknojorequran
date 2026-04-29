@@ -104,18 +104,18 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
               }}>
               অথবা, "ফ্রী" রেজিস্ট্রেশন করুন।
             </Button>
-            {showWa ?
-            <Button
-              className="w-full bg-green-600 hover:bg-green-700 text-white"
-              size="lg"
-              onClick={() => {
-                handleClose(false);
-                window.open(waLink!, "_blank", "noopener,noreferrer");
-              }}>
-              <MessageCircle className="mr-2 h-4 w-4" />
-              হোয়াটসঅ্যাপ গ্রুপে যোগ দিন
-            </Button> :
-            null}
+            {showWa && (
+              <Button
+                className="w-full bg-green-600 hover:bg-green-700 text-white"
+                size="lg"
+                onClick={() => {
+                  handleClose(false);
+                  window.open(waLink, "_blank", "noopener,noreferrer");
+                }}>
+                <MessageCircle className="mr-2 h-4 w-4" />
+                হোয়াটসঅ্যাপ গ্রুপে যোগ দিন
+              </Button>
+            )}
           </div> :
 
         <div className="space-y-4 pt-2">
