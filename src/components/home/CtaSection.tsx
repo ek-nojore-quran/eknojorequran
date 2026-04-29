@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { ArrowRight, MessageCircle, Heart } from "lucide-react";
 import { useSettings } from "@/hooks/useSettings";
 
 interface CtaSectionProps {
@@ -38,6 +38,15 @@ const CtaSection = ({ g }: CtaSectionProps) => {
             হোয়াটসঅ্যাপ গ্রুপে যোগ দিন
           </a>
         )}
+        <a
+          href="https://hcsb.org.bd/donate"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center gap-2 text-lg px-8 py-4 rounded-xl font-medium border border-primary/30 text-primary hover:bg-primary/10 transition-colors"
+        >
+          <Heart className="h-5 w-5" />
+          সদকা দিন
+        </a>
       </div>
     </section>
   );
