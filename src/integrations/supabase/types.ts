@@ -225,6 +225,48 @@ export type Database = {
         }
         Relationships: []
       }
+      surah_submissions: {
+        Row: {
+          admin_note: string | null
+          content: string
+          created_at: string
+          id: string
+          mistakes: number
+          name: string
+          profile_id: string
+          reviewed_at: string | null
+          surah_id: string | null
+          surah_name: string
+          user_id: string
+        }
+        Insert: {
+          admin_note?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          mistakes?: number
+          name: string
+          profile_id: string
+          reviewed_at?: string | null
+          surah_id?: string | null
+          surah_name: string
+          user_id: string
+        }
+        Update: {
+          admin_note?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          mistakes?: number
+          name?: string
+          profile_id?: string
+          reviewed_at?: string | null
+          surah_id?: string | null
+          surah_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       surahs: {
         Row: {
           created_at: string
@@ -321,6 +363,7 @@ export type Database = {
     }
     Functions: {
       generate_user_id: { Args: never; Returns: string }
+      get_email_for_user_id: { Args: { p_user_id: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -333,6 +376,15 @@ export type Database = {
           p_answers: Json
           p_name: string
           p_surah_id: string
+          p_user_id: string
+        }
+        Returns: Json
+      }
+      submit_surah_recitation: {
+        Args: {
+          p_content: string
+          p_surah_id: string
+          p_surah_name: string
           p_user_id: string
         }
         Returns: Json
