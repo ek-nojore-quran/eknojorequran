@@ -18,9 +18,9 @@ interface SurahDialogProps {
 
 const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
   const navigate = useNavigate();
-  const { data: settings } = useSettings();
-  const waLink = settings?.whatsapp_group_link?.trim();
-  const showWa = !!waLink && /^https?:\/\//i.test(waLink);
+  const { data: settings, isLoading: settingsLoading } = useSettings();
+  const waLink = settings?.whatsapp_group_link?.trim() || "";
+  const waValid = /^https?:\/\//i.test(waLink);
   const [userId, setUserId] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [verified, setVerified] = useState(false);
@@ -104,7 +104,15 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
               }}>
               অথবা, "ফ্রী" রেজিস্ট্রেশন করুন।
             </Button>
-            {showWa && (
+            {settingsLoading ? (
+              <Button
+                disabled
+                className="w-full bg-green-600 text-white opacity-70"
+                size="lg">
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                হোয়াটসঅ্যাপ লিংক লোড হচ্ছে...
+              </Button>
+            ) : waValid ? (
               <Button
                 className="w-full bg-green-600 hover:bg-green-700 text-white"
                 size="lg"
@@ -115,7 +123,7 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
                 <MessageCircle className="mr-2 h-4 w-4" />
                 হোয়াটসঅ্যাপ গ্রুপে যোগ দিন
               </Button>
-            )}
+            ) : null}
           </div> :
 
         <div className="space-y-4 pt-2">
