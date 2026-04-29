@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import SurahDialog from "@/components/SurahDialog";
+import CtaSection from "@/components/home/CtaSection";
 
 export type SurahData = {
   id: string;
@@ -142,11 +143,14 @@ const CourseSection = ({ g }: CourseSectionProps) => {
                     </div>
                   )}
                   {secondStep.length > 0 && (
-                    <div className="mb-12">
-                      <p className="text-center font-medium tracking-wide uppercase text-xl text-primary mb-2">দ্বিতীয় ধাপ</p>
-                      <p className="text-center text-muted-foreground mb-6">সূরা মুরসালাত (৭৭) থেকে সূরা তীন (৯৫)</p>
-                      {renderGrid(secondStep)}
-                    </div>
+                    <>
+                      <CtaSection g={g} />
+                      <div className="mb-12">
+                        <p className="text-center font-medium tracking-wide uppercase text-xl text-primary mb-2">দ্বিতীয় ধাপ</p>
+                        <p className="text-center text-muted-foreground mb-6">সূরা মুরসালাত (৭৭) থেকে সূরা তীন (৯৫)</p>
+                        {renderGrid(secondStep)}
+                      </div>
+                    </>
                   )}
                   {thirdStep.length > 0 && (
                     <div className="mb-12">
