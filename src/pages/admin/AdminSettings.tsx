@@ -25,6 +25,12 @@ const AdminSettings = () => {
   const [mcqTimeLimit, setMcqTimeLimit] = useState("30");
   const [autoMarking, setAutoMarking] = useState(true);
   const [whatsappLink, setWhatsappLink] = useState("");
+  const [waStep1, setWaStep1] = useState("");
+  const [waStep2, setWaStep2] = useState("");
+  const [waStep3, setWaStep3] = useState("");
+  const [waStep4, setWaStep4] = useState("");
+  const [waStep5, setWaStep5] = useState("");
+  const [waStep6, setWaStep6] = useState("");
   const [managerName, setManagerName] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
@@ -67,6 +73,12 @@ const AdminSettings = () => {
       setMcqTimeLimit(s.mcq_time_limit || "30");
       setAutoMarking(s.auto_marking === "true");
       setWhatsappLink(s.whatsapp_group_link || "");
+      setWaStep1(s.whatsapp_link_step_1 || "");
+      setWaStep2(s.whatsapp_link_step_2 || "");
+      setWaStep3(s.whatsapp_link_step_3 || "");
+      setWaStep4(s.whatsapp_link_step_4 || "");
+      setWaStep5(s.whatsapp_link_step_5 || "");
+      setWaStep6(s.whatsapp_link_step_6 || "");
       setManagerName(s.manager_name || "");
       if (s.logo_url) setLogoPreview(s.logo_url);
       setHeroTitle(s.hero_title || "");
@@ -98,6 +110,12 @@ const AdminSettings = () => {
       mcq_time_limit: mcqTimeLimit,
       auto_marking: autoMarking ? "true" : "false",
       whatsapp_group_link: whatsappLink,
+      whatsapp_link_step_1: waStep1,
+      whatsapp_link_step_2: waStep2,
+      whatsapp_link_step_3: waStep3,
+      whatsapp_link_step_4: waStep4,
+      whatsapp_link_step_5: waStep5,
+      whatsapp_link_step_6: waStep6,
       manager_name: managerName,
       hero_title: heroTitle,
       hero_subtitle: heroSubtitle,
@@ -218,9 +236,48 @@ const AdminSettings = () => {
               <MessageCircle className="h-5 w-5" /> WhatsApp সেটিংস
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
-            <Label htmlFor="whatsapp-link">WhatsApp গ্রুপ লিংক</Label>
-            <Input id="whatsapp-link" value={whatsappLink} onChange={(e) => setWhatsappLink(e.target.value)} placeholder="https://chat.whatsapp.com/..." />
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="whatsapp-link">ডিফল্ট WhatsApp গ্রুপ লিংক (fallback)</Label>
+              <Input id="whatsapp-link" value={whatsappLink} onChange={(e) => setWhatsappLink(e.target.value)} placeholder="https://chat.whatsapp.com/..." />
+              <p className="text-xs text-muted-foreground">
+                কোনো ধাপের আলাদা লিংক না দেওয়া থাকলে এই লিংকটি ব্যবহার হবে।
+              </p>
+            </div>
+
+            <Separator />
+
+            <div className="space-y-1">
+              <h3 className="font-semibold text-sm">ধাপ অনুযায়ী আলাদা WhatsApp গ্রুপ লিংক</h3>
+              <p className="text-xs text-muted-foreground">
+                প্রতিটি ধাপের CTA সেকশনে আলাদা WhatsApp গ্রুপ লিংক দেখাতে চাইলে নিচে বসান। খালি রাখলে উপরের ডিফল্ট লিংকটি ব্যবহার হবে।
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="wa-step-1">প্রথম ধাপ <span className="text-muted-foreground font-normal">(সূরা ৯৬–১১৪)</span></Label>
+              <Input id="wa-step-1" value={waStep1} onChange={(e) => setWaStep1(e.target.value)} placeholder="https://chat.whatsapp.com/..." />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="wa-step-2">দ্বিতীয় ধাপ <span className="text-muted-foreground font-normal">(সূরা ৭৭–৯৫)</span></Label>
+              <Input id="wa-step-2" value={waStep2} onChange={(e) => setWaStep2(e.target.value)} placeholder="https://chat.whatsapp.com/..." />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="wa-step-3">তৃতীয় ধাপ <span className="text-muted-foreground font-normal">(সূরা ৫৮–৭৬)</span></Label>
+              <Input id="wa-step-3" value={waStep3} onChange={(e) => setWaStep3(e.target.value)} placeholder="https://chat.whatsapp.com/..." />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="wa-step-4">চতুর্থ ধাপ <span className="text-muted-foreground font-normal">(সূরা ৩৯–৫৭)</span></Label>
+              <Input id="wa-step-4" value={waStep4} onChange={(e) => setWaStep4(e.target.value)} placeholder="https://chat.whatsapp.com/..." />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="wa-step-5">পঞ্চম ধাপ <span className="text-muted-foreground font-normal">(সূরা ২০–৩৮)</span></Label>
+              <Input id="wa-step-5" value={waStep5} onChange={(e) => setWaStep5(e.target.value)} placeholder="https://chat.whatsapp.com/..." />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="wa-step-6">ষষ্ঠ ধাপ <span className="text-muted-foreground font-normal">(সূরা ১–১৯)</span></Label>
+              <Input id="wa-step-6" value={waStep6} onChange={(e) => setWaStep6(e.target.value)} placeholder="https://chat.whatsapp.com/..." />
+            </div>
           </CardContent>
         </Card>
 

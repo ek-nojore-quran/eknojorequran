@@ -144,7 +144,7 @@ const CourseSection = ({ g }: CourseSectionProps) => {
                   )}
                   {secondStep.length > 0 && (
                     <>
-                      <CtaSection g={g} />
+                      <CtaSection g={g} stepNumber={2} />
                       <div className="mb-12">
                         <p className="text-center font-medium tracking-wide uppercase text-xl text-primary mb-2">দ্বিতীয় ধাপ</p>
                         <p className="text-center text-muted-foreground mb-6">সূরা মুরসালাত (৭৭) থেকে সূরা তীন (৯৫)</p>
@@ -154,7 +154,7 @@ const CourseSection = ({ g }: CourseSectionProps) => {
                   )}
                   {thirdStep.length > 0 && (
                     <>
-                      <CtaSection g={g} />
+                      <CtaSection g={g} stepNumber={3} />
                       <div className="mb-12">
                         <p className="text-center font-medium tracking-wide uppercase text-xl text-primary mb-2">তৃতীয় ধাপ</p>
                         <p className="text-center text-muted-foreground mb-6">সূরা মুজাদালা (৫৮) থেকে সূরা ইনসান (৭৬)</p>
@@ -164,7 +164,7 @@ const CourseSection = ({ g }: CourseSectionProps) => {
                   )}
                   {fourthStep.length > 0 && (
                     <>
-                      <CtaSection g={g} />
+                      <CtaSection g={g} stepNumber={4} />
                       <div className="mb-12">
                         <p className="text-center font-medium tracking-wide uppercase text-xl text-primary mb-2">চতুর্থ ধাপ</p>
                         <p className="text-center text-muted-foreground mb-6">সূরা যুমার (৩৯) থেকে সূরা হাদীদ (৫৭)</p>
@@ -174,7 +174,7 @@ const CourseSection = ({ g }: CourseSectionProps) => {
                   )}
                   {fifthStep.length > 0 && (
                     <>
-                      <CtaSection g={g} />
+                      <CtaSection g={g} stepNumber={5} />
                       <div className="mb-12">
                         <p className="text-center font-medium tracking-wide uppercase text-xl text-primary mb-2">পঞ্চম ধাপ</p>
                         <p className="text-center text-muted-foreground mb-6">সূরা ত্বা-হা (২০) থেকে সূরা সাদ (৩৮)</p>
@@ -184,7 +184,7 @@ const CourseSection = ({ g }: CourseSectionProps) => {
                   )}
                   {sixthStep.length > 0 && (
                     <>
-                      <CtaSection g={g} />
+                      <CtaSection g={g} stepNumber={6} />
                       <div>
                         <p className="text-center font-medium tracking-wide uppercase text-xl text-primary mb-2">ষষ্ঠ ধাপ</p>
                         <p className="text-center text-muted-foreground mb-6">সূরা আল-ফাতিহা (১) থেকে সূরা মারইয়াম (১৯)</p>

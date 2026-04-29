@@ -5,11 +5,16 @@ import whatsappLogo from "@/assets/whatsapp-logo.png";
 
 interface CtaSectionProps {
   g: (key: string, fallback: string) => string;
+  stepNumber?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
-const CtaSection = ({ g }: CtaSectionProps) => {
+const CtaSection = ({ g, stepNumber }: CtaSectionProps) => {
   const { data: settings } = useSettings();
-  const waLink = settings?.whatsapp_group_link?.trim() || "";
+  const stepLink = stepNumber
+    ? settings?.[`whatsapp_link_step_${stepNumber}`]?.trim() || ""
+    : "";
+  const defaultLink = settings?.whatsapp_group_link?.trim() || "";
+  const waLink = stepLink || defaultLink;
   const waValid = /^https?:\/\//i.test(waLink);
 
   return (
