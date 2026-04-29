@@ -4,9 +4,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ExternalLink, Loader2, FileText, Clock } from "lucide-react";
+import { ExternalLink, Loader2, FileText, Clock, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useSettings } from "@/hooks/useSettings";
 import type { SurahData } from "@/components/home/CourseSection";
 
 interface SurahDialogProps {
@@ -17,6 +18,9 @@ interface SurahDialogProps {
 
 const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
   const navigate = useNavigate();
+  const { data: settings } = useSettings();
+  const waLink = settings?.whatsapp_group_link?.trim();
+  const showWa = !!waLink && /^https?:\/\//i.test(waLink);
   const [userId, setUserId] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [verified, setVerified] = useState(false);
@@ -100,6 +104,18 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
               }}>
               অথবা, "ফ্রী" রেজিস্ট্রেশন করুন।
             </Button>
+            {showWa ?
+            <Button
+              className="w-full bg-green-600 hover:bg-green-700 text-white"
+              size="lg"
+              onClick={() => {
+                handleClose(false);
+                window.open(waLink!, "_blank", "noopener,noreferrer");
+              }}>
+              <MessageCircle className="mr-2 h-4 w-4" />
+              হোয়াটসঅ্যাপ গ্রুপে যোগ দিন
+            </Button> :
+            null}
           </div> :
 
         <div className="space-y-4 pt-2">

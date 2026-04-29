@@ -1,19 +1,34 @@
-## Add Free Registration Button in SurahDialog
+## Goal
 
-Add a secondary button below the "যাচাই করুন" button in the User ID verification step.
+Add a WhatsApp button inside the `SurahDialog` (the dialog shown when a user clicks a Surah card), placed right below the "অথবা, \"ফ্রী\" রেজিস্ট্রেশন করুন।" button, so users can quickly join the WhatsApp group from the same dialog.
 
-### Changes
+## Where
 
-**File: `src/components/SurahDialog.tsx`**
+File: `src/components/SurahDialog.tsx` — inside the pre-verification block (where the verify + register buttons live).
 
-In the verification form (when `!verified`), below the existing "যাচাই করুন" button, add a new outline/link-style button:
+## What to add
 
-- Text: **"অথবা, ফ্রী রেজিস্ট্রেশন করে আইডি সংগ্রহ করুন।"**
-- Variant: `outline` (full width, secondary appearance)
-- On click: navigate to `/register` (using `useNavigate` from `react-router-dom`)
-- Also closes the dialog before navigating
+A new green WhatsApp button below the registration button:
 
-### Behavior
+- Label: `হোয়াটসঅ্যাপ গ্রুপে যোগ দিন`
+- Icon: `MessageCircle` from `lucide-react`
+- Style: full-width, `size="lg"`, custom green classes (`bg-green-600 hover:bg-green-700 text-white`) so it stands out from verify (primary) and register (outline).
+- Behavior on click:
+  1. Close the dialog (`handleClose(false)`).
+  2. Open the WhatsApp group link in a new tab.
 
-- Button only appears in the verification step (hidden after successful verification)
-- Helps new users who don't have an ENQ-XXXX User ID yet get one via the registration flow
+## Where the WhatsApp link comes from
+
+Use the existing `whatsapp_group_link` setting (already managed in `AdminSettings.tsx` and stored via `useSettings`). Read it in `SurahDialog.tsx` using the `useSettings` hook, then open it via `window.open(link, "_blank")`. If the link is empty/not set, hide the button (don't show a broken button).
+
+## Technical details
+
+- Import `useSettings` from `@/hooks/useSettings` and `MessageCircle` from `lucide-react`.
+- Compute `const waLink = settings?.whatsapp_group_link?.trim();` (or equivalent based on the hook's API — verify hook shape during implementation).
+- Render the button only when `waLink` is a valid `http(s)` URL.
+- No DB or schema changes. No new dependencies.
+
+## Out of scope
+
+- No changes to admin settings, homepage WhatsApp section, or join-tracking logic.
+- No changes to the post-verification view of the dialog.
