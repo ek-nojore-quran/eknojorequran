@@ -401,6 +401,32 @@ const Dashboard = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Password change */}
+            <Card className="mt-4">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <KeyRound className="h-4 w-4" /> পাসওয়ার্ড পরিবর্তন
+                </CardTitle>
+                <CardDescription>আপনার অ্যাকাউন্টের নতুন পাসওয়ার্ড সেট করুন</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <Label>নতুন পাসওয়ার্ড</Label>
+                    <Input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="কমপক্ষে ৬ অক্ষর" />
+                  </div>
+                  <div>
+                    <Label>পুনরায় পাসওয়ার্ড</Label>
+                    <Input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                  </div>
+                </div>
+                <Button onClick={handleChangePassword} disabled={pwSaving}>
+                  {pwSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  পরিবর্তন করুন
+                </Button>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Course Tab */}
@@ -465,7 +491,7 @@ const Dashboard = () => {
           </TabsContent>
 
           {/* Submissions Tab */}
-          <TabsContent value="submissions">
+          <TabsContent value="quiz">
             <Card>
               <CardHeader>
                 <CardTitle className="text-xl">সাবমিশন ইতিহাস</CardTitle>
