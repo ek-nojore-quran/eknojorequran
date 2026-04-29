@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, MessageCircle, Heart } from "lucide-react";
+import { ArrowRight, Heart } from "lucide-react";
 import { useSettings } from "@/hooks/useSettings";
+import whatsappLogo from "@/assets/whatsapp-logo.png";
 
 interface CtaSectionProps {
   g: (key: string, fallback: string) => string;
