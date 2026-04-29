@@ -8,11 +8,10 @@ import HeroSection from "@/components/home/HeroSection";
 import FeaturesSection from "@/components/home/FeaturesSection";
 import CourseSection from "@/components/home/CourseSection";
 import CtaSection from "@/components/home/CtaSection";
-import WhatsAppSection from "@/components/home/WhatsAppSection";
 import ManagerSection from "@/components/home/ManagerSection";
 import CustomSection, { type CustomSectionData } from "@/components/home/CustomSection";
 
-const DEFAULT_ORDER = ["hero", "features", "cta", "course", "whatsapp"];
+const DEFAULT_ORDER = ["hero", "features", "cta", "course"];
 
 const Index = () => {
   const [whatsappDialogOpen, setWhatsappDialogOpen] = useState(false);
@@ -53,7 +52,6 @@ const Index = () => {
     features: <FeaturesSection key="features" g={g} />,
     course: <CourseSection key="course" g={g} />,
     cta: <CtaSection key="cta" g={g} />,
-    whatsapp: <WhatsAppSection key="whatsapp" g={g} setWhatsappDialogOpen={setWhatsappDialogOpen} />,
   };
 
   const renderSection = (key: string) => {
