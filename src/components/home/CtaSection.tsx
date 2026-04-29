@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, MessageCircle, Heart } from "lucide-react";
+import { ArrowRight, Heart } from "lucide-react";
 import { useSettings } from "@/hooks/useSettings";
+import whatsappLogo from "@/assets/whatsapp-logo.png";
 
 interface CtaSectionProps {
   g: (key: string, fallback: string) => string;
@@ -35,7 +36,7 @@ const CtaSection = ({ g }: CtaSectionProps) => {
             className="inline-flex items-center justify-center gap-2 text-lg px-8 py-4 rounded-xl font-medium text-white transition-opacity shadow-md hover:opacity-90"
             style={{ backgroundColor: "#25D366" }}
           >
-            <MessageCircle className="h-5 w-5" />
+            <img src={whatsappLogo} alt="WhatsApp" className="h-6 w-6" />
             হোয়াটসঅ্যাপ গ্রুপে যোগ দিন
           </a>
         )}
