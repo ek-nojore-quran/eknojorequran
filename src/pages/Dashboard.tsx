@@ -12,10 +12,14 @@ import { toast } from "sonner";
 import {
   LogOut, Loader2, User, BookOpen, ClipboardList, BarChart3,
   FileText, ExternalLink, CheckCircle2, Circle, Edit2, Save, X,
-  Phone, Mail, Calendar, Hash, Award, TrendingUp, Home, Copy
+  Phone, Mail, Calendar, Hash, Award, TrendingUp, Home, Copy,
+  Trophy, AlertCircle, KeyRound, BookMarked
 } from "lucide-react";
 import { format } from "date-fns";
 import { bn } from "date-fns/locale";
+import SubmissionForm from "@/components/dashboard/SubmissionForm";
+import SubmissionHistory from "@/components/dashboard/SubmissionHistory";
+import { useQuery } from "@tanstack/react-query";
 
 interface Profile {
   id: string;
