@@ -157,7 +157,7 @@ const CourseSection = ({ g }: CourseSectionProps) => {
                       <CtaSection g={g} />
                       <div className="mb-12">
                         <p className="text-center font-medium tracking-wide uppercase text-xl text-primary mb-2">তৃতীয় ধাপ</p>
-                        <p className="text-center text-muted-foreground mb-6">সূরা মুজাদিলা (৫৮) থেকে সূরা ইনসান (৭৬)</p>
+                        <p className="text-center text-muted-foreground mb-6">সূরা মুজাদালা (৫৮) থেকে সূরা ইনসান (৭৬)</p>
                         {renderGrid(thirdStep)}
                       </div>
                     </>
