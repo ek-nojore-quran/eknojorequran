@@ -107,14 +107,16 @@ const SurahDialog = ({ surah, open, onOpenChange }: SurahDialogProps) => {
             {settingsLoading ? (
               <Button
                 disabled
-                className="w-full bg-green-600 text-white opacity-70"
+                className="w-full text-white opacity-70"
+                style={{ backgroundColor: "#25D366" }}
                 size="lg">
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 হোয়াটসঅ্যাপ লিংক লোড হচ্ছে...
               </Button>
             ) : waValid ? (
               <Button
-                className="w-full bg-green-600 hover:bg-green-700 text-white"
+                className="w-full text-white hover:opacity-90"
+                style={{ backgroundColor: "#25D366" }}
                 size="lg"
                 onClick={() => {
                   handleClose(false);
