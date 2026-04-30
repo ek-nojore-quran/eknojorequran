@@ -11,64 +11,67 @@ import { Loader2 } from "lucide-react";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [userId, setUserId] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [forgotOpen, setForgotOpen] = useState(false);
-  const [resetUserId, setResetUserId] = useState("");
+  const [resetIdentifier, setResetIdentifier] = useState("");
   const [resetLoading, setResetLoading] = useState(false);
+
+  const resolveEmail = async (input: string): Promise<string | null> => {
+    const trimmed = input.trim();
+    if (!trimmed) return null;
+    if (trimmed.includes("@")) return trimmed.toLowerCase();
+    const { data, error } = await supabase.rpc("get_email_for_user_id", {
+      p_user_id: trimmed.toUpperCase(),
+    });
+    if (error || !data) return null;
+    return data as string;
+  };
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmed = resetUserId.trim().toUpperCase();
-    if (!trimmed) {
-      toast.error("আপনার ENQ-XXXX আইডি দিন");
+    if (!resetIdentifier.trim()) {
+      toast.error("আপনার User ID বা Email দিন");
       return;
     }
     setResetLoading(true);
-    // resolve email
-    const { data: emailData, error: emailErr } = await supabase.rpc("get_email_for_user_id", {
-      p_user_id: trimmed,
-    });
-    if (emailErr || !emailData) {
+    const email = await resolveEmail(resetIdentifier);
+    if (!email) {
       setResetLoading(false);
-      toast.error("এই User ID পাওয়া যায়নি");
+      toast.error("এই User ID বা Email পাওয়া যায়নি");
       return;
     }
-    const { error } = await supabase.auth.resetPasswordForEmail(emailData as string, {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
     setResetLoading(false);
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success("পাসওয়ার্ড রিসেট লিংক আপনার রেজিস্টার্ড ইমেইলে পাঠানো হয়েছে");
+      toast.success("পাসওয়ার্ড রিসেট লিংক আপনার ইমেইলে পাঠানো হয়েছে");
       setForgotOpen(false);
-      setResetUserId("");
+      setResetIdentifier("");
     }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmedId = userId.trim().toUpperCase();
-    if (!trimmedId || !password.trim()) {
+    if (!identifier.trim() || !password.trim()) {
       toast.error("সব ফিল্ড পূরণ করুন");
       return;
     }
 
     setLoading(true);
-    // resolve email from ENQ-XXXX
-    const { data: emailData, error: emailErr } = await supabase.rpc("get_email_for_user_id", {
-      p_user_id: trimmedId,
-    });
-    if (emailErr || !emailData) {
+    const email = await resolveEmail(identifier);
+    if (!email) {
       setLoading(false);
-      toast.error("এই User ID পাওয়া যায়নি");
+      toast.error("এই User ID বা Email পাওয়া যায়নি");
       return;
     }
 
     const { error } = await supabase.auth.signInWithPassword({
-      email: emailData as string,
+      email,
       password,
     });
     setLoading(false);
@@ -101,18 +104,18 @@ const Login = () => {
         <Card>
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">লগইন</CardTitle>
-            <CardDescription>আপনার User ID দিয়ে প্রবেশ করুন</CardDescription>
+            <CardDescription>User ID অথবা Email দিয়ে প্রবেশ করুন</CardDescription>
           </CardHeader>
           <form onSubmit={handleLogin}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="userId">User ID</Label>
+                <Label htmlFor="identifier">User ID বা Email</Label>
                 <Input
-                  id="userId"
+                  id="identifier"
                   type="text"
-                  placeholder="ENQ-0001"
-                  value={userId}
-                  onChange={(e) => setUserId(e.target.value.toUpperCase())}
+                  placeholder="ENQ-0001 বা you@example.com"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
                   required
                 />
               </div>
@@ -141,14 +144,14 @@ const Login = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>পাসওয়ার্ড রিসেট</DialogTitle>
-            <DialogDescription>আপনার ENQ-XXXX আইডি দিন, রেজিস্টার্ড ইমেইলে রিসেট লিংক পাঠানো হবে</DialogDescription>
+            <DialogDescription>User ID বা Email দিন, রেজিস্টার্ড ইমেইলে রিসেট লিংক পাঠানো হবে</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleForgotPassword} className="space-y-4">
             <Input
               type="text"
-              placeholder="ENQ-0001"
-              value={resetUserId}
-              onChange={(e) => setResetUserId(e.target.value.toUpperCase())}
+              placeholder="ENQ-0001 বা you@example.com"
+              value={resetIdentifier}
+              onChange={(e) => setResetIdentifier(e.target.value)}
               required
             />
             <Button type="submit" className="w-full" disabled={resetLoading}>
